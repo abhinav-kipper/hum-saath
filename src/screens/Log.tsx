@@ -133,8 +133,8 @@ export default function Log() {
       {isPapa ? (
         <section className={styles.card}>
           <h2 className={styles.qTitle}>
-            Neck / back pain right now?
-            <span className="hindi"> गर्दन का दर्द?</span>
+            Back / leg pain right now?
+            <span className="hindi"> पीठ/टांग का दर्द?</span>
           </h2>
           <p className={styles.qHelp}>1 = no pain · 10 = worst</p>
           <div className={styles.painGrid}>

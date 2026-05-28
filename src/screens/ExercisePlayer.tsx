@@ -88,7 +88,7 @@ export default function ExercisePlayer() {
             className={styles.primaryBtn}
             onClick={() => navigate('/log')}
           >
-            {profile === 'papa' ? 'Log how your neck feels' : 'Log your BP'}
+            {profile === 'papa' ? 'Log how your back feels' : 'Log your BP'}
             <ChevronRight size={22} />
           </button>
           <button

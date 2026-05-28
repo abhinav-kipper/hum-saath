@@ -5,8 +5,8 @@ export const PROFILES: Record<Profile, ProfileInfo> = {
     id: 'papa',
     name: 'Papa',
     nameHindi: 'पापा',
-    focus: 'Neck & back care',
-    focusHindi: 'गर्दन और पीठ',
+    focus: 'Back & sciatica care',
+    focusHindi: 'पीठ और साइटिका',
     accent: 'terracotta',
   },
   mummy: {

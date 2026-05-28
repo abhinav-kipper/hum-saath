@@ -90,7 +90,7 @@ export default function Today() {
 
         <TaskCard
           icon={<HeartPulse size={26} />}
-          title={profile === 'papa' ? 'Log neck pain' : 'Log blood pressure'}
+          title={profile === 'papa' ? 'Log back & leg pain' : 'Log blood pressure'}
           hindi={profile === 'papa' ? 'दर्द दर्ज करें' : 'बीपी दर्ज करें'}
           meta={
             checkInDone
