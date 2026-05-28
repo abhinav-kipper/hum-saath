@@ -1,10 +1,11 @@
 /* ============================================================
    Exercise routines.
 
-   PASTE YOUR VIDEOS HERE: replace each `videoId: 'REPLACE_ME'`
-   with the YouTube id of your unlisted clip (the part after
-   `watch?v=` or `youtu.be/`). That's the only edit needed —
-   the player reads everything from this one file.
+   The videoId values below are AI-SUGGESTED, search-sourced
+   candidates — they are NOT verified. Before your parents rely
+   on them, open each one and confirm (a) the link works and
+   (b) the form/technique is appropriate. Swapping any is a
+   one-line edit here; the player reads everything from this file.
 
    durationSec drives the per-exercise countdown timer.
    target is the human-readable goal (reps or time).
@@ -24,7 +25,7 @@ export interface Exercise {
   cue: string;
   /** One-line cue, Hindi */
   cueHindi: string;
-  /** YouTube video id (unlisted). Placeholder until you paste. */
+  /** YouTube video id (unverified candidate — confirm before use). */
   videoId: string;
 }
 
@@ -53,7 +54,7 @@ const papaRoutine: Routine = {
       durationSec: 45,
       cue: 'Make a gentle double chin, hold 2 sec, release.',
       cueHindi: 'हल्के से ठोड़ी पीछे खींचें, 2 सेकंड रोकें।',
-      videoId: 'REPLACE_ME',
+      videoId: '7rnlAVhAK-8',
     },
     {
       id: 'neck-side-stretch',
@@ -63,7 +64,7 @@ const papaRoutine: Routine = {
       durationSec: 60,
       cue: 'Ear toward shoulder, no shrugging. Breathe.',
       cueHindi: 'कान कंधे की ओर झुकाएँ, कंधा न उठाएँ।',
-      videoId: 'REPLACE_ME',
+      videoId: 't_q9JQh_-7A',
     },
     {
       id: 'shoulder-rolls',
@@ -73,7 +74,7 @@ const papaRoutine: Routine = {
       durationSec: 40,
       cue: 'Big slow circles, back then forward.',
       cueHindi: 'बड़े धीमे गोल घुमाव — पीछे फिर आगे।',
-      videoId: 'REPLACE_ME',
+      videoId: 'EOsdkHH5QvI',
     },
     {
       id: 'scapular-squeeze',
@@ -83,7 +84,7 @@ const papaRoutine: Routine = {
       durationSec: 40,
       cue: 'Pinch shoulder blades together, hold 2 sec.',
       cueHindi: 'दोनों कंधे के ब्लेड पीछे दबाएँ, 2 सेकंड रोकें।',
-      videoId: 'REPLACE_ME',
+      videoId: 'QN1oZVMMRjE',
     },
     {
       id: 'doorway-chest-stretch',
@@ -93,7 +94,7 @@ const papaRoutine: Routine = {
       durationSec: 35,
       cue: 'Forearms on frame, lean through gently.',
       cueHindi: 'दरवाज़े पर हाथ रखें, हल्के से आगे झुकें।',
-      videoId: 'REPLACE_ME',
+      videoId: 'NePr1XKRTLU',
     },
     {
       id: 'wall-angels',
@@ -103,7 +104,7 @@ const papaRoutine: Routine = {
       durationSec: 45,
       cue: 'Back to wall, slide arms up and down slowly.',
       cueHindi: 'पीठ दीवार से लगाकर हाथ ऊपर-नीचे करें।',
-      videoId: 'REPLACE_ME',
+      videoId: 'CwoPzrBDfpk',
     },
     {
       id: 'seated-cat-cow',
@@ -113,7 +114,7 @@ const papaRoutine: Routine = {
       durationSec: 45,
       cue: 'Round the back, then arch and open the chest.',
       cueHindi: 'पीठ गोल करें, फिर सीना खोलकर पीछे झुकें।',
-      videoId: 'REPLACE_ME',
+      videoId: 'PMxA3xlFpAk',
     },
     {
       id: 'thoracic-extension',
@@ -123,7 +124,7 @@ const papaRoutine: Routine = {
       durationSec: 35,
       cue: 'Upper back over chair edge, open and breathe.',
       cueHindi: 'ऊपरी पीठ कुर्सी पर टिकाकर पीछे खुलें।',
-      videoId: 'REPLACE_ME',
+      videoId: 'U2-q4ruoSQU',
     },
   ],
 };
@@ -144,7 +145,7 @@ const mummyRoutine: Routine = {
       durationSec: 600,
       cue: 'Comfortable but quick — you can talk, not sing.',
       cueHindi: 'तेज़ चलें — बात कर सकें पर गा न सकें।',
-      videoId: 'REPLACE_ME',
+      videoId: 'KyCXFrE9LQ4',
     },
     {
       id: 'wall-pushups',
@@ -154,7 +155,7 @@ const mummyRoutine: Routine = {
       durationSec: 45,
       cue: 'Hands on wall, lower chest in, push back out.',
       cueHindi: 'हाथ दीवार पर, सीना अंदर लाएँ, फिर धकेलें।',
-      videoId: 'REPLACE_ME',
+      videoId: 'QpMTk21EmaM',
     },
     {
       id: 'sit-to-stand',
@@ -164,7 +165,7 @@ const mummyRoutine: Routine = {
       durationSec: 50,
       cue: 'Stand from a chair without using hands.',
       cueHindi: 'कुर्सी से बिना हाथ लगाए उठें।',
-      videoId: 'REPLACE_ME',
+      videoId: 'kKTXrB6n4RM',
     },
     {
       id: 'standing-marches',
@@ -174,7 +175,7 @@ const mummyRoutine: Routine = {
       durationSec: 40,
       cue: 'Lift knees high, swing arms, steady pace.',
       cueHindi: 'घुटने ऊँचे उठाएँ, हाथ हिलाएँ।',
-      videoId: 'REPLACE_ME',
+      videoId: '8p8x6UTWIrI',
     },
     {
       id: 'band-rows',
@@ -184,7 +185,7 @@ const mummyRoutine: Routine = {
       durationSec: 45,
       cue: 'Pull band to ribs, squeeze, release slow.',
       cueHindi: 'बैंड पसलियों तक खींचें, दबाएँ, धीरे छोड़ें।',
-      videoId: 'REPLACE_ME',
+      videoId: 'mnP10HI18uI',
     },
     {
       id: 'calf-raises',
@@ -194,7 +195,7 @@ const mummyRoutine: Routine = {
       durationSec: 45,
       cue: 'Up on toes, pause, lower with control.',
       cueHindi: 'पंजों पर उठें, रुकें, धीरे नीचे आएँ।',
-      videoId: 'REPLACE_ME',
+      videoId: 'gwLzBJYoWlI',
     },
     {
       id: 'deep-breathing',
@@ -204,7 +205,7 @@ const mummyRoutine: Routine = {
       durationSec: 120,
       cue: 'In for 4, out for 6. Soften the shoulders.',
       cueHindi: '4 गिनती साँस लें, 6 में छोड़ें। कंधे ढीले।',
-      videoId: 'REPLACE_ME',
+      videoId: 'Mg2ar-7_HfA',
     },
   ],
 };
