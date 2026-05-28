@@ -1,0 +1,87 @@
+.monthName {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.weekdays span {
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--ink-light);
+  opacity: 0.7;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.blank {
+  aspect-ratio: 1;
+}
+
+.cell {
+  aspect-ratio: 1;
+  border-radius: 9px;
+  border: 1px solid var(--cream-dark);
+  display: grid;
+  place-items: center;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ink-light);
+}
+
+.today {
+  outline: 2.5px solid var(--accent);
+  outline-offset: 1px;
+  color: var(--ink);
+}
+
+.future {
+  opacity: 0.4;
+}
+
+/* completion levels — emptier = cream, fuller = sage */
+.lvl0 {
+  background: var(--cream);
+}
+.lvl1 {
+  background: color-mix(in srgb, var(--sage) 22%, var(--white));
+}
+.lvl2 {
+  background: color-mix(in srgb, var(--sage) 42%, var(--white));
+}
+.lvl3 {
+  background: color-mix(in srgb, var(--sage) 65%, var(--white));
+}
+.lvl4 {
+  background: var(--sage);
+  color: var(--white);
+  border-color: var(--sage);
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  margin-top: 12px;
+  font-size: 0.72rem;
+  color: var(--ink-light);
+}
+
+.swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  border: 1px solid var(--cream-dark);
+}

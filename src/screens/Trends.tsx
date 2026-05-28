@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LineChart, Footprints, Dumbbell } from 'lucide-react';
 import { useProfile } from '../context/ProfileContext';
-import { getLogs, todayKey } from '../lib/store';
+import { getLogs, getMedCountsByDate, todayKey } from '../lib/store';
+import { getMedicines } from '../data/medicines';
 import type { DayLog } from '../types';
 import TrendChart, { type ChartSeries } from '../components/TrendChart';
+import CalendarHeatmap from '../components/CalendarHeatmap';
 import styles from './Trends.module.css';
 
 const DAYS = 14;
@@ -29,9 +31,12 @@ export default function Trends() {
   const { profile } = useProfile();
   const navigate = useNavigate();
   const [logs, setLogs] = useState<DayLog[]>([]);
+  const [medCounts, setMedCounts] = useState<Record<string, number>>({});
 
   useEffect(() => {
-    if (profile) getLogs(profile).then(setLogs);
+    if (!profile) return;
+    getLogs(profile).then(setLogs);
+    getMedCountsByDate(profile).then(setMedCounts);
   }, [profile]);
 
   if (!profile) return null;
@@ -73,6 +78,27 @@ export default function Trends() {
 
   const walkCount = days.filter((d) => byDate.get(d)?.walked).length;
   const exerciseCount = days.filter((d) => byDate.get(d)?.exerciseDone).length;
+
+  // adherence heatmap levels (0–4) per active day
+  const medsTotal = getMedicines(profile).length;
+  const expected = 3 + (medsTotal > 0 ? 1 : 0);
+  const heatLevels: Record<string, number> = {};
+  const activityDates = new Set<string>([
+    ...logs.map((l) => l.date),
+    ...Object.keys(medCounts),
+  ]);
+  activityDates.forEach((date) => {
+    const l = byDate.get(date);
+    let done = 0;
+    if (l?.exerciseDone) done++;
+    const checkin = isPapa
+      ? typeof l?.painScore === 'number'
+      : typeof l?.systolic === 'number';
+    if (checkin) done++;
+    if (l?.walked) done++;
+    if (medsTotal > 0 && (medCounts[date] ?? 0) >= medsTotal) done++;
+    if (done > 0) heatLevels[date] = Math.max(1, Math.round((done / expected) * 4));
+  });
 
   return (
     <div className={styles.page}>
@@ -138,6 +164,11 @@ export default function Trends() {
                 <span className={styles.legendBand}>Shaded = healthy range</span>
               </div>
             )}
+          </section>
+
+          <section className={styles.card}>
+            <h2 className={styles.cardTitle}>This month · इस महीना</h2>
+            <CalendarHeatmap levels={heatLevels} />
           </section>
 
           <div className={styles.stats}>
