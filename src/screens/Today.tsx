@@ -29,6 +29,7 @@ import type { DayLog, MedLog, StreakInfo } from '../types';
 import TaskCard from '../components/TaskCard';
 import StreakChip from '../components/StreakChip';
 import PlantMascot from '../components/PlantMascot';
+import InstallPrompt from '../components/InstallPrompt';
 import styles from './Today.module.css';
 
 function greeting(): { en: string; hi: string } {
@@ -132,6 +133,8 @@ export default function Today() {
 
   return (
     <div className={styles.page}>
+      <InstallPrompt />
+
       <header className={styles.header}>
         <div className={styles.greetRow}>
           <div>
