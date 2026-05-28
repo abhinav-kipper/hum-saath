@@ -1,8 +1,10 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Heart } from 'lucide-react';
 import { useProfile } from './context/ProfileContext';
+import { isSupabaseConfigured, getHousehold } from './lib/store';
 import AppLayout from './components/AppLayout';
 import Onboarding from './screens/Onboarding';
+import HouseholdSetup from './screens/HouseholdSetup';
 import Today from './screens/Today';
 import ExercisePlayer from './screens/ExercisePlayer';
 import Log from './screens/Log';
@@ -26,6 +28,9 @@ export default function App() {
   const { loading, profile } = useProfile();
 
   if (loading) return <Splash />;
+
+  // When the cloud is configured, ask for the shared family code once.
+  if (isSupabaseConfigured() && !getHousehold()) return <HouseholdSetup />;
 
   if (!profile) {
     return (

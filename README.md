@@ -62,27 +62,48 @@ Open the deployed URL on the phone → browser menu → **Add to Home Screen**.
 Launch from the home screen; it should open full-screen (standalone) and the
 already-loaded screens + lessons work offline (videos need network).
 
-## Where the Supabase swap goes (v2)
+## Cloud sync with Supabase (optional)
 
-All persistence lives in `src/lib/store.ts`. The exported functions are already
-async and the row types (`src/types.ts`) mirror future tables (string `id`,
-`profile`, `date`, ISO `createdAt`). To migrate:
+The app runs **local-only** by default (data in the browser). Add Supabase to
+sync across the family's devices and keep a durable backup. Sharing uses a
+**household code**: every device enters the same code once, and Supabase RLS
+scopes all data to that code — no logins for your parents. The code is the only
+secret, so make it long and unguessable.
 
-- Create `profiles` and a `logs` table in Supabase (one row per profile/day).
-- Replace the localStorage body of each `store.ts` function with Supabase
-  queries — signatures and types stay identical, **no UI changes needed**.
+`src/lib/store.ts` dispatches each operation to Supabase when both env vars are
+set **and** a household code is entered; otherwise it uses localStorage. No UI
+code changed.
 
-Other `// TODO v2` markers in the code: WhatsApp automation, lesson images,
-food/protein logging, PDF export.
+**Activate:**
+
+1. Create a Supabase project.
+2. In the SQL editor, run `supabase/migrations/0001_init.sql` (creates `logs` +
+   `med_logs` and the household RLS policies).
+3. Set env vars locally (`.env`, see `.env.example`) and in Vercel
+   (Project → Settings → Environment Variables):
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+4. Redeploy / restart. The app now shows a one-time **Family setup** screen —
+   enter the same household code on each device (yours + both parents').
+
+To switch households, clear site data (a Settings screen to change it is a
+future addition).
+
+Other `// TODO v2` markers in the code: reminders (web-push), WhatsApp
+automation, lesson images, food/protein logging, PDF export.
 
 ## Project map
 
 ```
 src/
-  data/         exercises.ts, lessons.json/.ts, profiles.ts   (content)
-  lib/store.ts  the only module that touches persistence
+  data/         exercises, lessons, medicines, profiles, affirmations  (content)
+  lib/          store (persistence dispatch), supabase, share,
+                dailyUpdate, confetti, util
   context/      ProfileContext (active parent + accent color)
-  components/   TaskCard, BottomNav, StreakChip, TrendChart, AppLayout
-  screens/      Onboarding, Today, ExercisePlayer, Log, Trends, Lessons
+  components/   TaskCard, BottomNav, StreakChip, TrendChart,
+                CalendarHeatmap, PlantMascot, AppLayout
+  screens/      Onboarding, HouseholdSetup, Today, ExercisePlayer,
+                Log, Medicines, Trends, Lessons
   types.ts      domain types (Supabase-shaped)
+supabase/migrations/  SQL schema + RLS
 ```
