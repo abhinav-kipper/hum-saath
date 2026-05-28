@@ -22,8 +22,14 @@ import { todayKey } from './util';
 
 const HOUSEHOLD_KEY = 'saath.household.v1';
 
-const URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-const ANON = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
+// Accept either manual VITE_* vars or the Vercel Supabase integration's
+// NEXT_PUBLIC_* vars (anon or the newer publishable key).
+const URL =
+  import.meta.env.VITE_SUPABASE_URL || import.meta.env.NEXT_PUBLIC_SUPABASE_URL;
+const ANON =
+  import.meta.env.VITE_SUPABASE_ANON_KEY ||
+  import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+  import.meta.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
 export function isSupabaseConfigured(): boolean {
   return Boolean(URL && ANON);
