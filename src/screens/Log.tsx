@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Check, Footprints, TrendingDown, TrendingUp, Minus } from 'lucide-react';
 import { useProfile } from '../context/ProfileContext';
 import { getLog, getLogs, upsertLog } from '../lib/store';
+import { playSound } from '../lib/sounds';
 import { checkinKind } from '../lib/checkin';
 import type { DayLog } from '../types';
 import styles from './Log.module.css';
@@ -70,6 +71,7 @@ export default function Log() {
             };
     await upsertLog(profile, patch);
     setHistory(await getLogs(profile));
+    playSound('save');
     setSaved(true);
   };
 

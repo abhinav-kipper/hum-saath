@@ -41,7 +41,7 @@ const KEYS = {
 
 export async function getProfile(): Promise<Profile | null> {
   const v = localStorage.getItem(KEYS.profile);
-  return v === 'papa' || v === 'mummy' ? v : null;
+  return v === 'papa' || v === 'mummy' || v === 'chunnu' ? v : null;
 }
 
 export async function setProfile(profile: Profile): Promise<void> {

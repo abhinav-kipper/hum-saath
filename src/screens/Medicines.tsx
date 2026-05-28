@@ -11,6 +11,7 @@ import {
   removeMedicine,
 } from '../lib/store';
 import { shareOnWhatsApp } from '../lib/share';
+import { playSound } from '../lib/sounds';
 import { composeMedsUpdate } from '../lib/dailyUpdate';
 import { formatClock, toInputTime } from '../lib/util';
 import { suggestHindi } from '../lib/translit';
@@ -145,6 +146,7 @@ export default function Medicines() {
       map[l.medId] = l;
     });
     setTaken(map);
+    return map;
   };
 
   useEffect(() => {
@@ -157,9 +159,14 @@ export default function Medicines() {
   if (!profile || !info) return null;
 
   const toggle = async (medId: string) => {
-    if (taken[medId]) await unmarkMedTaken(profile, medId);
+    const wasTaken = Boolean(taken[medId]);
+    if (wasTaken) await unmarkMedTaken(profile, medId);
     else await markMedTaken(profile, medId);
-    await loadTaken(profile);
+    const map = await loadTaken(profile);
+    if (!wasTaken) {
+      const allTaken = meds.length > 0 && meds.every((m) => map[m.id]);
+      playSound(allTaken ? 'celebrate' : 'done');
+    }
   };
 
   const addNew = async () => {

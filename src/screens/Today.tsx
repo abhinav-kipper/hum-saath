@@ -26,10 +26,12 @@ import { todayAffirmation } from '../data/affirmations';
 import { composeDailyUpdate } from '../lib/dailyUpdate';
 import { shareOnWhatsApp } from '../lib/share';
 import { launchConfetti } from '../lib/confetti';
+import { playSound } from '../lib/sounds';
 import type { DayLog, MedLog, StreakInfo } from '../types';
 import TaskCard from '../components/TaskCard';
 import StreakChip from '../components/StreakChip';
 import PlantMascot from '../components/PlantMascot';
+import SoundToggle from '../components/SoundToggle';
 import InstallPrompt from '../components/InstallPrompt';
 import styles from './Today.module.css';
 
@@ -80,6 +82,7 @@ export default function Today() {
       shouldCelebrate(profile).then((yes) => {
         if (yes) {
           launchConfetti();
+          playSound('celebrate');
           markCelebrated(profile);
         }
       });
@@ -180,6 +183,7 @@ export default function Today() {
         </div>
         <div className={styles.statusRow}>
           {streak && <StreakChip streak={streak} />}
+          <SoundToggle />
         </div>
       </header>
 
