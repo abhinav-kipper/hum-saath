@@ -1,14 +1,29 @@
 /* ============================================================
-   Data layer — the ONLY module that touches persistence.
-   UI code must import from here and never read localStorage
-   directly. Every function is async so swapping localStorage
-   for Supabase later is a single-file change with no UI edits.
+   Data layer — the ONLY module the UI imports for persistence.
+   UI never touches localStorage or Supabase directly.
 
-   // TODO v2: replace the localStorage body of each function
-   // with Supabase calls. Signatures + types stay identical.
+   Dual-mode: each data op runs against Supabase when it's
+   configured AND a household code is set (remote.useSupabase());
+   otherwise it falls back to localStorage. So the app works
+   offline / before setup, and "turning on the cloud" needs no
+   UI changes — just env vars + a household code.
+
+   Device-local state (active profile, confetti-fired-today)
+   stays in localStorage in both modes.
    ============================================================ */
 
 import type { DayLog, DayLogPatch, MedLog, Profile, StreakInfo } from '../types';
+import { todayKey, uid } from './util';
+import * as remote from './supabase';
+
+export { todayKey };
+export {
+  isSupabaseConfigured,
+  useSupabase,
+  getHousehold,
+  setHousehold,
+  clearHousehold,
+} from './supabase';
 
 const KEYS = {
   profile: 'saath.activeProfile.v1',
@@ -17,38 +32,8 @@ const KEYS = {
   celebrated: 'saath.celebrated.v1',
 } as const;
 
-/** Local calendar day as YYYY-MM-DD (not UTC). */
-export function todayKey(d: Date = new Date()): string {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${y}-${m}-${day}`;
-}
-
-function uid(): string {
-  if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
-    return crypto.randomUUID();
-  }
-  return `id_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
-}
-
-function readLogs(): DayLog[] {
-  try {
-    const raw = localStorage.getItem(KEYS.logs);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw) as DayLog[];
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
-
-function writeLogs(logs: DayLog[]): void {
-  localStorage.setItem(KEYS.logs, JSON.stringify(logs));
-}
-
 /* ---------------------------------------------------------- */
-/* Profile                                                    */
+/* Profile (always device-local)                              */
 /* ---------------------------------------------------------- */
 
 export async function getProfile(): Promise<Profile | null> {
@@ -61,10 +46,25 @@ export async function setProfile(profile: Profile): Promise<void> {
 }
 
 /* ---------------------------------------------------------- */
-/* Logs                                                       */
+/* Logs — dispatched to Supabase or localStorage             */
 /* ---------------------------------------------------------- */
 
+function readLogs(): DayLog[] {
+  try {
+    const raw = localStorage.getItem(KEYS.logs);
+    const parsed = raw ? (JSON.parse(raw) as DayLog[]) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeLogs(logs: DayLog[]): void {
+  localStorage.setItem(KEYS.logs, JSON.stringify(logs));
+}
+
 export async function getLogs(profile: Profile): Promise<DayLog[]> {
+  if (remote.useSupabase()) return remote.getLogs(profile);
   return readLogs()
     .filter((l) => l.profile === profile)
     .sort((a, b) => a.date.localeCompare(b.date));
@@ -74,29 +74,27 @@ export async function getLog(
   profile: Profile,
   date: string = todayKey(),
 ): Promise<DayLog | undefined> {
+  if (remote.useSupabase()) return remote.getLog(profile, date);
   return readLogs().find((l) => l.profile === profile && l.date === date);
 }
 
-/**
- * Create or update today's (or any day's) log for a profile.
- * One row per profile per day; repeat calls merge into it.
- */
+/** Create or update a day's log for a profile (one row per profile/day). */
 export async function upsertLog(
   profile: Profile,
   patch: DayLogPatch,
   date: string = todayKey(),
 ): Promise<DayLog> {
+  if (remote.useSupabase()) return remote.upsertLog(profile, patch, date);
+
   const logs = readLogs();
   const now = new Date().toISOString();
   const idx = logs.findIndex((l) => l.profile === profile && l.date === date);
-
   if (idx >= 0) {
     const updated: DayLog = { ...logs[idx], ...patch, updatedAt: now };
     logs[idx] = updated;
     writeLogs(logs);
     return updated;
   }
-
   const created: DayLog = {
     id: uid(),
     profile,
@@ -111,7 +109,7 @@ export async function upsertLog(
 }
 
 /* ---------------------------------------------------------- */
-/* Streak — forgiving: a miss pauses, never resets/guilts.    */
+/* Streak — derived from getLogs, so works in both modes      */
 /* ---------------------------------------------------------- */
 
 function daysBetween(a: string, b: string): number {
@@ -121,16 +119,14 @@ function daysBetween(a: string, b: string): number {
 }
 
 export async function getStreak(profile: Profile): Promise<StreakInfo> {
-  const logs = await getLogs(profile); // ascending by date
+  const logs = await getLogs(profile);
   if (logs.length === 0) {
     return { count: 0, daysSinceLast: Infinity, status: 'new' };
   }
-
   const dates = logs.map((l) => l.date);
   const last = dates[dates.length - 1];
   const daysSinceLast = daysBetween(last, todayKey());
 
-  // Count consecutive days ending at the most recent logged day.
   let count = 1;
   for (let i = dates.length - 1; i > 0; i--) {
     if (daysBetween(dates[i - 1], dates[i]) === 1) count++;
@@ -146,14 +142,13 @@ export async function getStreak(profile: Profile): Promise<StreakInfo> {
 }
 
 /* ---------------------------------------------------------- */
-/* Medicine logs                                              */
+/* Medicine logs — dispatched                                 */
 /* ---------------------------------------------------------- */
 
 function readMedLogs(): MedLog[] {
   try {
     const raw = localStorage.getItem(KEYS.medLogs);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw) as MedLog[];
+    const parsed = raw ? (JSON.parse(raw) as MedLog[]) : [];
     return Array.isArray(parsed) ? parsed : [];
   } catch {
     return [];
@@ -164,26 +159,26 @@ function writeMedLogs(logs: MedLog[]): void {
   localStorage.setItem(KEYS.medLogs, JSON.stringify(logs));
 }
 
-/** Medicine entries taken on a given day for a profile. */
 export async function getMedLogs(
   profile: Profile,
   date: string = todayKey(),
 ): Promise<MedLog[]> {
+  if (remote.useSupabase()) return remote.getMedLogs(profile, date);
   return readMedLogs().filter((m) => m.profile === profile && m.date === date);
 }
 
-/** Mark a medicine taken (idempotent for the day — keeps first time). */
 export async function markMedTaken(
   profile: Profile,
   medId: string,
   date: string = todayKey(),
 ): Promise<MedLog> {
+  if (remote.useSupabase()) return remote.markMedTaken(profile, medId, date);
+
   const logs = readMedLogs();
   const existing = logs.find(
     (m) => m.profile === profile && m.medId === medId && m.date === date,
   );
   if (existing) return existing;
-
   const created: MedLog = {
     id: uid(),
     profile,
@@ -196,22 +191,22 @@ export async function markMedTaken(
   return created;
 }
 
-/** Undo a medicine-taken entry for the day. */
 export async function unmarkMedTaken(
   profile: Profile,
   medId: string,
   date: string = todayKey(),
 ): Promise<void> {
+  if (remote.useSupabase()) return remote.unmarkMedTaken(profile, medId, date);
   const next = readMedLogs().filter(
     (m) => !(m.profile === profile && m.medId === medId && m.date === date),
   );
   writeMedLogs(next);
 }
 
-/** Count of meds taken per day for a profile (date -> count). */
 export async function getMedCountsByDate(
   profile: Profile,
 ): Promise<Record<string, number>> {
+  if (remote.useSupabase()) return remote.getMedCountsByDate(profile);
   const counts: Record<string, number> = {};
   for (const m of readMedLogs()) {
     if (m.profile === profile) counts[m.date] = (counts[m.date] ?? 0) + 1;
@@ -220,7 +215,7 @@ export async function getMedCountsByDate(
 }
 
 /* ---------------------------------------------------------- */
-/* Daily celebration (fire confetti once per day per profile) */
+/* Daily celebration (device-local: confetti once per day)    */
 /* ---------------------------------------------------------- */
 
 function readCelebrated(): Record<string, string> {
@@ -232,7 +227,6 @@ function readCelebrated(): Record<string, string> {
   }
 }
 
-/** True if this profile hasn't yet celebrated a full day today. */
 export async function shouldCelebrate(
   profile: Profile,
   date: string = todayKey(),
@@ -240,7 +234,6 @@ export async function shouldCelebrate(
   return readCelebrated()[profile] !== date;
 }
 
-/** Record that today's celebration has fired for this profile. */
 export async function markCelebrated(
   profile: Profile,
   date: string = todayKey(),
@@ -254,7 +247,7 @@ export async function markCelebrated(
 /* Dev / testing helpers                                      */
 /* ---------------------------------------------------------- */
 
-/** Wipe everything (used by a hidden reset in onboarding). */
+/** Wipe local device state (does not delete cloud rows). */
 export async function resetAll(): Promise<void> {
   localStorage.removeItem(KEYS.logs);
   localStorage.removeItem(KEYS.medLogs);
