@@ -10,15 +10,24 @@ import {
   Send,
 } from 'lucide-react';
 import { useProfile } from '../context/ProfileContext';
-import { getLog, getMedLogs, getStreak } from '../lib/store';
+import {
+  getLog,
+  getMedLogs,
+  getStreak,
+  shouldCelebrate,
+  markCelebrated,
+} from '../lib/store';
 import { getRoutine } from '../data/exercises';
 import { getMedicines } from '../data/medicines';
 import { todayLesson } from '../data/lessons';
+import { todayAffirmation } from '../data/affirmations';
 import { composeDailyUpdate } from '../lib/dailyUpdate';
 import { shareOnWhatsApp } from '../lib/share';
+import { launchConfetti } from '../lib/confetti';
 import type { DayLog, MedLog, StreakInfo } from '../types';
 import TaskCard from '../components/TaskCard';
 import StreakChip from '../components/StreakChip';
+import PlantMascot from '../components/PlantMascot';
 import styles from './Today.module.css';
 
 function greeting(): { en: string; hi: string } {
@@ -43,6 +52,32 @@ export default function Today() {
     getStreak(profile).then(setStreak);
     getMedLogs(profile).then(setMedLogs);
   }, [profile]);
+
+  // Fire confetti once per day when everything for the day is done.
+  useEffect(() => {
+    if (!profile) return;
+    const medsList = getMedicines(profile);
+    const allMeds = medsList.length > 0 && medLogs.length >= medsList.length;
+    const checkIn =
+      profile === 'papa'
+        ? typeof log?.painScore === 'number'
+        : typeof log?.systolic === 'number';
+    const t = [
+      log?.exerciseDone,
+      checkIn,
+      log?.walked,
+      ...(medsList.length > 0 ? [allMeds] : []),
+    ];
+    const done = t.filter(Boolean).length;
+    if (t.length > 0 && done >= t.length) {
+      shouldCelebrate(profile).then((yes) => {
+        if (yes) {
+          launchConfetti();
+          markCelebrated(profile);
+        }
+      });
+    }
+  }, [profile, log, medLogs]);
 
   if (!profile || !info) return null;
 
@@ -118,9 +153,11 @@ export default function Today() {
         </div>
         <div className={styles.statusRow}>
           {streak && <StreakChip streak={streak} />}
-          <span className={styles.encourage}>{encourage}</span>
         </div>
       </header>
+
+      <PlantMascot done={doneCount} total={totalCount} label={encourage} />
+      <p className={styles.affirm}>{todayAffirmation()}</p>
 
       {streak?.status === 'welcome' && (
         <div className={styles.welcome}>

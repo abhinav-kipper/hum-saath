@@ -14,6 +14,7 @@ const KEYS = {
   profile: 'saath.activeProfile.v1',
   logs: 'saath.logs.v1',
   medLogs: 'saath.medLogs.v1',
+  celebrated: 'saath.celebrated.v1',
 } as const;
 
 /** Local calendar day as YYYY-MM-DD (not UTC). */
@@ -207,6 +208,48 @@ export async function unmarkMedTaken(
   writeMedLogs(next);
 }
 
+/** Count of meds taken per day for a profile (date -> count). */
+export async function getMedCountsByDate(
+  profile: Profile,
+): Promise<Record<string, number>> {
+  const counts: Record<string, number> = {};
+  for (const m of readMedLogs()) {
+    if (m.profile === profile) counts[m.date] = (counts[m.date] ?? 0) + 1;
+  }
+  return counts;
+}
+
+/* ---------------------------------------------------------- */
+/* Daily celebration (fire confetti once per day per profile) */
+/* ---------------------------------------------------------- */
+
+function readCelebrated(): Record<string, string> {
+  try {
+    const raw = localStorage.getItem(KEYS.celebrated);
+    return raw ? (JSON.parse(raw) as Record<string, string>) : {};
+  } catch {
+    return {};
+  }
+}
+
+/** True if this profile hasn't yet celebrated a full day today. */
+export async function shouldCelebrate(
+  profile: Profile,
+  date: string = todayKey(),
+): Promise<boolean> {
+  return readCelebrated()[profile] !== date;
+}
+
+/** Record that today's celebration has fired for this profile. */
+export async function markCelebrated(
+  profile: Profile,
+  date: string = todayKey(),
+): Promise<void> {
+  const map = readCelebrated();
+  map[profile] = date;
+  localStorage.setItem(KEYS.celebrated, JSON.stringify(map));
+}
+
 /* ---------------------------------------------------------- */
 /* Dev / testing helpers                                      */
 /* ---------------------------------------------------------- */
@@ -215,5 +258,6 @@ export async function unmarkMedTaken(
 export async function resetAll(): Promise<void> {
   localStorage.removeItem(KEYS.logs);
   localStorage.removeItem(KEYS.medLogs);
+  localStorage.removeItem(KEYS.celebrated);
   localStorage.removeItem(KEYS.profile);
 }

@@ -95,6 +95,15 @@
   color: var(--accent-dark);
 }
 
+.affirm {
+  margin: -10px 0 22px;
+  text-align: center;
+  font-family: var(--font-hand);
+  font-size: 1.45rem;
+  line-height: 1.2;
+  color: var(--ink-light);
+}
+
 .shareDayBtn {
   width: 100%;
   margin-top: 18px;
