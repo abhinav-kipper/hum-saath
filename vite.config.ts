@@ -4,6 +4,9 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 // https://vite.dev/config/
 export default defineConfig({
+  // Read VITE_* (manual) and NEXT_PUBLIC_* (Vercel Supabase integration).
+  // NOT plain SUPABASE_* — those include secret keys we must never bundle.
+  envPrefix: ['VITE_', 'NEXT_PUBLIC_'],
   plugins: [
     react(),
     VitePWA({
