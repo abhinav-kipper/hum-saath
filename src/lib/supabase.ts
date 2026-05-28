@@ -16,7 +16,7 @@
    ============================================================ */
 
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
-import type { DayLog, DayLogPatch, MedLog, Profile } from '../types';
+import type { Cheer, DayLog, DayLogPatch, MedLog, Profile } from '../types';
 import type { Medicine, MedicineInput } from '../data/medicines';
 import { todayKey } from './util';
 
@@ -353,4 +353,66 @@ export async function removeMedicine(_profile: Profile, id: string): Promise<voi
     .eq('household', household())
     .eq('id', id);
   if (error) throw error;
+}
+
+/* -------- family cheers -------- */
+
+interface CheerRow {
+  id: string;
+  to_profile: Profile;
+  from_name: string;
+  emoji: string;
+  date: string;
+  created_at: string;
+}
+
+function toCheer(r: CheerRow): Cheer {
+  return {
+    id: r.id,
+    toProfile: r.to_profile,
+    fromName: r.from_name,
+    emoji: r.emoji,
+    date: r.date,
+    createdAt: r.created_at,
+  };
+}
+
+export async function getCheers(
+  toProfile: Profile,
+  date: string = todayKey(),
+): Promise<Cheer[]> {
+  const { data, error } = await sb()
+    .from('cheers')
+    .select('*')
+    .eq('household', household())
+    .eq('to_profile', toProfile)
+    .eq('date', date)
+    .order('created_at', { ascending: false });
+  if (error) {
+    console.error('supabase getCheers', error);
+    return [];
+  }
+  return (data as CheerRow[]).map(toCheer);
+}
+
+export async function sendCheer(
+  fromName: string,
+  toProfile: Profile,
+  emoji: string,
+  date: string = todayKey(),
+): Promise<Cheer> {
+  const { data, error } = await sb()
+    .from('cheers')
+    .insert({
+      household: household(),
+      to_profile: toProfile,
+      from_name: fromName,
+      emoji,
+      date,
+      created_at: new Date().toISOString(),
+    })
+    .select('*')
+    .single();
+  if (error) throw error;
+  return toCheer(data as CheerRow);
 }

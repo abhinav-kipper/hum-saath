@@ -12,7 +12,7 @@
    stays in localStorage in both modes.
    ============================================================ */
 
-import type { DayLog, DayLogPatch, MedLog, Profile, StreakInfo } from '../types';
+import type { Cheer, DayLog, DayLogPatch, MedLog, Profile, StreakInfo } from '../types';
 import type { Medicine, MedicineInput } from '../data/medicines';
 import { STARTER_MEDICINES } from '../data/medicines';
 import { todayKey, uid } from './util';
@@ -33,6 +33,7 @@ const KEYS = {
   medLogs: 'saath.medLogs.v1',
   medicines: 'saath.medicines.v1',
   celebrated: 'saath.celebrated.v1',
+  cheers: 'saath.cheers.v1',
 } as const;
 
 /* ---------------------------------------------------------- */
@@ -316,6 +317,57 @@ export async function markCelebrated(
 }
 
 /* ---------------------------------------------------------- */
+/* Family cheers — dispatched to Supabase or localStorage     */
+/* ---------------------------------------------------------- */
+
+function readCheers(): Cheer[] {
+  try {
+    const raw = localStorage.getItem(KEYS.cheers);
+    const parsed = raw ? (JSON.parse(raw) as Cheer[]) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeCheers(cheers: Cheer[]): void {
+  localStorage.setItem(KEYS.cheers, JSON.stringify(cheers));
+}
+
+/** Cheers a profile has received on a given day, newest first. */
+export async function getCheers(
+  toProfile: Profile,
+  date: string = todayKey(),
+): Promise<Cheer[]> {
+  if (remote.useSupabase()) return remote.getCheers(toProfile, date);
+  return readCheers()
+    .filter((c) => c.toProfile === toProfile && c.date === date)
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+}
+
+/** Send a cheer from the active profile's name to another family member. */
+export async function sendCheer(
+  fromName: string,
+  toProfile: Profile,
+  emoji: string,
+  date: string = todayKey(),
+): Promise<Cheer> {
+  if (remote.useSupabase()) return remote.sendCheer(fromName, toProfile, emoji, date);
+  const created: Cheer = {
+    id: uid(),
+    toProfile,
+    fromName,
+    emoji,
+    date,
+    createdAt: new Date().toISOString(),
+  };
+  const cheers = readCheers();
+  cheers.push(created);
+  writeCheers(cheers);
+  return created;
+}
+
+/* ---------------------------------------------------------- */
 /* Dev / testing helpers                                      */
 /* ---------------------------------------------------------- */
 
@@ -325,5 +377,6 @@ export async function resetAll(): Promise<void> {
   localStorage.removeItem(KEYS.medLogs);
   localStorage.removeItem(KEYS.medicines);
   localStorage.removeItem(KEYS.celebrated);
+  localStorage.removeItem(KEYS.cheers);
   localStorage.removeItem(KEYS.profile);
 }

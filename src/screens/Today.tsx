@@ -37,6 +37,7 @@ import TaskCard from '../components/TaskCard';
 import StreakChip from '../components/StreakChip';
 import PlantMascot from '../components/PlantMascot';
 import SoundToggle from '../components/SoundToggle';
+import FamilyCheers from '../components/FamilyCheers';
 import InstallPrompt from '../components/InstallPrompt';
 import styles from './Today.module.css';
 
@@ -276,6 +277,8 @@ export default function Today() {
           onClick={() => navigate('/lessons')}
         />
       </div>
+
+      <FamilyCheers />
 
       <button type="button" className={styles.shareDayBtn} onClick={shareDay}>
         <Send size={20} aria-hidden />
