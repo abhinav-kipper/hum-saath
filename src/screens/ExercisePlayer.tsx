@@ -13,6 +13,7 @@ import {
 import { useProfile } from '../context/ProfileContext';
 import { getRoutine } from '../data/exercises';
 import { upsertLog } from '../lib/store';
+import { playSound } from '../lib/sounds';
 import styles from './ExercisePlayer.module.css';
 
 function fmt(sec: number): string {
@@ -59,7 +60,10 @@ export default function ExercisePlayer() {
 
   // record completion once
   useEffect(() => {
-    if (finished && profile) upsertLog(profile, { exerciseDone: true });
+    if (finished && profile) {
+      upsertLog(profile, { exerciseDone: true });
+      playSound('done');
+    }
   }, [finished, profile]);
 
   if (!profile || !routine) return null;

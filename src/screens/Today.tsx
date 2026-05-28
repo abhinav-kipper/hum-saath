@@ -8,16 +8,21 @@ import {
   Pill,
   RefreshCw,
   Send,
+  Flower2,
+  ChevronRight,
 } from 'lucide-react';
 import { useProfile } from '../context/ProfileContext';
 import {
   getLog,
+  getLogs,
   getMedLogs,
+  getMedCountsByDate,
   getStreak,
   listMedicines,
   shouldCelebrate,
   markCelebrated,
 } from '../lib/store';
+import { computeGarden } from '../lib/garden';
 import { getRoutine } from '../data/exercises';
 import type { Medicine } from '../data/medicines';
 import { todayLesson } from '../data/lessons';
@@ -26,10 +31,13 @@ import { todayAffirmation } from '../data/affirmations';
 import { composeDailyUpdate } from '../lib/dailyUpdate';
 import { shareOnWhatsApp } from '../lib/share';
 import { launchConfetti } from '../lib/confetti';
+import { playSound } from '../lib/sounds';
 import type { DayLog, MedLog, StreakInfo } from '../types';
 import TaskCard from '../components/TaskCard';
 import StreakChip from '../components/StreakChip';
 import PlantMascot from '../components/PlantMascot';
+import SoundToggle from '../components/SoundToggle';
+import FamilyCheers from '../components/FamilyCheers';
 import InstallPrompt from '../components/InstallPrompt';
 import styles from './Today.module.css';
 
@@ -49,6 +57,7 @@ export default function Today() {
   const [streak, setStreak] = useState<StreakInfo | null>(null);
   const [medLogs, setMedLogs] = useState<MedLog[]>([]);
   const [meds, setMeds] = useState<Medicine[]>([]);
+  const [gardenFlowers, setGardenFlowers] = useState(0);
 
   useEffect(() => {
     if (!profile) return;
@@ -56,6 +65,9 @@ export default function Today() {
     getStreak(profile).then(setStreak);
     getMedLogs(profile).then(setMedLogs);
     listMedicines(profile).then(setMeds);
+    Promise.all([getLogs(profile), getMedCountsByDate(profile)]).then(([ls, mc]) =>
+      setGardenFlowers(computeGarden(ls, mc).flowers),
+    );
   }, [profile]);
 
   // Fire confetti once per day when everything for the day is done.
@@ -80,6 +92,7 @@ export default function Today() {
       shouldCelebrate(profile).then((yes) => {
         if (yes) {
           launchConfetti();
+          playSound('celebrate');
           markCelebrated(profile);
         }
       });
@@ -180,11 +193,25 @@ export default function Today() {
         </div>
         <div className={styles.statusRow}>
           {streak && <StreakChip streak={streak} />}
+          <SoundToggle />
         </div>
       </header>
 
       <PlantMascot done={doneCount} total={totalCount} label={encourage} />
       <p className={styles.affirm}>{todayAffirmation()}</p>
+
+      <button
+        type="button"
+        className={styles.gardenChip}
+        onClick={() => navigate('/garden')}
+      >
+        <Flower2 size={20} aria-hidden />
+        <span className={styles.gardenChipText}>
+          Your garden · {gardenFlowers} {gardenFlowers === 1 ? 'flower' : 'flowers'}
+          <span className={styles.gardenChipHindi}>बगीचा देखें</span>
+        </span>
+        <ChevronRight size={18} aria-hidden />
+      </button>
 
       {streak?.status === 'welcome' && (
         <div className={styles.welcome}>
@@ -250,6 +277,8 @@ export default function Today() {
           onClick={() => navigate('/lessons')}
         />
       </div>
+
+      <FamilyCheers />
 
       <button type="button" className={styles.shareDayBtn} onClick={shareDay}>
         <Send size={20} aria-hidden />

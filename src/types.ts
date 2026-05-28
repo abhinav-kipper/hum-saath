@@ -83,3 +83,25 @@ export interface MedLog {
   /** ISO timestamp it was taken */
   takenAt: string;
 }
+
+/** The small set of warm reactions family can send each other. */
+export const CHEER_EMOJIS = ['👏', '❤️', '🌟', '🌸', '💪'] as const;
+export type CheerEmoji = (typeof CHEER_EMOJIS)[number];
+
+/**
+ * A warm nudge from one family member to another. Two-way by
+ * nature: you send cheers to the others, and see the ones sent
+ * to you. Maps to a Supabase `cheers` table scoped by household.
+ */
+export interface Cheer {
+  id: string;
+  /** Who the cheer is for */
+  toProfile: Profile;
+  /** Display name of the sender (the active profile when sent) */
+  fromName: string;
+  emoji: string;
+  /** Local calendar day, YYYY-MM-DD */
+  date: string;
+  /** ISO timestamp it was sent */
+  createdAt: string;
+}
