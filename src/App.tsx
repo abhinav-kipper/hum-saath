@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Heart } from 'lucide-react';
 import { useProfile } from './context/ProfileContext';
@@ -5,6 +6,7 @@ import { isSupabaseConfigured, getHousehold } from './lib/store';
 import AppLayout from './components/AppLayout';
 import Onboarding from './screens/Onboarding';
 import HouseholdSetup from './screens/HouseholdSetup';
+import FirstRunGuide from './screens/FirstRunGuide';
 import Today from './screens/Today';
 import ExercisePlayer from './screens/ExercisePlayer';
 import Log from './screens/Log';
@@ -24,8 +26,13 @@ function Splash() {
   );
 }
 
+const GUIDE_KEY = 'saath.guideSeen.v1';
+
 export default function App() {
   const { loading, profile } = useProfile();
+  const [guideSeen, setGuideSeen] = useState(
+    () => localStorage.getItem(GUIDE_KEY) === '1',
+  );
 
   if (loading) return <Splash />;
 
@@ -38,6 +45,18 @@ export default function App() {
         <Route path="/onboarding" element={<Onboarding />} />
         <Route path="*" element={<Navigate to="/onboarding" replace />} />
       </Routes>
+    );
+  }
+
+  // One-time gentle intro after a profile is chosen.
+  if (!guideSeen) {
+    return (
+      <FirstRunGuide
+        onDone={() => {
+          localStorage.setItem(GUIDE_KEY, '1');
+          setGuideSeen(true);
+        }}
+      />
     );
   }
 
