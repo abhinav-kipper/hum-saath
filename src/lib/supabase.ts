@@ -79,6 +79,7 @@ interface LogRow {
   created_at: string;
   updated_at: string;
   pain_score: number | null;
+  mood_score: number | null;
   systolic: number | null;
   diastolic: number | null;
   walked: boolean | null;
@@ -93,6 +94,7 @@ function toDayLog(r: LogRow): DayLog {
     createdAt: r.created_at,
     updatedAt: r.updated_at,
     painScore: r.pain_score ?? undefined,
+    moodScore: r.mood_score ?? undefined,
     systolic: r.systolic ?? undefined,
     diastolic: r.diastolic ?? undefined,
     walked: r.walked ?? undefined,
@@ -103,6 +105,7 @@ function toDayLog(r: LogRow): DayLog {
 function patchToRow(patch: DayLogPatch): Record<string, unknown> {
   const row: Record<string, unknown> = {};
   if ('painScore' in patch) row.pain_score = patch.painScore ?? null;
+  if ('moodScore' in patch) row.mood_score = patch.moodScore ?? null;
   if ('systolic' in patch) row.systolic = patch.systolic ?? null;
   if ('diastolic' in patch) row.diastolic = patch.diastolic ?? null;
   if ('walked' in patch) row.walked = patch.walked ?? null;

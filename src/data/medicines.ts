@@ -23,6 +23,15 @@ export type MedicineInput = Omit<Medicine, 'id'>;
 
 export const STARTER_MEDICINES: Record<Profile, MedicineInput[]> = {
   papa: [],
+  chunnu: [
+    {
+      name: 'Antidepressant',
+      hindiName: 'एंटीडिप्रेसेंट',
+      time: '9:00 PM',
+      note: 'Same time every day · don’t skip',
+      noteHindi: 'रोज़ एक ही समय · छोड़ें नहीं',
+    },
+  ],
   mummy: [
     {
       name: 'Thyroid tablet',

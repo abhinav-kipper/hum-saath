@@ -3,10 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import { Check, Footprints, TrendingDown, TrendingUp, Minus } from 'lucide-react';
 import { useProfile } from '../context/ProfileContext';
 import { getLog, getLogs, upsertLog } from '../lib/store';
+import { checkinKind } from '../lib/checkin';
 import type { DayLog } from '../types';
 import styles from './Log.module.css';
 
 const PAIN_SCALE = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const MOOD_SCALE = [
+  { n: 1, emoji: '😟' },
+  { n: 2, emoji: '🙁' },
+  { n: 3, emoji: '😐' },
+  { n: 4, emoji: '🙂' },
+  { n: 5, emoji: '😄' },
+];
 
 function bpStatus(sys: number, dia: number): 'ok' | 'watch' | 'high' {
   if (sys >= 140 || dia >= 90) return 'high';
@@ -19,6 +27,7 @@ export default function Log() {
   const navigate = useNavigate();
 
   const [pain, setPain] = useState<number | null>(null);
+  const [mood, setMood] = useState<number | null>(null);
   const [sys, setSys] = useState('');
   const [dia, setDia] = useState('');
   const [walked, setWalked] = useState(false);
@@ -30,6 +39,7 @@ export default function Log() {
     getLog(profile).then((l) => {
       if (!l) return;
       if (typeof l.painScore === 'number') setPain(l.painScore);
+      if (typeof l.moodScore === 'number') setMood(l.moodScore);
       if (typeof l.systolic === 'number') setSys(String(l.systolic));
       if (typeof l.diastolic === 'number') setDia(String(l.diastolic));
       setWalked(Boolean(l.walked));
@@ -38,37 +48,49 @@ export default function Log() {
   }, [profile]);
 
   if (!profile) return null;
-  const isPapa = profile === 'papa';
+  const kind = checkinKind(profile);
 
-  const canSave = isPapa
-    ? pain !== null || walked
-    : (sys !== '' && dia !== '') || walked;
+  const canSave =
+    kind === 'pain'
+      ? pain !== null || walked
+      : kind === 'mood'
+        ? mood !== null || walked
+        : (sys !== '' && dia !== '') || walked;
 
   const save = async () => {
-    const patch = isPapa
-      ? { painScore: pain ?? undefined, walked }
-      : {
-          systolic: sys ? Number(sys) : undefined,
-          diastolic: dia ? Number(dia) : undefined,
-          walked,
-        };
+    const patch =
+      kind === 'pain'
+        ? { painScore: pain ?? undefined, walked }
+        : kind === 'mood'
+          ? { moodScore: mood ?? undefined, walked }
+          : {
+              systolic: sys ? Number(sys) : undefined,
+              diastolic: dia ? Number(dia) : undefined,
+              walked,
+            };
     await upsertLog(profile, patch);
     setHistory(await getLogs(profile));
     setSaved(true);
   };
 
-  // improvement message comparing earliest vs current in the series
-  const metric = isPapa ? 'painScore' : 'systolic';
+  // improvement message — for mood, higher is better; pain/BP lower is better
+  const metricKey =
+    kind === 'mood' ? 'moodScore' : kind === 'bp' ? 'systolic' : 'painScore';
   const series = history
-    .map((l) => l[metric as 'painScore' | 'systolic'])
+    .map((l) => l[metricKey as 'painScore' | 'systolic' | 'moodScore'])
     .filter((v): v is number => typeof v === 'number');
   const first = series[0];
   const latest = series[series.length - 1];
   const delta = first != null && latest != null ? latest - first : null;
 
   if (saved) {
-    const improving = delta != null && delta < 0;
-    const worse = delta != null && delta > 0;
+    const higherBetter = kind === 'mood';
+    const improving = delta != null && (higherBetter ? delta > 0 : delta < 0);
+    const worse = delta != null && (higherBetter ? delta < 0 : delta > 0);
+    const numDir = delta == null ? 'steady' : delta < 0 ? 'down' : delta > 0 ? 'up' : 'steady';
+    const metricLabel = kind === 'mood' ? 'Mood' : kind === 'bp' ? 'Systolic' : 'Pain';
+    const unit = kind === 'bp' ? ' mmHg' : '';
+
     return (
       <div className={styles.page}>
         <div className={styles.savedWrap}>
@@ -85,18 +107,17 @@ export default function Log() {
                   improving ? styles.good : worse ? styles.warn : ''
                 }`}
               >
-                {improving ? (
+                {numDir === 'down' ? (
                   <TrendingDown size={20} />
-                ) : worse ? (
+                ) : numDir === 'up' ? (
                   <TrendingUp size={20} />
                 ) : (
                   <Minus size={20} />
                 )}
               </span>
               <span>
-                {isPapa ? 'Pain' : 'Systolic'} {improving ? 'down' : worse ? 'up' : 'steady'} from{' '}
-                <b>{first}</b> to <b>{latest}</b>
-                {isPapa ? '' : ' mmHg'} over {series.length} entries.
+                {metricLabel} {numDir} from <b>{first}</b> to <b>{latest}</b>
+                {unit} over {series.length} entries.
                 {improving && ' Keep going!'}
               </span>
             </div>
@@ -130,7 +151,7 @@ export default function Log() {
         <p className={styles.sub}>One quick note about how you feel.</p>
       </header>
 
-      {isPapa ? (
+      {kind === 'pain' && (
         <section className={styles.card}>
           <h2 className={styles.qTitle}>
             Back / leg pain right now?
@@ -151,7 +172,33 @@ export default function Log() {
             ))}
           </div>
         </section>
-      ) : (
+      )}
+
+      {kind === 'mood' && (
+        <section className={styles.card}>
+          <h2 className={styles.qTitle}>
+            How is your mood today?
+            <span className="hindi"> आज मन कैसा है?</span>
+          </h2>
+          <p className={styles.qHelp}>1 = low · 5 = great</p>
+          <div className={styles.moodGrid}>
+            {MOOD_SCALE.map((opt) => (
+              <button
+                key={opt.n}
+                type="button"
+                className={`${styles.moodBtn} ${mood === opt.n ? styles.moodActive : ''}`}
+                onClick={() => setMood(opt.n)}
+                aria-pressed={mood === opt.n}
+                aria-label={`Mood ${opt.n} of 5`}
+              >
+                {opt.emoji}
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {kind === 'bp' && (
         <section className={styles.card}>
           <h2 className={styles.qTitle}>
             Blood pressure <span className="hindi">रक्तचाप</span>
@@ -181,9 +228,7 @@ export default function Log() {
               />
             </label>
           </div>
-          {sys && dia && (
-            <BpHint status={bpStatus(Number(sys), Number(dia))} />
-          )}
+          {sys && dia && <BpHint status={bpStatus(Number(sys), Number(dia))} />}
         </section>
       )}
 

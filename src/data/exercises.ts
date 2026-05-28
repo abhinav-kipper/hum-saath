@@ -215,9 +215,71 @@ const mummyRoutine: Routine = {
   ],
 };
 
+/* ---------------- Chunnu — mind & mood (move + breathe) ---- */
+
+const chunnuRoutine: Routine = {
+  profile: 'chunnu',
+  title: 'Mind & mood routine',
+  titleHindi: 'मन और मूड की एक्सरसाइज़',
+  minutes: 25,
+  exercises: [
+    {
+      id: 'walk-outside',
+      name: '15-min walk outside',
+      hindiName: '15 मिनट बाहर टहलना',
+      target: '15 min',
+      durationSec: 900,
+      cue: 'Get some daylight and keep an easy pace — movement lifts mood.',
+      cueHindi: 'धूप लें, आराम से चलें — चलना मूड अच्छा करता है।',
+      videoId: 'REPLACE_ME',
+    },
+    {
+      id: 'shoulder-release',
+      name: 'Shoulder & neck release',
+      hindiName: 'कंधे और गर्दन ढीली करें',
+      target: '1 min',
+      durationSec: 60,
+      cue: 'Roll the shoulders and drop the tension you’re holding.',
+      cueHindi: 'कंधे घुमाएँ, तनाव छोड़ें।',
+      videoId: 'REPLACE_ME',
+    },
+    {
+      id: 'gentle-stretch',
+      name: 'Gentle full-body stretch',
+      hindiName: 'हल्की स्ट्रेचिंग',
+      target: '2 min',
+      durationSec: 120,
+      cue: 'Reach up, fold forward, breathe into each stretch.',
+      cueHindi: 'ऊपर खिंचें, आगे झुकें, साँस लेते रहें।',
+      videoId: 'REPLACE_ME',
+    },
+    {
+      id: 'box-breathing',
+      name: 'Box breathing',
+      hindiName: 'बॉक्स ब्रीदिंग',
+      target: '3 min',
+      durationSec: 180,
+      cue: 'In 4 · hold 4 · out 4 · hold 4. Calms the nervous system.',
+      cueHindi: '4 साँस लें · 4 रोकें · 4 छोड़ें · 4 रोकें।',
+      videoId: 'REPLACE_ME',
+    },
+    {
+      id: 'mindful-sit',
+      name: 'Mindful sit',
+      hindiName: 'शांत बैठक',
+      target: '5 min',
+      durationSec: 300,
+      cue: 'Sit quietly, notice your breath, let thoughts pass.',
+      cueHindi: 'शांति से बैठें, साँस पर ध्यान दें।',
+      videoId: 'REPLACE_ME',
+    },
+  ],
+};
+
 export const ROUTINES: Record<Profile, Routine> = {
   papa: papaRoutine,
   mummy: mummyRoutine,
+  chunnu: chunnuRoutine,
 };
 
 export function getRoutine(profile: Profile): Routine {

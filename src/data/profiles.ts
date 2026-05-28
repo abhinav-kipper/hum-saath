@@ -17,6 +17,18 @@ export const PROFILES: Record<Profile, ProfileInfo> = {
     focusHindi: 'बीपी और थायराइड',
     accent: 'sage',
   },
+  chunnu: {
+    id: 'chunnu',
+    name: 'Chunnu',
+    nameHindi: 'चुन्नू',
+    focus: 'Mind & mood',
+    focusHindi: 'मन और मूड',
+    accent: 'indigo',
+  },
 };
 
-export const PROFILE_LIST: ProfileInfo[] = [PROFILES.papa, PROFILES.mummy];
+export const PROFILE_LIST: ProfileInfo[] = [
+  PROFILES.papa,
+  PROFILES.mummy,
+  PROFILES.chunnu,
+];

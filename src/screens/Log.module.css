@@ -71,6 +71,36 @@
   color: var(--white);
 }
 
+/* mood scale */
+.moodGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+.moodBtn {
+  aspect-ratio: 1;
+  min-height: 56px;
+  border-radius: 16px;
+  background: var(--cream);
+  border: 1px solid var(--cream-dark);
+  font-size: 1.8rem;
+  line-height: 1;
+  filter: grayscale(0.4);
+  opacity: 0.7;
+}
+.moodBtn:active {
+  transform: scale(0.95);
+}
+
+.moodActive {
+  background: color-mix(in srgb, var(--accent) 16%, var(--white));
+  border-color: var(--accent);
+  filter: none;
+  opacity: 1;
+  transform: scale(1.05);
+}
+
 /* bp */
 .bpRow {
   display: flex;

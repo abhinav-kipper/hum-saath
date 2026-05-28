@@ -13,7 +13,7 @@ import {
 import { shareOnWhatsApp } from '../lib/share';
 import { composeMedsUpdate } from '../lib/dailyUpdate';
 import type { Medicine, MedicineInput } from '../data/medicines';
-import type { MedLog } from '../types';
+import type { MedLog, Profile } from '../types';
 import styles from './Medicines.module.css';
 
 function fmtTime(iso: string): string {
@@ -85,8 +85,8 @@ export default function Medicines() {
   const [taken, setTaken] = useState<Record<string, MedLog>>({});
   const [editing, setEditing] = useState(false);
 
-  const loadMeds = (p: 'papa' | 'mummy') => listMedicines(p).then(setMeds);
-  const loadTaken = async (p: 'papa' | 'mummy') => {
+  const loadMeds = (p: Profile) => listMedicines(p).then(setMeds);
+  const loadTaken = async (p: Profile) => {
     const logs = await getMedLogs(p);
     const map: Record<string, MedLog> = {};
     logs.forEach((l) => {

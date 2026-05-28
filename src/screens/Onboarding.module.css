@@ -82,6 +82,12 @@
 .sage .avatar {
   background: var(--sage);
 }
+.indigo {
+  border-color: color-mix(in srgb, var(--indigo) 40%, var(--cream-dark));
+}
+.indigo .avatar {
+  background: var(--indigo);
+}
 
 .avatar {
   flex: 0 0 auto;
