@@ -27,7 +27,7 @@ export const STARTER_MEDICINES: Record<Profile, MedicineInput[]> = {
     {
       name: 'Antidepressant',
       hindiName: 'एंटीडिप्रेसेंट',
-      time: '9:00 PM',
+      time: '21:00',
       note: 'Same time every day · don’t skip',
       noteHindi: 'रोज़ एक ही समय · छोड़ें नहीं',
     },
@@ -36,14 +36,14 @@ export const STARTER_MEDICINES: Record<Profile, MedicineInput[]> = {
     {
       name: 'Thyroid tablet',
       hindiName: 'थायराइड की गोली',
-      time: '7:00 AM',
+      time: '07:00',
       note: 'Empty stomach · 1 hr before food',
       noteHindi: 'खाली पेट · खाने से 1 घंटा पहले',
     },
     {
       name: 'BP tablet',
       hindiName: 'बीपी की गोली',
-      time: '9:00 AM',
+      time: '09:00',
       note: 'With or after breakfast',
       noteHindi: 'नाश्ते के साथ या बाद में',
     },

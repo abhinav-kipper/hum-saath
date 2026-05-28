@@ -1,8 +1,38 @@
 import { useState } from 'react';
-import { Moon, BookOpen } from 'lucide-react';
+import { Moon } from 'lucide-react';
 import { useProfile } from '../context/ProfileContext';
 import { lessonsFor, todayLesson, type Lesson } from '../data/lessons';
 import styles from './Lessons.module.css';
+
+function emojiFor(l: Lesson): string {
+  const t = l.title.toLowerCase();
+  const map: [string, string][] = [
+    ['sona', '🛏️'],
+    ['neend', '🛏️'],
+    ['dawai', '💊'],
+    ['thyroid', '💊'],
+    ['goli', '💊'],
+    ['antidepressant', '💊'],
+    ['namak', '🧂'],
+    ['protein', '🥚'],
+    ['chaal', '🚶'],
+    ['walk', '🚶'],
+    ['hilna', '🏃'],
+    ['baith', '🪑'],
+    ['sciatica', '🌿'],
+    ['barf', '🧊'],
+    ['sikaai', '🔥'],
+    ['paani', '💧'],
+    ['potassium', '🍌'],
+    ['mood', '🌼'],
+    ['mann', '🌼'],
+    ['din', '🎉'],
+    ['bure', '🤍'],
+  ];
+  for (const [k, e] of map) if (t.includes(k)) return e;
+  const cycle = ['🌱', '✨', '💛', '🌿', '☀️'];
+  return cycle[l.day % cycle.length];
+}
 
 export default function Lessons() {
   const { profile } = useProfile();
@@ -29,10 +59,14 @@ export default function Lessons() {
       </header>
 
       <article className={styles.lessonCard}>
-        {/* TODO v2: real lesson images. Placeholder banner for now. */}
-        <div className={styles.banner} aria-hidden>
-          <BookOpen size={30} />
-          <span className={styles.day}>Day {lesson.day}</span>
+        <div className={styles.banner}>
+          <span className={styles.dayPill}>
+            {isToday ? '✦ Today' : `Day ${lesson.day}`}
+          </span>
+          <span className={styles.bannerEmoji} aria-hidden>
+            {emojiFor(lesson)}
+          </span>
+          <span className={styles.blob} aria-hidden />
         </div>
 
         <div className={styles.body}>
@@ -45,7 +79,7 @@ export default function Lessons() {
 
           <div className={styles.tryBox}>
             <span className={styles.tryHead}>
-              <Moon size={18} aria-hidden /> Try tonight · आज आज़माएँ
+              <Moon size={16} aria-hidden /> Try tonight · आज आज़माएँ
             </span>
             <p className={styles.tryText}>{lesson.tryTonight}</p>
             <p className={styles.tryHindi}>{lesson.tryTonightHindi}</p>
@@ -66,8 +100,11 @@ export default function Lessons() {
               }`}
               onClick={() => open(l)}
             >
-              <span className={styles.listDay}>{l.day}</span>
+              <span className={styles.listEmoji} aria-hidden>
+                {emojiFor(l)}
+              </span>
               <span className={styles.listText}>{l.title}</span>
+              <span className={styles.listDay}>Day {l.day}</span>
             </button>
           </li>
         ))}
