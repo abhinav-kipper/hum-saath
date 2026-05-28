@@ -1,0 +1,184 @@
+[
+  {
+    "id": "lesson-01",
+    "day": 1,
+    "audience": "both",
+    "title": "Chhoti shuruaat, bada farak",
+    "body": [
+      "Health koi ek din ka kaam nahi hai — yeh roz ki chhoti aadaton se banta hai. Sirf 5 minute bhi kaafi hai shuru karne ke liye.",
+      "Aaj ka maqsad perfect hona nahi, bas shuru karna hai. Ek task chuno aur use poora karo.",
+      "Jab aap roz thoda karte ho, body yaad rakhti hai. Consistency hi asli dawa hai."
+    ],
+    "tryTonight": "Aaj sirf ek task complete karein — koi bhi.",
+    "tryTonightHindi": "आज सिर्फ़ एक काम पूरा करें।"
+  },
+  {
+    "id": "lesson-02",
+    "day": 2,
+    "audience": "papa",
+    "title": "Takiya sahi rakho, gardan bachao",
+    "body": [
+      "Galat takiya raat bhar gardan ko mod ke rakhta hai — subah dard isi wajah se hota hai.",
+      "Takiya itna ooncha ho ki gardan reedh ki haddi ke seedh mein rahe — na zyada ooncha, na flat.",
+      "Pet ke bal sona gardan ke liye sabse bura hai. Seedhe ya karwat lekar soyein."
+    ],
+    "tryTonight": "Aaj raat takiye ki height check karein — gardan seedhi honi chahiye.",
+    "tryTonightHindi": "आज तकिए की ऊँचाई जाँचें।"
+  },
+  {
+    "id": "lesson-03",
+    "day": 3,
+    "audience": "mummy",
+    "title": "Thyroid ki goli ka sahi time",
+    "body": [
+      "Thyroid ki dawa khaali pet leni chahiye — khaane se kam se kam 1 ghanta pehle.",
+      "Dawa ke baad chai, doodh ya calcium turant na lein — yeh absorption kam kar dete hain.",
+      "Roz ek hi time par lena sabse zaroori hai. Phone par alarm laga lein."
+    ],
+    "tryTonight": "Kal subah ke liye thyroid dawa ka alarm set karein.",
+    "tryTonightHindi": "कल सुबह की दवा का अलार्म लगाएँ।"
+  },
+  {
+    "id": "lesson-04",
+    "day": 4,
+    "audience": "mummy",
+    "title": "Chhupa hua namak",
+    "body": [
+      "BP ke liye namak sabse bada dushman hai — par asli khatra packet wale khaane mein chhupa hota hai.",
+      "Namkeen, achaar, papad, bread aur sauces mein bahut namak hota hai, bina swaad ke bhi.",
+      "Khaana banate waqt namak thoda kam karein — jeebh 2 hafte mein adjust ho jaati hai."
+    ],
+    "tryTonight": "Aaj ek packaged snack ka namak (sodium) label padhein.",
+    "tryTonightHindi": "एक पैकेट का नमक लेबल पढ़ें।"
+  },
+  {
+    "id": "lesson-05",
+    "day": 5,
+    "audience": "both",
+    "title": "Protein — dal se aage",
+    "body": [
+      "Hum Indians carb (chawal, roti) zyada aur protein kam khaate hain. Umar ke saath protein muscle bachata hai.",
+      "Dal, paneer, ande, dahi, soya aur chana achhe protein source hain.",
+      "Har thali mein ek protein zaroor rakhein — sirf dal-chawal kaafi nahi."
+    ],
+    "tryTonight": "Aaj raat ke khaane mein ek extra protein add karein (dahi/paneer/anda).",
+    "tryTonightHindi": "खाने में एक प्रोटीन जोड़ें।"
+  },
+  {
+    "id": "lesson-06",
+    "day": 6,
+    "audience": "both",
+    "title": "Khaane ke baad chaal",
+    "body": [
+      "Khaane ke turant baad 10 minute chalna blood sugar aur BP dono ke liye kamaal karta hai.",
+      "Yeh tez daudna nahi — bas aaram se ghar ya gali mein tehelna hai.",
+      "Dinner ke baad ki walk neend bhi behtar karti hai."
+    ],
+    "tryTonight": "Aaj dinner ke baad 10 minute chalein.",
+    "tryTonightHindi": "रात के खाने के बाद 10 मिनट चलें।"
+  },
+  {
+    "id": "lesson-07",
+    "day": 7,
+    "audience": "papa",
+    "title": "Chin tuck kyun zaroori hai",
+    "body": [
+      "Phone aur laptop par gardan aage jhuk jaati hai — isse 'tech neck' ka dard hota hai.",
+      "Chin tuck gardan ki gehri muscles ko mazboot karta hai jo sir ko seedha rakhti hain.",
+      "Din mein 2-3 baar, kuch second ke liye karna kaafi asar dikhata hai."
+    ],
+    "tryTonight": "Abhi baithe-baithe 5 chin tucks karein.",
+    "tryTonightHindi": "अभी 5 चिन टक करें।"
+  },
+  {
+    "id": "lesson-08",
+    "day": 8,
+    "audience": "mummy",
+    "title": "Potassium — namak ka dushman",
+    "body": [
+      "Potassium body se extra sodium nikalne mein madad karta hai, isse BP control hota hai.",
+      "Kela, nariyal paani, palak, rajma, aloo aur dahi mein achha potassium hota hai.",
+      "Agar kidney ki problem ho to doctor se poochh kar hi badhayein."
+    ],
+    "tryTonight": "Aaj ek potassium-rich cheez khaayein (kela/palak).",
+    "tryTonightHindi": "एक पोटैशियम वाली चीज़ खाएँ।"
+  },
+  {
+    "id": "lesson-09",
+    "day": 9,
+    "audience": "both",
+    "title": "Achhi neend, achhi sehat",
+    "body": [
+      "Kam neend BP badhati hai aur dard ko zyada mehsoos karaati hai.",
+      "Sone se 1 ghanta pehle phone screen band karein — neeli roshni neend kharab karti hai.",
+      "Roz ek hi time par sona aur uthna body ki ghadi theek rakhta hai."
+    ],
+    "tryTonight": "Aaj sone se 30 min pehle phone door rakhein.",
+    "tryTonightHindi": "सोने से पहले फ़ोन दूर रखें।"
+  },
+  {
+    "id": "lesson-10",
+    "day": 10,
+    "audience": "papa",
+    "title": "Zyada baithna nuksaan",
+    "body": [
+      "Ek hi position mein lambe samay baithna gardan aur kamar dono ko akad deta hai.",
+      "Har 30-40 minute mein uthkar thoda chalein ya kandhe ghumayein.",
+      "Bistar par jhuk kar phone dekhna sabse zyada dard deta hai — table par baithein."
+    ],
+    "tryTonight": "Ek reminder lagayein — har 40 min mein uthna.",
+    "tryTonightHindi": "हर 40 मिनट में उठने का रिमाइंडर।"
+  },
+  {
+    "id": "lesson-11",
+    "day": 11,
+    "audience": "papa",
+    "title": "Barf ya sikaai?",
+    "body": [
+      "Naya, tez dard ya soojan ho to barf (ice) — 15 minute, kapde mein lapet kar.",
+      "Purana, akdan wala dard ho to garam sikaai (heat) muscles dheeli karti hai.",
+      "Dono kabhi seedhe skin par nahi — hamesha kapde ke beech rakhein."
+    ],
+    "tryTonight": "Akdan ho to aaj 10 min garam sikaai karein.",
+    "tryTonightHindi": "अकड़न पर गरम सिकाई करें।"
+  },
+  {
+    "id": "lesson-12",
+    "day": 12,
+    "audience": "mummy",
+    "title": "BP roz naapna kyun",
+    "body": [
+      "Ek baar ka reading kuch nahi batata — pattern hi asli kahani kehta hai.",
+      "Roz ek hi time par, 5 min aaram ke baad, baithe hue naapein.",
+      "Apne readings doctor ko dikhayein — isse dawa sahi set hoti hai."
+    ],
+    "tryTonight": "Aaj BP naap kar app mein log karein.",
+    "tryTonightHindi": "आज बीपी नापकर लॉग करें।"
+  },
+  {
+    "id": "lesson-13",
+    "day": 13,
+    "audience": "both",
+    "title": "Paani peena na bhoolein",
+    "body": [
+      "Umar ke saath pyaas ka ehsaas kam hota hai, isliye paani peena yaad rakhna padta hai.",
+      "Din bhar thoda-thoda paani BP aur energy dono ke liye achha hai.",
+      "Subah uthte hi ek glass paani body ko jagaa deta hai."
+    ],
+    "tryTonight": "Bistar ke paas paani ka glass rakhein.",
+    "tryTonightHindi": "बिस्तर के पास पानी रखें।"
+  },
+  {
+    "id": "lesson-14",
+    "day": 14,
+    "audience": "both",
+    "title": "Do hafte poore — shabaash!",
+    "body": [
+      "Aapne 2 hafte apni sehat ko time diya — yeh badi baat hai.",
+      "Ab tak ke trends dekhein: dard, BP ya walk mein kya badla?",
+      "Aage bhi yahi chhoti aadtein jaari rakhein. Saath chalte rahenge."
+    ],
+    "tryTonight": "Apne 14-din ke trends dekhein aur khud ko shabaashi dein.",
+    "tryTonightHindi": "अपने 14-दिन के ट्रेंड्स देखें।"
+  }
+]

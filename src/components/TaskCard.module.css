@@ -1,0 +1,79 @@
+.card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  text-align: left;
+  background: var(--white);
+  border: 1px solid var(--cream-dark);
+  border-radius: var(--radius-card);
+  padding: 18px;
+  min-height: 84px;
+  transition: transform 0.08s ease;
+}
+
+.card:active {
+  transform: scale(0.985);
+}
+
+.iconWrap {
+  flex: 0 0 auto;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: var(--cream);
+  color: var(--accent);
+}
+
+.done .iconWrap {
+  background: color-mix(in srgb, var(--accent) 14%, var(--white));
+}
+
+.text {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.title {
+  font-size: 1.12rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.hindi {
+  font-size: 0.95rem;
+  color: var(--ink-light);
+}
+
+.meta {
+  font-size: 0.82rem;
+  color: var(--ink-light);
+  margin-top: 4px;
+  opacity: 0.85;
+}
+
+.right {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+}
+
+.chevron {
+  color: var(--ink-light);
+  opacity: 0.6;
+}
+
+.checkBubble {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--sage);
+  color: var(--white);
+}
