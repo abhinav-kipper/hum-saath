@@ -1,0 +1,156 @@
+.page {
+  padding-top: 8px;
+}
+
+.header {
+  margin-bottom: 16px;
+}
+
+.title {
+  font-size: 1.9rem;
+  font-style: italic;
+}
+
+.titleHindi {
+  font-style: normal;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 1.1rem;
+  color: var(--ink-light);
+}
+
+.lessonCard {
+  background: var(--white);
+  border: 1px solid var(--cream-dark);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+
+.banner {
+  height: 120px;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--accent) 75%, var(--ink)),
+    var(--accent)
+  );
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 0 22px;
+}
+
+.day {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  opacity: 0.95;
+}
+
+.body {
+  padding: 22px;
+}
+
+.lessonTitle {
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+  font-style: italic;
+}
+
+.para {
+  margin: 0 0 12px;
+  color: var(--ink-light);
+  font-size: 1.02rem;
+  line-height: 1.6;
+}
+
+.tryBox {
+  margin-top: 18px;
+  background: color-mix(in srgb, var(--accent) 10%, var(--cream));
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--cream-dark));
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.tryHead {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+  color: var(--accent-dark);
+  text-transform: uppercase;
+}
+
+.tryText {
+  margin: 8px 0 2px;
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.tryHindi {
+  margin: 0;
+  color: var(--ink-light);
+}
+
+.moreTitle {
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.listItem {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  background: var(--white);
+  border: 1px solid var(--cream-dark);
+  border-radius: 16px;
+  padding: 14px 16px;
+  min-height: 60px;
+}
+.listItem:active {
+  transform: scale(0.99);
+}
+
+.listActive {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, var(--white));
+}
+
+.listDay {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: var(--cream);
+  color: var(--ink-light);
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+.listActive .listDay {
+  background: var(--accent);
+  color: var(--white);
+}
+
+.listText {
+  font-size: 1.02rem;
+  font-weight: 500;
+}

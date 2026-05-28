@@ -1,0 +1,10 @@
+.shell {
+  min-height: 100dvh;
+}
+
+.main {
+  padding: 0 var(--pad-screen);
+  /* clear the fixed bottom nav (+ safe area) */
+  padding-bottom: calc(96px + env(safe-area-inset-bottom));
+  padding-top: max(20px, env(safe-area-inset-top));
+}

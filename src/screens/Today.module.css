@@ -1,0 +1,83 @@
+.page {
+  padding-top: 8px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.greetRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.greet {
+  margin: 0 0 2px;
+  color: var(--ink-light);
+  font-size: 0.95rem;
+}
+
+.name {
+  font-size: 2rem;
+  font-style: italic;
+}
+
+.nameHindi {
+  font-style: normal;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 1.2rem;
+  color: var(--ink-light);
+}
+
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px 6px 6px;
+  border-radius: 999px;
+  background: var(--white);
+  border: 1px solid var(--cream-dark);
+  color: var(--ink-light);
+}
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--accent);
+  color: var(--white);
+  font-weight: 600;
+  font-family: var(--font-display);
+}
+
+.welcome {
+  background: color-mix(in srgb, var(--gold) 16%, var(--white));
+  border: 1px solid color-mix(in srgb, var(--gold) 40%, var(--cream-dark));
+  border-radius: var(--radius-card);
+  padding: 16px 18px;
+  margin-bottom: 22px;
+}
+
+.welcomeText {
+  margin: 0 0 4px;
+  font-weight: 600;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  margin-bottom: 14px;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}

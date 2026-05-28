@@ -1,0 +1,27 @@
+.chart {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.grid {
+  stroke: var(--cream-dark);
+  stroke-width: 1;
+}
+
+.band {
+  fill: color-mix(in srgb, var(--sage) 16%, transparent);
+}
+
+.axisText {
+  fill: var(--ink-light);
+  font-family: var(--font-body);
+  font-size: 10px;
+}
+
+.unit {
+  fill: var(--ink-light);
+  font-family: var(--font-body);
+  font-size: 9px;
+  opacity: 0.7;
+}
