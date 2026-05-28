@@ -1,27 +1,93 @@
 import { useEffect, useState } from 'react';
-import { Pill, Clock, Check, Send } from 'lucide-react';
+import { Pill, Clock, Check, Send, Plus, Trash2 } from 'lucide-react';
 import { useProfile } from '../context/ProfileContext';
-import { getMedicines } from '../data/medicines';
-import { getMedLogs, markMedTaken, unmarkMedTaken } from '../lib/store';
+import {
+  getMedLogs,
+  markMedTaken,
+  unmarkMedTaken,
+  listMedicines,
+  addMedicine,
+  updateMedicine,
+  removeMedicine,
+} from '../lib/store';
 import { shareOnWhatsApp } from '../lib/share';
 import { composeMedsUpdate } from '../lib/dailyUpdate';
+import type { Medicine, MedicineInput } from '../data/medicines';
 import type { MedLog } from '../types';
 import styles from './Medicines.module.css';
 
 function fmtTime(iso: string): string {
-  return new Date(iso).toLocaleTimeString([], {
-    hour: 'numeric',
-    minute: '2-digit',
-  });
+  return new Date(iso).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+}
+
+function EditMedRow({
+  med,
+  onSave,
+  onRemove,
+}: {
+  med: Medicine;
+  onSave: (id: string, patch: Partial<MedicineInput>) => void;
+  onRemove: (id: string) => void;
+}) {
+  const [m, setM] = useState(med);
+  const set = (field: keyof MedicineInput, v: string) =>
+    setM((prev) => ({ ...prev, [field]: v }));
+  const blur = (field: keyof MedicineInput) =>
+    onSave(med.id, { [field]: m[field] } as Partial<MedicineInput>);
+
+  return (
+    <div className={styles.editCard}>
+      <input
+        className={styles.editName}
+        value={m.name}
+        placeholder="Name (English)"
+        onChange={(e) => set('name', e.target.value)}
+        onBlur={() => blur('name')}
+      />
+      <input
+        className={styles.editField}
+        value={m.hindiName}
+        placeholder="नाम (Hindi)"
+        onChange={(e) => set('hindiName', e.target.value)}
+        onBlur={() => blur('hindiName')}
+      />
+      <input
+        className={styles.editField}
+        value={m.time}
+        placeholder="Time — e.g. 7:00 AM"
+        onChange={(e) => set('time', e.target.value)}
+        onBlur={() => blur('time')}
+      />
+      <input
+        className={styles.editField}
+        value={m.note}
+        placeholder="Note (English) — e.g. empty stomach"
+        onChange={(e) => set('note', e.target.value)}
+        onBlur={() => blur('note')}
+      />
+      <input
+        className={styles.editField}
+        value={m.noteHindi}
+        placeholder="नोट (Hindi)"
+        onChange={(e) => set('noteHindi', e.target.value)}
+        onBlur={() => blur('noteHindi')}
+      />
+      <button type="button" className={styles.removeBtn} onClick={() => onRemove(med.id)}>
+        <Trash2 size={16} aria-hidden /> Remove
+      </button>
+    </div>
+  );
 }
 
 export default function Medicines() {
   const { profile, info } = useProfile();
+  const [meds, setMeds] = useState<Medicine[]>([]);
   const [taken, setTaken] = useState<Record<string, MedLog>>({});
+  const [editing, setEditing] = useState(false);
 
-  const reload = async () => {
-    if (!profile) return;
-    const logs = await getMedLogs(profile);
+  const loadMeds = (p: 'papa' | 'mummy') => listMedicines(p).then(setMeds);
+  const loadTaken = async (p: 'papa' | 'mummy') => {
+    const logs = await getMedLogs(p);
     const map: Record<string, MedLog> = {};
     logs.forEach((l) => {
       map[l.medId] = l;
@@ -30,17 +96,39 @@ export default function Medicines() {
   };
 
   useEffect(() => {
-    reload();
+    if (!profile) return;
+    loadMeds(profile);
+    loadTaken(profile);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
 
   if (!profile || !info) return null;
-  const meds = getMedicines(profile);
 
   const toggle = async (medId: string) => {
     if (taken[medId]) await unmarkMedTaken(profile, medId);
     else await markMedTaken(profile, medId);
-    await reload();
+    await loadTaken(profile);
+  };
+
+  const addNew = async () => {
+    await addMedicine(profile, {
+      name: 'New medicine',
+      hindiName: '',
+      time: '',
+      note: '',
+      noteHindi: '',
+    });
+    await loadMeds(profile);
+  };
+
+  const saveField = (id: string, patch: Partial<MedicineInput>) => {
+    updateMedicine(profile, id, patch);
+    setMeds((prev) => prev.map((m) => (m.id === id ? { ...m, ...patch } : m)));
+  };
+
+  const removeMed = async (id: string) => {
+    await removeMedicine(profile, id);
+    await loadMeds(profile);
   };
 
   const buildSummary = (): string => {
@@ -48,10 +136,7 @@ export default function Medicines() {
       day: 'numeric',
       month: 'short',
     });
-    const medStatus = meds.map((m) => ({
-      name: m.name,
-      takenAt: taken[m.id]?.takenAt,
-    }));
+    const medStatus = meds.map((m) => ({ name: m.name, takenAt: taken[m.id]?.takenAt }));
     return composeMedsUpdate(info.name, dateStr, medStatus);
   };
 
@@ -60,19 +145,48 @@ export default function Medicines() {
   return (
     <div className={styles.page}>
       <header className={styles.header}>
-        <h1 className={styles.title}>
-          Medicines <span className={styles.titleHindi}>दवाइयाँ</span>
-        </h1>
-        <p className={styles.sub}>Tap when taken — then share to the family group.</p>
+        <div className={styles.titleRow}>
+          <h1 className={styles.title}>
+            Medicines <span className={styles.titleHindi}>दवाइयाँ</span>
+          </h1>
+          <button
+            type="button"
+            className={styles.editBtn}
+            onClick={() => setEditing((e) => !e)}
+          >
+            {editing ? 'Done' : 'Edit'}
+          </button>
+        </div>
+        <p className={styles.sub}>
+          {editing
+            ? 'Add, edit or remove medicines.'
+            : 'Tap when taken — then share to the family group.'}
+        </p>
       </header>
 
-      {meds.length === 0 ? (
+      {editing ? (
+        <>
+          <div className={styles.list}>
+            {meds.map((m) => (
+              <EditMedRow key={m.id} med={m} onSave={saveField} onRemove={removeMed} />
+            ))}
+          </div>
+          <button type="button" className={styles.addBtn} onClick={addNew}>
+            <Plus size={20} aria-hidden /> Add medicine
+          </button>
+        </>
+      ) : meds.length === 0 ? (
         <div className={styles.empty}>
           <Pill size={38} aria-hidden />
-          <p className={styles.emptyTitle}>No medicines added</p>
-          <p className={styles.emptySub}>
-            Add them in <code>src/data/medicines.ts</code>.
-          </p>
+          <p className={styles.emptyTitle}>No medicines yet</p>
+          <p className={styles.emptySub}>Add {info.name}’s medicines to track them.</p>
+          <button
+            type="button"
+            className={styles.addBtn}
+            onClick={() => setEditing(true)}
+          >
+            <Plus size={20} aria-hidden /> Add medicine
+          </button>
         </div>
       ) : (
         <>
@@ -87,15 +201,21 @@ export default function Medicines() {
                   <div className={styles.info}>
                     <div className={styles.nameRow}>
                       <span className={styles.name}>{m.name}</span>
-                      <span className={styles.nameHindi}>{m.hindiName}</span>
+                      {m.hindiName && <span className={styles.nameHindi}>{m.hindiName}</span>}
                     </div>
-                    <div className={styles.metaRow}>
-                      <Clock size={15} aria-hidden />
-                      <span>{m.time}</span>
-                      <span className={styles.dot}>·</span>
-                      <span>{m.note}</span>
-                    </div>
-                    <div className={styles.noteHindi}>{m.noteHindi}</div>
+                    {(m.time || m.note) && (
+                      <div className={styles.metaRow}>
+                        {m.time && (
+                          <>
+                            <Clock size={15} aria-hidden />
+                            <span>{m.time}</span>
+                          </>
+                        )}
+                        {m.time && m.note && <span className={styles.dot}>·</span>}
+                        {m.note && <span>{m.note}</span>}
+                      </div>
+                    )}
+                    {m.noteHindi && <div className={styles.noteHindi}>{m.noteHindi}</div>}
                     {done && (
                       <div className={styles.takenAt}>
                         Taken at {fmtTime(taken[m.id].takenAt)} · ली गई

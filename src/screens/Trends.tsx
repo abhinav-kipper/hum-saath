@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LineChart, Footprints, Dumbbell } from 'lucide-react';
 import { useProfile } from '../context/ProfileContext';
-import { getLogs, getMedCountsByDate, todayKey } from '../lib/store';
-import { getMedicines } from '../data/medicines';
+import { getLogs, getMedCountsByDate, listMedicines, todayKey } from '../lib/store';
 import type { DayLog } from '../types';
 import TrendChart, { type ChartSeries } from '../components/TrendChart';
 import CalendarHeatmap from '../components/CalendarHeatmap';
@@ -32,11 +31,13 @@ export default function Trends() {
   const navigate = useNavigate();
   const [logs, setLogs] = useState<DayLog[]>([]);
   const [medCounts, setMedCounts] = useState<Record<string, number>>({});
+  const [medsTotal, setMedsTotal] = useState(0);
 
   useEffect(() => {
     if (!profile) return;
     getLogs(profile).then(setLogs);
     getMedCountsByDate(profile).then(setMedCounts);
+    listMedicines(profile).then((m) => setMedsTotal(m.length));
   }, [profile]);
 
   if (!profile) return null;
@@ -80,7 +81,6 @@ export default function Trends() {
   const exerciseCount = days.filter((d) => byDate.get(d)?.exerciseDone).length;
 
   // adherence heatmap levels (0–4) per active day
-  const medsTotal = getMedicines(profile).length;
   const expected = 3 + (medsTotal > 0 ? 1 : 0);
   const heatLevels: Record<string, number> = {};
   const activityDates = new Set<string>([

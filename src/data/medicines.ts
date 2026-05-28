@@ -1,13 +1,8 @@
 /* ============================================================
-   Medicine schedules per profile.
-
-   EDIT THESE to match the real prescription — names, times, and
-   the timing note. Generic names are used here on purpose (no
-   guessed brand names or doses). Adding/removing a medicine is
-   just an edit to the arrays below; the Medicines screen and the
-   Today card read everything from this file.
-
-   Papa currently has none — add his here if needed.
+   Medicine definitions are now editable + stored (localStorage
+   or Supabase) via src/lib/store.ts. This file only holds the
+   suggested STARTER set used to seed a new household and the
+   shared Medicine type.
    ============================================================ */
 
 import type { Profile } from '../types';
@@ -24,11 +19,12 @@ export interface Medicine {
   noteHindi: string;
 }
 
-export const MEDICINES: Record<Profile, Medicine[]> = {
+export type MedicineInput = Omit<Medicine, 'id'>;
+
+export const STARTER_MEDICINES: Record<Profile, MedicineInput[]> = {
   papa: [],
   mummy: [
     {
-      id: 'thyroid',
       name: 'Thyroid tablet',
       hindiName: 'थायराइड की गोली',
       time: '7:00 AM',
@@ -36,7 +32,6 @@ export const MEDICINES: Record<Profile, Medicine[]> = {
       noteHindi: 'खाली पेट · खाने से 1 घंटा पहले',
     },
     {
-      id: 'bp',
       name: 'BP tablet',
       hindiName: 'बीपी की गोली',
       time: '9:00 AM',
@@ -45,7 +40,3 @@ export const MEDICINES: Record<Profile, Medicine[]> = {
     },
   ],
 };
-
-export function getMedicines(profile: Profile): Medicine[] {
-  return MEDICINES[profile];
-}

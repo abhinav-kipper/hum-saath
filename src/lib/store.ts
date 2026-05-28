@@ -13,6 +13,8 @@
    ============================================================ */
 
 import type { DayLog, DayLogPatch, MedLog, Profile, StreakInfo } from '../types';
+import type { Medicine, MedicineInput } from '../data/medicines';
+import { STARTER_MEDICINES } from '../data/medicines';
 import { todayKey, uid } from './util';
 import * as remote from './supabase';
 
@@ -29,6 +31,7 @@ const KEYS = {
   profile: 'saath.activeProfile.v1',
   logs: 'saath.logs.v1',
   medLogs: 'saath.medLogs.v1',
+  medicines: 'saath.medicines.v1',
   celebrated: 'saath.celebrated.v1',
 } as const;
 
@@ -215,6 +218,74 @@ export async function getMedCountsByDate(
 }
 
 /* ---------------------------------------------------------- */
+/* Medicine definitions — editable, dispatched                */
+/* ---------------------------------------------------------- */
+
+function readMedDefs(): Record<Profile, Medicine[]> | null {
+  try {
+    const raw = localStorage.getItem(KEYS.medicines);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Record<Profile, Medicine[]>;
+    return parsed && typeof parsed === 'object' ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeMedDefs(defs: Record<Profile, Medicine[]>): void {
+  localStorage.setItem(KEYS.medicines, JSON.stringify(defs));
+}
+
+function seedMedDefs(): Record<Profile, Medicine[]> {
+  return {
+    papa: STARTER_MEDICINES.papa.map((m) => ({ ...m, id: uid() })),
+    mummy: STARTER_MEDICINES.mummy.map((m) => ({ ...m, id: uid() })),
+  };
+}
+
+export async function listMedicines(profile: Profile): Promise<Medicine[]> {
+  if (remote.useSupabase()) return remote.listMedicines(profile);
+  let defs = readMedDefs();
+  if (!defs) {
+    defs = seedMedDefs();
+    writeMedDefs(defs);
+  }
+  return defs[profile] ?? [];
+}
+
+export async function addMedicine(
+  profile: Profile,
+  data: MedicineInput,
+): Promise<Medicine> {
+  if (remote.useSupabase()) return remote.addMedicine(profile, data);
+  const defs = readMedDefs() ?? seedMedDefs();
+  const med: Medicine = { ...data, id: uid() };
+  defs[profile] = [...(defs[profile] ?? []), med];
+  writeMedDefs(defs);
+  return med;
+}
+
+export async function updateMedicine(
+  profile: Profile,
+  id: string,
+  patch: Partial<MedicineInput>,
+): Promise<void> {
+  if (remote.useSupabase()) return remote.updateMedicine(profile, id, patch);
+  const defs = readMedDefs() ?? seedMedDefs();
+  defs[profile] = (defs[profile] ?? []).map((m) =>
+    m.id === id ? { ...m, ...patch } : m,
+  );
+  writeMedDefs(defs);
+}
+
+export async function removeMedicine(profile: Profile, id: string): Promise<void> {
+  if (remote.useSupabase()) return remote.removeMedicine(profile, id);
+  const defs = readMedDefs() ?? seedMedDefs();
+  defs[profile] = (defs[profile] ?? []).filter((m) => m.id !== id);
+  writeMedDefs(defs);
+}
+
+/* ---------------------------------------------------------- */
 /* Daily celebration (device-local: confetti once per day)    */
 /* ---------------------------------------------------------- */
 
@@ -251,6 +322,7 @@ export async function markCelebrated(
 export async function resetAll(): Promise<void> {
   localStorage.removeItem(KEYS.logs);
   localStorage.removeItem(KEYS.medLogs);
+  localStorage.removeItem(KEYS.medicines);
   localStorage.removeItem(KEYS.celebrated);
   localStorage.removeItem(KEYS.profile);
 }
