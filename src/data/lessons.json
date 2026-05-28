@@ -16,14 +16,14 @@
     "id": "lesson-02",
     "day": 2,
     "audience": "papa",
-    "title": "Takiya sahi rakho, gardan bachao",
+    "title": "Sciatica mein sona kaise",
     "body": [
-      "Galat takiya raat bhar gardan ko mod ke rakhta hai — subah dard isi wajah se hota hai.",
-      "Takiya itna ooncha ho ki gardan reedh ki haddi ke seedh mein rahe — na zyada ooncha, na flat.",
-      "Pet ke bal sona gardan ke liye sabse bura hai. Seedhe ya karwat lekar soyein."
+      "Galat tarah se sona raat bhar lower back par dabav daalta hai — subah dard isi wajah se badhta hai.",
+      "Karwat lekar soyein to ghutnon ke beech ek takiya rakhein; seedhe soyein to ghutnon ke neeche.",
+      "Bahut naram (saggy) gadda kamar ke liye theek nahi — thoda firm gadda behtar hai."
     ],
-    "tryTonight": "Aaj raat takiye ki height check karein — gardan seedhi honi chahiye.",
-    "tryTonightHindi": "आज तकिए की ऊँचाई जाँचें।"
+    "tryTonight": "Aaj ghutnon ke beech ya neeche takiya rakh kar soyein.",
+    "tryTonightHindi": "घुटनों के बीच/नीचे तकिया रखकर सोएँ।"
   },
   {
     "id": "lesson-03",
@@ -81,14 +81,14 @@
     "id": "lesson-07",
     "day": 7,
     "audience": "papa",
-    "title": "Chin tuck kyun zaroori hai",
+    "title": "Sciatica — dard taang tak kyun jaata hai",
     "body": [
-      "Phone aur laptop par gardan aage jhuk jaati hai — isse 'tech neck' ka dard hota hai.",
-      "Chin tuck gardan ki gehri muscles ko mazboot karta hai jo sir ko seedha rakhti hain.",
-      "Din mein 2-3 baar, kuch second ke liye karna kaafi asar dikhata hai."
+      "Sciatic nerve kamar se nikalkar kulhe aur taang tak jaati hai — is par dabav padne se dard taang tak pahunchta hai.",
+      "Isliye sciatica mein sirf kamar nahi, taang ya pichhle hisse mein bhi jhunjhuni ya dard ho sakta hai.",
+      "Halki nerve-glide aur stretch nerve ko 'free' karne mein madad karti hai — par dard tez ho to ruk jaayein."
     ],
-    "tryTonight": "Abhi baithe-baithe 5 chin tucks karein.",
-    "tryTonightHindi": "अभी 5 चिन टक करें।"
+    "tryTonight": "Aaj baithkar halki nerve glide karein (app ka video dekhein).",
+    "tryTonightHindi": "बैठकर हल्की नर्व ग्लाइड करें।"
   },
   {
     "id": "lesson-08",
@@ -120,11 +120,11 @@
     "id": "lesson-10",
     "day": 10,
     "audience": "papa",
-    "title": "Zyada baithna nuksaan",
+    "title": "Zyada baithna aur sciatica",
     "body": [
-      "Ek hi position mein lambe samay baithna gardan aur kamar dono ko akad deta hai.",
-      "Har 30-40 minute mein uthkar thoda chalein ya kandhe ghumayein.",
-      "Bistar par jhuk kar phone dekhna sabse zyada dard deta hai — table par baithein."
+      "Ek hi jagah lambe samay baithna sciatic nerve par dabav badha deta hai.",
+      "Har 30-40 minute mein uthkar thoda chalein ya halka stretch karein.",
+      "Pichhli jeb mein mota wallet rakh kar na baithein — yeh kulhe ka balance bigaadta hai."
     ],
     "tryTonight": "Ek reminder lagayein — har 40 min mein uthna.",
     "tryTonightHindi": "हर 40 मिनट में उठने का रिमाइंडर।"
@@ -133,14 +133,14 @@
     "id": "lesson-11",
     "day": 11,
     "audience": "papa",
-    "title": "Barf ya sikaai?",
+    "title": "Barf ya sikaai — kamar ke liye",
     "body": [
       "Naya, tez dard ya soojan ho to barf (ice) — 15 minute, kapde mein lapet kar.",
       "Purana, akdan wala dard ho to garam sikaai (heat) muscles dheeli karti hai.",
       "Dono kabhi seedhe skin par nahi — hamesha kapde ke beech rakhein."
     ],
-    "tryTonight": "Akdan ho to aaj 10 min garam sikaai karein.",
-    "tryTonightHindi": "अकड़न पर गरम सिकाई करें।"
+    "tryTonight": "Akdan ho to aaj kamar par 10 min garam sikaai karein.",
+    "tryTonightHindi": "कमर पर 10 मिनट गरम सिकाई करें।"
   },
   {
     "id": "lesson-12",

@@ -117,7 +117,7 @@ export default function Trends() {
 
           <section className={styles.card}>
             <h2 className={styles.cardTitle}>
-              {isPapa ? 'Neck pain (1–10)' : 'Blood pressure (mmHg)'}
+              {isPapa ? 'Back & leg pain (1–10)' : 'Blood pressure (mmHg)'}
             </h2>
             <TrendChart
               labels={labels}
