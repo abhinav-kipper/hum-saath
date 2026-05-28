@@ -8,6 +8,7 @@ import ExercisePlayer from './screens/ExercisePlayer';
 import Log from './screens/Log';
 import Trends from './screens/Trends';
 import Lessons from './screens/Lessons';
+import Medicines from './screens/Medicines';
 import styles from './App.module.css';
 
 function Splash() {
@@ -41,6 +42,7 @@ export default function App() {
       <Route path="/exercise" element={<ExercisePlayer />} />
       <Route element={<AppLayout />}>
         <Route path="/" element={<Today />} />
+        <Route path="/medicines" element={<Medicines />} />
         <Route path="/log" element={<Log />} />
         <Route path="/trends" element={<Trends />} />
         <Route path="/lessons" element={<Lessons />} />

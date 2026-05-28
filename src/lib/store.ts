@@ -8,11 +8,12 @@
    // with Supabase calls. Signatures + types stay identical.
    ============================================================ */
 
-import type { DayLog, DayLogPatch, Profile, StreakInfo } from '../types';
+import type { DayLog, DayLogPatch, MedLog, Profile, StreakInfo } from '../types';
 
 const KEYS = {
   profile: 'saath.activeProfile.v1',
   logs: 'saath.logs.v1',
+  medLogs: 'saath.medLogs.v1',
 } as const;
 
 /** Local calendar day as YYYY-MM-DD (not UTC). */
@@ -144,11 +145,75 @@ export async function getStreak(profile: Profile): Promise<StreakInfo> {
 }
 
 /* ---------------------------------------------------------- */
+/* Medicine logs                                              */
+/* ---------------------------------------------------------- */
+
+function readMedLogs(): MedLog[] {
+  try {
+    const raw = localStorage.getItem(KEYS.medLogs);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as MedLog[];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeMedLogs(logs: MedLog[]): void {
+  localStorage.setItem(KEYS.medLogs, JSON.stringify(logs));
+}
+
+/** Medicine entries taken on a given day for a profile. */
+export async function getMedLogs(
+  profile: Profile,
+  date: string = todayKey(),
+): Promise<MedLog[]> {
+  return readMedLogs().filter((m) => m.profile === profile && m.date === date);
+}
+
+/** Mark a medicine taken (idempotent for the day — keeps first time). */
+export async function markMedTaken(
+  profile: Profile,
+  medId: string,
+  date: string = todayKey(),
+): Promise<MedLog> {
+  const logs = readMedLogs();
+  const existing = logs.find(
+    (m) => m.profile === profile && m.medId === medId && m.date === date,
+  );
+  if (existing) return existing;
+
+  const created: MedLog = {
+    id: uid(),
+    profile,
+    medId,
+    date,
+    takenAt: new Date().toISOString(),
+  };
+  logs.push(created);
+  writeMedLogs(logs);
+  return created;
+}
+
+/** Undo a medicine-taken entry for the day. */
+export async function unmarkMedTaken(
+  profile: Profile,
+  medId: string,
+  date: string = todayKey(),
+): Promise<void> {
+  const next = readMedLogs().filter(
+    (m) => !(m.profile === profile && m.medId === medId && m.date === date),
+  );
+  writeMedLogs(next);
+}
+
+/* ---------------------------------------------------------- */
 /* Dev / testing helpers                                      */
 /* ---------------------------------------------------------- */
 
 /** Wipe everything (used by a hidden reset in onboarding). */
 export async function resetAll(): Promise<void> {
   localStorage.removeItem(KEYS.logs);
+  localStorage.removeItem(KEYS.medLogs);
   localStorage.removeItem(KEYS.profile);
 }
