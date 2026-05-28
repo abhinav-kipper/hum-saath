@@ -17,6 +17,7 @@
 
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import type { DayLog, DayLogPatch, MedLog, Profile } from '../types';
+import type { Medicine, MedicineInput } from '../data/medicines';
 import { todayKey } from './util';
 
 const HOUSEHOLD_KEY = 'saath.household.v1';
@@ -262,4 +263,91 @@ export async function getMedCountsByDate(
     counts[r.date] = (counts[r.date] ?? 0) + 1;
   }
   return counts;
+}
+
+/* -------- medicine definitions -------- */
+
+interface MedicineRow {
+  id: string;
+  name: string;
+  hindi_name: string | null;
+  time: string | null;
+  note: string | null;
+  note_hindi: string | null;
+  sort: number;
+}
+
+function toMedicine(r: MedicineRow): Medicine {
+  return {
+    id: r.id,
+    name: r.name,
+    hindiName: r.hindi_name ?? '',
+    time: r.time ?? '',
+    note: r.note ?? '',
+    noteHindi: r.note_hindi ?? '',
+  };
+}
+
+export async function listMedicines(profile: Profile): Promise<Medicine[]> {
+  const { data, error } = await sb()
+    .from('medicines')
+    .select('*')
+    .eq('household', household())
+    .eq('profile', profile)
+    .order('sort', { ascending: true })
+    .order('created_at', { ascending: true });
+  if (error) {
+    console.error('supabase listMedicines', error);
+    return [];
+  }
+  return (data as MedicineRow[]).map(toMedicine);
+}
+
+export async function addMedicine(
+  profile: Profile,
+  data: MedicineInput,
+): Promise<Medicine> {
+  const { data: row, error } = await sb()
+    .from('medicines')
+    .insert({
+      household: household(),
+      profile,
+      name: data.name,
+      hindi_name: data.hindiName,
+      time: data.time,
+      note: data.note,
+      note_hindi: data.noteHindi,
+    })
+    .select('*')
+    .single();
+  if (error) throw error;
+  return toMedicine(row as MedicineRow);
+}
+
+export async function updateMedicine(
+  _profile: Profile,
+  id: string,
+  patch: Partial<MedicineInput>,
+): Promise<void> {
+  const row: Record<string, unknown> = {};
+  if ('name' in patch) row.name = patch.name;
+  if ('hindiName' in patch) row.hindi_name = patch.hindiName;
+  if ('time' in patch) row.time = patch.time;
+  if ('note' in patch) row.note = patch.note;
+  if ('noteHindi' in patch) row.note_hindi = patch.noteHindi;
+  const { error } = await sb()
+    .from('medicines')
+    .update(row)
+    .eq('household', household())
+    .eq('id', id);
+  if (error) throw error;
+}
+
+export async function removeMedicine(_profile: Profile, id: string): Promise<void> {
+  const { error } = await sb()
+    .from('medicines')
+    .delete()
+    .eq('household', household())
+    .eq('id', id);
+  if (error) throw error;
 }

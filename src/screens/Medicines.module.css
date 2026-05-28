@@ -6,6 +6,92 @@
   margin-bottom: 18px;
 }
 
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.editBtn {
+  flex: 0 0 auto;
+  min-height: 40px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: var(--white);
+  border: 1px solid var(--cream-dark);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+.editBtn:active {
+  background: var(--cream);
+}
+
+.editCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--white);
+  border: 1px solid var(--cream-dark);
+  border-radius: var(--radius-card);
+  padding: 16px;
+}
+
+.editName,
+.editField {
+  width: 100%;
+  min-height: 48px;
+  border-radius: 12px;
+  border: 1px solid var(--cream-dark);
+  background: var(--cream);
+  padding: 0 14px;
+  font-size: 1rem;
+  color: var(--ink);
+}
+.editName {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.editName:focus,
+.editField:focus {
+  outline: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  border-color: var(--accent);
+}
+
+.removeBtn {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 6px 14px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--terracotta) 12%, var(--white));
+  color: var(--terracotta-d);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.addBtn {
+  width: 100%;
+  min-height: 56px;
+  margin-top: 14px;
+  border-radius: 16px;
+  border: 2px dashed var(--cream-dark);
+  background: var(--white);
+  color: var(--accent);
+  font-size: 1.05rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.addBtn:active {
+  background: var(--cream);
+}
+
 .title {
   font-size: 1.9rem;
   font-style: italic;

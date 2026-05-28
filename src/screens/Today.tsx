@@ -14,11 +14,12 @@ import {
   getLog,
   getMedLogs,
   getStreak,
+  listMedicines,
   shouldCelebrate,
   markCelebrated,
 } from '../lib/store';
 import { getRoutine } from '../data/exercises';
-import { getMedicines } from '../data/medicines';
+import type { Medicine } from '../data/medicines';
 import { todayLesson } from '../data/lessons';
 import { todayAffirmation } from '../data/affirmations';
 import { composeDailyUpdate } from '../lib/dailyUpdate';
@@ -45,19 +46,20 @@ export default function Today() {
   const [log, setLog] = useState<DayLog | undefined>();
   const [streak, setStreak] = useState<StreakInfo | null>(null);
   const [medLogs, setMedLogs] = useState<MedLog[]>([]);
+  const [meds, setMeds] = useState<Medicine[]>([]);
 
   useEffect(() => {
     if (!profile) return;
     getLog(profile).then(setLog);
     getStreak(profile).then(setStreak);
     getMedLogs(profile).then(setMedLogs);
+    listMedicines(profile).then(setMeds);
   }, [profile]);
 
   // Fire confetti once per day when everything for the day is done.
   useEffect(() => {
     if (!profile) return;
-    const medsList = getMedicines(profile);
-    const allMeds = medsList.length > 0 && medLogs.length >= medsList.length;
+    const allMeds = meds.length > 0 && medLogs.length >= meds.length;
     const checkIn =
       profile === 'papa'
         ? typeof log?.painScore === 'number'
@@ -66,7 +68,7 @@ export default function Today() {
       log?.exerciseDone,
       checkIn,
       log?.walked,
-      ...(medsList.length > 0 ? [allMeds] : []),
+      ...(meds.length > 0 ? [allMeds] : []),
     ];
     const done = t.filter(Boolean).length;
     if (t.length > 0 && done >= t.length) {
@@ -77,13 +79,12 @@ export default function Today() {
         }
       });
     }
-  }, [profile, log, medLogs]);
+  }, [profile, log, medLogs, meds]);
 
   if (!profile || !info) return null;
 
   const routine = getRoutine(profile);
   const lesson = todayLesson(profile);
-  const meds = getMedicines(profile);
   const medTaken = medLogs.length;
   const allMedsTaken = meds.length > 0 && medTaken >= meds.length;
   const g = greeting();
@@ -182,20 +183,20 @@ export default function Today() {
           onClick={() => navigate('/exercise')}
         />
 
-        {meds.length > 0 && (
-          <TaskCard
-            icon={<Pill size={26} />}
-            title="Medicines"
-            hindi="दवाइयाँ"
-            meta={
-              allMedsTaken
+        <TaskCard
+          icon={<Pill size={26} />}
+          title="Medicines"
+          hindi="दवाइयाँ"
+          meta={
+            meds.length === 0
+              ? 'Tap to add'
+              : allMedsTaken
                 ? 'All taken — great!'
                 : `${medTaken}/${meds.length} taken today`
-            }
-            done={allMedsTaken}
-            onClick={() => navigate('/medicines')}
-          />
-        )}
+          }
+          done={allMedsTaken}
+          onClick={() => navigate('/medicines')}
+        />
 
         <TaskCard
           icon={<HeartPulse size={26} />}
