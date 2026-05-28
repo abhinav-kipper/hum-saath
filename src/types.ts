@@ -65,3 +65,19 @@ export interface StreakInfo {
    */
   status: 'active' | 'paused' | 'welcome' | 'new';
 }
+
+/**
+ * One row each time a medicine is marked taken.
+ * Maps to a Supabase `med_logs` table:
+ *   id uuid pk, profile text, med_id text, date date, taken_at timestamptz
+ */
+export interface MedLog {
+  id: string;
+  profile: Profile;
+  /** matches Medicine.id in src/data/medicines.ts */
+  medId: string;
+  /** Local calendar day, YYYY-MM-DD */
+  date: string;
+  /** ISO timestamp it was taken */
+  takenAt: string;
+}

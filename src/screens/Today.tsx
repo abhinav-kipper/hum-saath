@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Dumbbell, HeartPulse, Footprints, BookOpen, RefreshCw } from 'lucide-react';
+import { Dumbbell, HeartPulse, Footprints, BookOpen, Pill, RefreshCw } from 'lucide-react';
 import { useProfile } from '../context/ProfileContext';
-import { getLog, getStreak } from '../lib/store';
+import { getLog, getMedLogs, getStreak } from '../lib/store';
 import { getRoutine } from '../data/exercises';
+import { getMedicines } from '../data/medicines';
 import { todayLesson } from '../data/lessons';
 import type { DayLog, StreakInfo } from '../types';
 import TaskCard from '../components/TaskCard';
@@ -22,17 +23,21 @@ export default function Today() {
   const navigate = useNavigate();
   const [log, setLog] = useState<DayLog | undefined>();
   const [streak, setStreak] = useState<StreakInfo | null>(null);
+  const [medTaken, setMedTaken] = useState(0);
 
   useEffect(() => {
     if (!profile) return;
     getLog(profile).then(setLog);
     getStreak(profile).then(setStreak);
+    getMedLogs(profile).then((logs) => setMedTaken(logs.length));
   }, [profile]);
 
   if (!profile || !info) return null;
 
   const routine = getRoutine(profile);
   const lesson = todayLesson(profile);
+  const meds = getMedicines(profile);
+  const allMedsTaken = meds.length > 0 && medTaken >= meds.length;
   const g = greeting();
 
   const checkInDone =
@@ -87,6 +92,21 @@ export default function Today() {
           done={log?.exerciseDone}
           onClick={() => navigate('/exercise')}
         />
+
+        {meds.length > 0 && (
+          <TaskCard
+            icon={<Pill size={26} />}
+            title="Medicines"
+            hindi="दवाइयाँ"
+            meta={
+              allMedsTaken
+                ? 'All taken — great!'
+                : `${medTaken}/${meds.length} taken today`
+            }
+            done={allMedsTaken}
+            onClick={() => navigate('/medicines')}
+          />
+        )}
 
         <TaskCard
           icon={<HeartPulse size={26} />}
