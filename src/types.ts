@@ -6,7 +6,7 @@
    in src/lib/store.ts and these types stay put.
    ============================================================ */
 
-export type Profile = 'papa' | 'mummy';
+export type Profile = 'papa' | 'mummy' | 'chunnu';
 
 export interface ProfileInfo {
   id: Profile;
@@ -19,7 +19,7 @@ export interface ProfileInfo {
   /** Short condition summary, Hindi */
   focusHindi: string;
   /** Which accent token this profile uses */
-  accent: 'terracotta' | 'sage';
+  accent: 'terracotta' | 'sage' | 'indigo';
 }
 
 /**
@@ -42,6 +42,8 @@ export interface DayLog {
   /** Mummy: blood pressure */
   systolic?: number;
   diastolic?: number;
+  /** Chunnu: daily mood, 1–5 (higher is better) */
+  moodScore?: number;
   /** Both: did a walk happen today */
   walked?: boolean;
   /** Both: completed the day's exercise routine */

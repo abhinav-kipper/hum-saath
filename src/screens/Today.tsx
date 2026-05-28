@@ -21,6 +21,7 @@ import {
 import { getRoutine } from '../data/exercises';
 import type { Medicine } from '../data/medicines';
 import { todayLesson } from '../data/lessons';
+import { checkinKind } from '../lib/checkin';
 import { todayAffirmation } from '../data/affirmations';
 import { composeDailyUpdate } from '../lib/dailyUpdate';
 import { shareOnWhatsApp } from '../lib/share';
@@ -61,10 +62,13 @@ export default function Today() {
   useEffect(() => {
     if (!profile) return;
     const allMeds = meds.length > 0 && medLogs.length >= meds.length;
+    const ck = checkinKind(profile);
     const checkIn =
-      profile === 'papa'
+      ck === 'pain'
         ? typeof log?.painScore === 'number'
-        : typeof log?.systolic === 'number';
+        : ck === 'mood'
+          ? typeof log?.moodScore === 'number'
+          : typeof log?.systolic === 'number';
     const t = [
       log?.exerciseDone,
       checkIn,
@@ -90,10 +94,29 @@ export default function Today() {
   const allMedsTaken = meds.length > 0 && medTaken >= meds.length;
   const g = greeting();
 
+  const kind = checkinKind(profile);
   const checkInDone =
-    profile === 'papa'
+    kind === 'pain'
       ? typeof log?.painScore === 'number'
-      : typeof log?.systolic === 'number';
+      : kind === 'mood'
+        ? typeof log?.moodScore === 'number'
+        : typeof log?.systolic === 'number';
+
+  const checkInTitle =
+    kind === 'pain'
+      ? 'Log back & leg pain'
+      : kind === 'mood'
+        ? 'Log your mood'
+        : 'Log blood pressure';
+  const checkInHindi =
+    kind === 'pain' ? 'दर्द दर्ज करें' : kind === 'mood' ? 'मूड दर्ज करें' : 'बीपी दर्ज करें';
+  const checkInMeta = checkInDone
+    ? kind === 'pain'
+      ? `Pain: ${log?.painScore}/10`
+      : kind === 'mood'
+        ? `Mood: ${log?.moodScore}/5`
+        : `BP: ${log?.systolic}/${log?.diastolic}`
+    : 'Takes 20 seconds';
 
   // progress for the encouraging line
   const tasks = [
@@ -203,15 +226,9 @@ export default function Today() {
 
         <TaskCard
           icon={<HeartPulse size={26} />}
-          title={profile === 'papa' ? 'Log back & leg pain' : 'Log blood pressure'}
-          hindi={profile === 'papa' ? 'दर्द दर्ज करें' : 'बीपी दर्ज करें'}
-          meta={
-            checkInDone
-              ? profile === 'papa'
-                ? `Pain: ${log?.painScore}/10`
-                : `BP: ${log?.systolic}/${log?.diastolic}`
-              : 'Takes 20 seconds'
-          }
+          title={checkInTitle}
+          hindi={checkInHindi}
+          meta={checkInMeta}
           done={checkInDone}
           onClick={() => navigate('/log')}
         />

@@ -20,15 +20,20 @@ interface ProfileContextValue {
 
 const ProfileContext = createContext<ProfileContextValue | null>(null);
 
+const ACCENTS: Record<Profile, [string, string]> = {
+  papa: ['var(--terracotta)', 'var(--terracotta-d)'],
+  mummy: ['var(--sage)', 'var(--sage-dark)'],
+  chunnu: ['var(--indigo)', 'var(--indigo-dark)'],
+};
+
 /** Repaint the accent CSS variables to match the active profile. */
 function applyAccent(profile: Profile | null) {
   const root = document.documentElement;
-  const sage = profile === 'mummy';
-  root.style.setProperty('--accent', sage ? 'var(--sage)' : 'var(--terracotta)');
-  root.style.setProperty(
-    '--accent-dark',
-    sage ? 'var(--sage-dark)' : 'var(--terracotta-d)',
-  );
+  const [accent, dark] = profile
+    ? ACCENTS[profile]
+    : ['var(--terracotta)', 'var(--terracotta-d)'];
+  root.style.setProperty('--accent', accent);
+  root.style.setProperty('--accent-dark', dark);
 }
 
 export function ProfileProvider({ children }: { children: ReactNode }) {

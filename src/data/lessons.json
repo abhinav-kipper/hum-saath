@@ -169,6 +169,45 @@
     "tryTonightHindi": "बिस्तर के पास पानी रखें।"
   },
   {
+    "id": "lesson-15",
+    "day": 15,
+    "audience": "chunnu",
+    "title": "Dawai roz, ek hi time",
+    "body": [
+      "Antidepressant tabhi kaam karti hai jab roz li jaaye — beech mein chhodna mood neeche le jaata hai.",
+      "Ek fix time chuno (jaise raat ko) aur usse jodo kisi aadat se — brush ke baad, ya khaane ke baad.",
+      "Side-effect ya kuch ajeeb lage to doctor se baat karo, dawai khud se band mat karo."
+    ],
+    "tryTonight": "Aaj dawai ka ek pakka time set karo aur alarm lagao.",
+    "tryTonightHindi": "दवाई का एक पक्का समय तय करें।"
+  },
+  {
+    "id": "lesson-16",
+    "day": 16,
+    "audience": "chunnu",
+    "title": "Hilna-dulna = behtar mood",
+    "body": [
+      "Sirf 15-20 minute chalna depression mein dawai jitna asar dikha sakta hai — research kehti hai.",
+      "Subah ki dhoop body clock aur neend dono theek karti hai.",
+      "Mann na ho tab bhi 5 minute — shuruaat hi sabse mushkil hoti hai."
+    ],
+    "tryTonight": "Kal subah 15 min bahar tehelne ka plan banao.",
+    "tryTonightHindi": "कल सुबह 15 मिनट बाहर टहलें।"
+  },
+  {
+    "id": "lesson-17",
+    "day": 17,
+    "audience": "chunnu",
+    "title": "Bure din bhi theek hain",
+    "body": [
+      "Har din achha nahi hoga, aur yeh normal hai — progress seedhi line mein nahi chalti.",
+      "Ek kharab din poori journey kharab nahi karta. Kal phir se shuru.",
+      "Kisi se baat karna — dost, family ya therapist — bojh halka karta hai."
+    ],
+    "tryTonight": "Aaj kisi ek bharosemand insaan ko message karo.",
+    "tryTonightHindi": "किसी भरोसेमंद को मैसेज करें।"
+  },
+  {
     "id": "lesson-14",
     "day": 14,
     "audience": "both",

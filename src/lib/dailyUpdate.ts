@@ -32,7 +32,7 @@ export interface DailyUpdateInput {
 
 /** One message summarising the whole day, for the family group. */
 export function composeDailyUpdate(i: DailyUpdateInput): string {
-  const flower = i.profile === 'mummy' ? '🌸' : '🌿';
+  const flower = i.profile === 'mummy' ? '🌸' : i.profile === 'chunnu' ? '🌼' : '🌿';
   const lines: string[] = [`${flower} ${i.name} ki aaj ki update — ${i.dateStr}`, ''];
 
   if (i.meds.length > 0) {
@@ -48,6 +48,10 @@ export function composeDailyUpdate(i: DailyUpdateInput): string {
   if (i.profile === 'mummy') {
     if (typeof i.log?.systolic === 'number' && typeof i.log?.diastolic === 'number') {
       lines.push(`🩺 BP: ${i.log.systolic}/${i.log.diastolic}`);
+    }
+  } else if (i.profile === 'chunnu') {
+    if (typeof i.log?.moodScore === 'number') {
+      lines.push(`🙂 Mood: ${i.log.moodScore}/5`);
     }
   } else if (typeof i.log?.painScore === 'number') {
     lines.push(`💢 Dard (back/leg): ${i.log.painScore}/10`);

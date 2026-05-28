@@ -2,13 +2,14 @@ import { useNavigate } from 'react-router-dom';
 import { Heart } from 'lucide-react';
 import { useProfile } from '../context/ProfileContext';
 import { PROFILE_LIST } from '../data/profiles';
+import type { Profile } from '../types';
 import styles from './Onboarding.module.css';
 
 export default function Onboarding() {
   const { choose } = useProfile();
   const navigate = useNavigate();
 
-  const pick = async (id: 'papa' | 'mummy') => {
+  const pick = async (id: Profile) => {
     await choose(id);
     navigate('/', { replace: true });
   };

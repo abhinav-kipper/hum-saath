@@ -240,6 +240,7 @@ function seedMedDefs(): Record<Profile, Medicine[]> {
   return {
     papa: STARTER_MEDICINES.papa.map((m) => ({ ...m, id: uid() })),
     mummy: STARTER_MEDICINES.mummy.map((m) => ({ ...m, id: uid() })),
+    chunnu: STARTER_MEDICINES.chunnu.map((m) => ({ ...m, id: uid() })),
   };
 }
 

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { LineChart, Footprints, Dumbbell } from 'lucide-react';
 import { useProfile } from '../context/ProfileContext';
 import { getLogs, getMedCountsByDate, listMedicines, todayKey } from '../lib/store';
+import { checkinKind } from '../lib/checkin';
 import type { DayLog } from '../types';
 import TrendChart, { type ChartSeries } from '../components/TrendChart';
 import CalendarHeatmap from '../components/CalendarHeatmap';
@@ -26,6 +27,8 @@ function shortLabel(key: string): string {
   return `${Number(d)}/${Number(m)}`;
 }
 
+type MetricKey = 'painScore' | 'systolic' | 'diastolic' | 'moodScore';
+
 export default function Trends() {
   const { profile } = useProfile();
   const navigate = useNavigate();
@@ -41,41 +44,66 @@ export default function Trends() {
   }, [profile]);
 
   if (!profile) return null;
-  const isPapa = profile === 'papa';
+  const kind = checkinKind(profile);
 
   const days = lastNDays(DAYS);
   const byDate = new Map(logs.map((l) => [l.date, l]));
   const labels = days.map(shortLabel);
 
-  const valueAt = (date: string, key: 'painScore' | 'systolic' | 'diastolic') =>
-    byDate.get(date)?.[key] ?? null;
+  const valueAt = (date: string, key: MetricKey) => byDate.get(date)?.[key] ?? null;
 
-  const series: ChartSeries[] = isPapa
-    ? [
-        {
-          label: 'Pain',
-          color: 'var(--terracotta)',
-          points: days.map((d) => valueAt(d, 'painScore')),
-        },
-      ]
-    : [
-        {
-          label: 'Systolic',
-          color: 'var(--terracotta)',
-          points: days.map((d) => valueAt(d, 'systolic')),
-        },
-        {
-          label: 'Diastolic',
-          color: 'var(--sage-dark)',
-          points: days.map((d) => valueAt(d, 'diastolic')),
-        },
-      ];
+  const series: ChartSeries[] =
+    kind === 'pain'
+      ? [
+          {
+            label: 'Pain',
+            color: 'var(--accent)',
+            points: days.map((d) => valueAt(d, 'painScore')),
+          },
+        ]
+      : kind === 'mood'
+        ? [
+            {
+              label: 'Mood',
+              color: 'var(--accent)',
+              points: days.map((d) => valueAt(d, 'moodScore')),
+            },
+          ]
+        : [
+            {
+              label: 'Systolic',
+              color: 'var(--terracotta)',
+              points: days.map((d) => valueAt(d, 'systolic')),
+            },
+            {
+              label: 'Diastolic',
+              color: 'var(--sage-dark)',
+              points: days.map((d) => valueAt(d, 'diastolic')),
+            },
+          ];
 
   const primary = series[0].points.filter((v): v is number => v != null);
   const hasData = primary.length > 0;
   const first = primary[0];
   const latest = primary[primary.length - 1];
   const delta = first != null && latest != null ? latest - first : null;
+
+  // mood: higher is better; pain & BP: lower is better
+  const higherBetter = kind === 'mood';
+  const improving = delta != null && (higherBetter ? delta > 0 : delta < 0);
+  const worse = delta != null && (higherBetter ? delta < 0 : delta > 0);
+  const numDir = delta == null ? 'steady' : delta < 0 ? 'down' : delta > 0 ? 'up' : 'steady';
+  const metricLabel = kind === 'mood' ? 'Mood' : kind === 'bp' ? 'Systolic' : 'Pain';
+
+  const cardTitle =
+    kind === 'pain'
+      ? 'Back & leg pain (1–10)'
+      : kind === 'mood'
+        ? 'Mood (1–5)'
+        : 'Blood pressure (mmHg)';
+  const yMin = kind === 'mood' ? 1 : kind === 'bp' ? 60 : 0;
+  const yMax = kind === 'mood' ? 5 : kind === 'bp' ? 180 : 10;
+  const unit = kind === 'mood' ? '/5' : kind === 'bp' ? 'mmHg' : '/10';
 
   const walkCount = days.filter((d) => byDate.get(d)?.walked).length;
   const exerciseCount = days.filter((d) => byDate.get(d)?.exerciseDone).length;
@@ -91,9 +119,12 @@ export default function Trends() {
     const l = byDate.get(date);
     let done = 0;
     if (l?.exerciseDone) done++;
-    const checkin = isPapa
-      ? typeof l?.painScore === 'number'
-      : typeof l?.systolic === 'number';
+    const checkin =
+      kind === 'pain'
+        ? typeof l?.painScore === 'number'
+        : kind === 'mood'
+          ? typeof l?.moodScore === 'number'
+          : typeof l?.systolic === 'number';
     if (checkin) done++;
     if (l?.walked) done++;
     if (medsTotal > 0 && (medCounts[date] ?? 0) >= medsTotal) done++;
@@ -131,29 +162,25 @@ export default function Trends() {
           {delta != null && primary.length >= 2 && (
             <div
               className={`${styles.summary} ${
-                delta < 0 ? styles.good : delta > 0 ? styles.warn : ''
+                improving ? styles.good : worse ? styles.warn : ''
               }`}
             >
-              {isPapa ? 'Pain' : 'Systolic'}{' '}
-              {delta < 0 ? 'down' : delta > 0 ? 'up' : 'steady'} from{' '}
-              <b>{first}</b> to <b>{latest}</b>
-              {delta < 0 && ' — improving!'}
+              {metricLabel} {numDir} from <b>{first}</b> to <b>{latest}</b>
+              {improving && ' — improving!'}
             </div>
           )}
 
           <section className={styles.card}>
-            <h2 className={styles.cardTitle}>
-              {isPapa ? 'Back & leg pain (1–10)' : 'Blood pressure (mmHg)'}
-            </h2>
+            <h2 className={styles.cardTitle}>{cardTitle}</h2>
             <TrendChart
               labels={labels}
               series={series}
-              yMin={isPapa ? 0 : 60}
-              yMax={isPapa ? 10 : 180}
-              band={isPapa ? undefined : { from: 70, to: 120 }}
-              unit={isPapa ? '/10' : 'mmHg'}
+              yMin={yMin}
+              yMax={yMax}
+              band={kind === 'bp' ? { from: 70, to: 120 } : undefined}
+              unit={unit}
             />
-            {!isPapa && (
+            {kind === 'bp' && (
               <div className={styles.legend}>
                 <span>
                   <i className={styles.dotTerra} /> Systolic
