@@ -129,9 +129,9 @@ export default function Today() {
   const totalCount = tasks.length;
 
   let encourage: string;
-  if (doneCount === 0) encourage = 'Chaliye shuru karein 🌱';
-  else if (doneCount >= totalCount) encourage = 'Aaj sab ho gaya — kamaal! 🎉';
-  else encourage = `${doneCount}/${totalCount} ho gaya — bahut badhiya!`;
+  if (doneCount === 0) encourage = 'Chalo, shuru karte hain 🌱';
+  else if (doneCount >= totalCount) encourage = 'Aaj sab ho gaya — wah! 🎉';
+  else encourage = `${doneCount}/${totalCount} ho gaya — lage raho 👏`;
 
   const shareDay = () => {
     const dateStr = new Date().toLocaleDateString('en-GB', {

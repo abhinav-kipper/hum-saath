@@ -12,6 +12,8 @@ import {
 } from '../lib/store';
 import { shareOnWhatsApp } from '../lib/share';
 import { composeMedsUpdate } from '../lib/dailyUpdate';
+import { formatClock, toInputTime } from '../lib/util';
+import { suggestHindi } from '../lib/translit';
 import type { Medicine, MedicineInput } from '../data/medicines';
 import type { MedLog, Profile } from '../types';
 import styles from './Medicines.module.css';
@@ -19,6 +21,17 @@ import styles from './Medicines.module.css';
 function fmtTime(iso: string): string {
   return new Date(iso).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
 }
+
+function nowHHMM(): string {
+  const d = new Date();
+  return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+}
+
+const TIME_PRESETS = [
+  { emoji: '🌅', value: '08:00', label: 'Morning' },
+  { emoji: '☀️', value: '14:00', label: 'Afternoon' },
+  { emoji: '🌙', value: '21:00', label: 'Night' },
+];
 
 function EditMedRow({
   med,
@@ -34,44 +47,83 @@ function EditMedRow({
     setM((prev) => ({ ...prev, [field]: v }));
   const blur = (field: keyof MedicineInput) =>
     onSave(med.id, { [field]: m[field] } as Partial<MedicineInput>);
+  const setTime = (v: string) => {
+    set('time', v);
+    onSave(med.id, { time: v });
+  };
+  const suggest = () => {
+    const s = suggestHindi(m.name);
+    if (s) {
+      set('hindiName', s);
+      onSave(med.id, { hindiName: s });
+    }
+  };
 
   return (
     <div className={styles.editCard}>
+      <label className={styles.fieldLabel}>Medicine name</label>
       <input
         className={styles.editName}
         value={m.name}
-        placeholder="Name (English)"
+        placeholder="e.g. Thyroid tablet"
         onChange={(e) => set('name', e.target.value)}
         onBlur={() => blur('name')}
       />
+
+      <label className={styles.fieldLabel}>
+        हिंदी नाम
+        <button type="button" className={styles.suggestBtn} onClick={suggest}>
+          सुझाव ✨
+        </button>
+      </label>
       <input
         className={styles.editField}
         value={m.hindiName}
-        placeholder="नाम (Hindi)"
+        placeholder="थायराइड की गोली"
         onChange={(e) => set('hindiName', e.target.value)}
         onBlur={() => blur('hindiName')}
       />
-      <input
-        className={styles.editField}
-        value={m.time}
-        placeholder="Time — e.g. 7:00 AM"
-        onChange={(e) => set('time', e.target.value)}
-        onBlur={() => blur('time')}
-      />
+
+      <label className={styles.fieldLabel}>Time</label>
+      <div className={styles.timeRow}>
+        <input
+          className={styles.timeInput}
+          type="time"
+          value={toInputTime(m.time)}
+          onChange={(e) => setTime(e.target.value)}
+        />
+        <button type="button" className={styles.preset} onClick={() => setTime(nowHHMM())}>
+          Now
+        </button>
+        {TIME_PRESETS.map((p) => (
+          <button
+            key={p.value}
+            type="button"
+            className={styles.preset}
+            aria-label={p.label}
+            onClick={() => setTime(p.value)}
+          >
+            {p.emoji}
+          </button>
+        ))}
+      </div>
+
+      <label className={styles.fieldLabel}>Note (optional)</label>
       <input
         className={styles.editField}
         value={m.note}
-        placeholder="Note (English) — e.g. empty stomach"
+        placeholder="e.g. empty stomach, 1 hr before food"
         onChange={(e) => set('note', e.target.value)}
         onBlur={() => blur('note')}
       />
       <input
         className={styles.editField}
         value={m.noteHindi}
-        placeholder="नोट (Hindi)"
+        placeholder="हिंदी नोट (optional)"
         onChange={(e) => set('noteHindi', e.target.value)}
         onBlur={() => blur('noteHindi')}
       />
+
       <button type="button" className={styles.removeBtn} onClick={() => onRemove(med.id)}>
         <Trash2 size={16} aria-hidden /> Remove
       </button>
@@ -208,7 +260,7 @@ export default function Medicines() {
                         {m.time && (
                           <>
                             <Clock size={15} aria-hidden />
-                            <span>{m.time}</span>
+                            <span>{formatClock(m.time)}</span>
                           </>
                         )}
                         {m.time && m.note && <span className={styles.dot}>·</span>}

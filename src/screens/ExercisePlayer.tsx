@@ -8,6 +8,7 @@ import {
   ChevronLeft,
   Check,
   Video,
+  ExternalLink,
 } from 'lucide-react';
 import { useProfile } from '../context/ProfileContext';
 import { getRoutine } from '../data/exercises';
@@ -143,7 +144,7 @@ export default function ExercisePlayer() {
           <iframe
             key={current.id}
             className={styles.video}
-            src={`https://www.youtube.com/embed/${current.videoId}?rel=0&playsinline=1`}
+            src={`https://www.youtube-nocookie.com/embed/${current.videoId}?rel=0&playsinline=1`}
             title={current.name}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
@@ -156,6 +157,22 @@ export default function ExercisePlayer() {
           </div>
         )}
       </div>
+
+      <a
+        className={styles.ytLink}
+        href={
+          hasVideo
+            ? `https://www.youtube.com/watch?v=${current.videoId}`
+            : `https://www.youtube.com/results?search_query=${encodeURIComponent(
+                current.name + ' exercise how to',
+              )}`
+        }
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <ExternalLink size={15} aria-hidden />
+        {hasVideo ? 'Not playing? Watch on YouTube' : 'Find this on YouTube'}
+      </a>
 
       <div className={styles.nameBlock}>
         <h1 className={styles.exName}>{current.name}</h1>

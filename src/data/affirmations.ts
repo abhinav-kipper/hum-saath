@@ -2,14 +2,14 @@
    Replace freely; keep them short and never guilt-y. */
 
 export const AFFIRMATIONS: string[] = [
-  'Aaj thoda, kal thoda — sehat aise hi banti hai 🌿',
-  'Aap kar rahe ho, yahi sabse badi baat hai 💛',
-  'Har chhota kadam mayne rakhta hai',
-  'Dheere chalo, par roz chalo',
-  'Aaj apne liye 10 minute — bas itna kaafi hai',
-  'Khud ka khayal rakhna sabse zaroori hai',
-  'Aapki mehnat dikh rahi hai — shaabaash!',
-  'Ek waqt mein ek kaam — aaram se',
+  'Aaj ke liye bas itna kaafi hai 🌿',
+  'Thoda sa bhi kar liya, toh badi baat hai 💛',
+  'Jaldi kuch nahi — bas roz thoda thoda',
+  'Aaj apne liye thoda waqt nikaal lo',
+  'Ek kaam, aaram se — sab ek saath nahi',
+  'Saans lo, phir shuru karte hain',
+  'Itni door aa gaye — shaabaash 👏',
+  'Mann na ho tab bhi, 5 minute try kar lo',
 ];
 
 function dayNumber(d: Date = new Date()): number {
