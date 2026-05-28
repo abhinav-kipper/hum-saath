@@ -81,3 +81,44 @@
   flex-direction: column;
   gap: 14px;
 }
+
+.statusRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.encourage {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--accent-dark);
+}
+
+.shareDayBtn {
+  width: 100%;
+  margin-top: 18px;
+  min-height: 64px;
+  border-radius: 18px;
+  background: #25d366; /* WhatsApp green */
+  color: #073b27;
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  padding: 10px 16px;
+}
+.shareDayBtn:active {
+  filter: brightness(0.95);
+}
+
+.shareDayHindi {
+  flex-basis: 100%;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.85rem;
+  opacity: 0.85;
+}

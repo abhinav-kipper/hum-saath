@@ -1,12 +1,22 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Dumbbell, HeartPulse, Footprints, BookOpen, Pill, RefreshCw } from 'lucide-react';
+import {
+  Dumbbell,
+  HeartPulse,
+  Footprints,
+  BookOpen,
+  Pill,
+  RefreshCw,
+  Send,
+} from 'lucide-react';
 import { useProfile } from '../context/ProfileContext';
 import { getLog, getMedLogs, getStreak } from '../lib/store';
 import { getRoutine } from '../data/exercises';
 import { getMedicines } from '../data/medicines';
 import { todayLesson } from '../data/lessons';
-import type { DayLog, StreakInfo } from '../types';
+import { composeDailyUpdate } from '../lib/dailyUpdate';
+import { shareOnWhatsApp } from '../lib/share';
+import type { DayLog, MedLog, StreakInfo } from '../types';
 import TaskCard from '../components/TaskCard';
 import StreakChip from '../components/StreakChip';
 import styles from './Today.module.css';
@@ -18,18 +28,20 @@ function greeting(): { en: string; hi: string } {
   return { en: 'Good evening', hi: 'शुभ संध्या' };
 }
 
+const NEW_STREAK: StreakInfo = { count: 0, daysSinceLast: Infinity, status: 'new' };
+
 export default function Today() {
   const { profile, info } = useProfile();
   const navigate = useNavigate();
   const [log, setLog] = useState<DayLog | undefined>();
   const [streak, setStreak] = useState<StreakInfo | null>(null);
-  const [medTaken, setMedTaken] = useState(0);
+  const [medLogs, setMedLogs] = useState<MedLog[]>([]);
 
   useEffect(() => {
     if (!profile) return;
     getLog(profile).then(setLog);
     getStreak(profile).then(setStreak);
-    getMedLogs(profile).then((logs) => setMedTaken(logs.length));
+    getMedLogs(profile).then(setMedLogs);
   }, [profile]);
 
   if (!profile || !info) return null;
@@ -37,6 +49,7 @@ export default function Today() {
   const routine = getRoutine(profile);
   const lesson = todayLesson(profile);
   const meds = getMedicines(profile);
+  const medTaken = medLogs.length;
   const allMedsTaken = meds.length > 0 && medTaken >= meds.length;
   const g = greeting();
 
@@ -44,6 +57,42 @@ export default function Today() {
     profile === 'papa'
       ? typeof log?.painScore === 'number'
       : typeof log?.systolic === 'number';
+
+  // progress for the encouraging line
+  const tasks = [
+    log?.exerciseDone,
+    checkInDone,
+    log?.walked,
+    ...(meds.length > 0 ? [allMedsTaken] : []),
+  ];
+  const doneCount = tasks.filter(Boolean).length;
+  const totalCount = tasks.length;
+
+  let encourage: string;
+  if (doneCount === 0) encourage = 'Chaliye shuru karein 🌱';
+  else if (doneCount >= totalCount) encourage = 'Aaj sab ho gaya — kamaal! 🎉';
+  else encourage = `${doneCount}/${totalCount} ho gaya — bahut badhiya!`;
+
+  const shareDay = () => {
+    const dateStr = new Date().toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'short',
+    });
+    const medStatus = meds.map((m) => ({
+      name: m.name,
+      takenAt: medLogs.find((l) => l.medId === m.id)?.takenAt,
+    }));
+    shareOnWhatsApp(
+      composeDailyUpdate({
+        name: info.name,
+        profile,
+        dateStr,
+        log,
+        meds: medStatus,
+        streak: streak ?? NEW_STREAK,
+      }),
+    );
+  };
 
   return (
     <div className={styles.page}>
@@ -67,7 +116,10 @@ export default function Today() {
             <RefreshCw size={15} aria-hidden />
           </button>
         </div>
-        {streak && <StreakChip streak={streak} />}
+        <div className={styles.statusRow}>
+          {streak && <StreakChip streak={streak} />}
+          <span className={styles.encourage}>{encourage}</span>
+        </div>
       </header>
 
       {streak?.status === 'welcome' && (
@@ -140,6 +192,12 @@ export default function Today() {
           onClick={() => navigate('/lessons')}
         />
       </div>
+
+      <button type="button" className={styles.shareDayBtn} onClick={shareDay}>
+        <Send size={20} aria-hidden />
+        Share today with family
+        <span className={styles.shareDayHindi}>परिवार को आज का अपडेट भेजें</span>
+      </button>
     </div>
   );
 }
