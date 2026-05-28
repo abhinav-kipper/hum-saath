@@ -13,6 +13,7 @@ import Log from './screens/Log';
 import Trends from './screens/Trends';
 import Lessons from './screens/Lessons';
 import Medicines from './screens/Medicines';
+import Garden from './screens/Garden';
 import styles from './App.module.css';
 
 function Splash() {
@@ -68,6 +69,7 @@ export default function App() {
         <Route path="/" element={<Today />} />
         <Route path="/medicines" element={<Medicines />} />
         <Route path="/log" element={<Log />} />
+        <Route path="/garden" element={<Garden />} />
         <Route path="/trends" element={<Trends />} />
         <Route path="/lessons" element={<Lessons />} />
       </Route>

@@ -1,10 +1,11 @@
 import { NavLink } from 'react-router-dom';
-import { Home, TrendingUp, BookOpen, ClipboardList } from 'lucide-react';
+import { Home, TrendingUp, BookOpen, ClipboardList, Flower2 } from 'lucide-react';
 import styles from './BottomNav.module.css';
 
 const ITEMS = [
   { to: '/', icon: Home, label: 'Today', hindi: 'आज', end: true },
   { to: '/log', icon: ClipboardList, label: 'Log', hindi: 'लॉग' },
+  { to: '/garden', icon: Flower2, label: 'Garden', hindi: 'बगीचा' },
   { to: '/trends', icon: TrendingUp, label: 'Trends', hindi: 'प्रगति' },
   { to: '/lessons', icon: BookOpen, label: 'Learn', hindi: 'सीखें' },
 ];

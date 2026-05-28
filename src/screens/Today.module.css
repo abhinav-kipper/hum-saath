@@ -97,11 +97,42 @@
 }
 
 .affirm {
-  margin: -10px 0 22px;
+  margin: -10px 0 16px;
   text-align: center;
   font-family: var(--font-hand);
   font-size: 1.45rem;
   line-height: 1.2;
+  color: var(--ink-light);
+}
+
+.gardenChip {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+  padding: 12px 14px;
+  border-radius: var(--radius-card);
+  background: color-mix(in srgb, var(--sage) 12%, var(--white));
+  border: 1px solid color-mix(in srgb, var(--sage) 30%, var(--cream-dark));
+  color: var(--sage-dark);
+  text-align: left;
+}
+
+.gardenChip:active {
+  background: color-mix(in srgb, var(--sage) 20%, var(--white));
+}
+
+.gardenChipText {
+  flex: 1;
+  font-weight: 700;
+  font-size: 0.98rem;
+}
+
+.gardenChipHindi {
+  display: block;
+  font-weight: 500;
+  font-size: 0.78rem;
   color: var(--ink-light);
 }
 
