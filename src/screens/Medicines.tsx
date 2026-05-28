@@ -4,6 +4,7 @@ import { useProfile } from '../context/ProfileContext';
 import { getMedicines } from '../data/medicines';
 import { getMedLogs, markMedTaken, unmarkMedTaken } from '../lib/store';
 import { shareOnWhatsApp } from '../lib/share';
+import { composeMedsUpdate } from '../lib/dailyUpdate';
 import type { MedLog } from '../types';
 import styles from './Medicines.module.css';
 
@@ -47,12 +48,11 @@ export default function Medicines() {
       day: 'numeric',
       month: 'short',
     });
-    const lines = meds.map((m) =>
-      taken[m.id]
-        ? `✅ ${m.name} — ${fmtTime(taken[m.id].takenAt)}`
-        : `⏳ ${m.name} — pending`,
-    );
-    return `${info.name} — dawai update (${dateStr})\n${lines.join('\n')}\n— Saath`;
+    const medStatus = meds.map((m) => ({
+      name: m.name,
+      takenAt: taken[m.id]?.takenAt,
+    }));
+    return composeMedsUpdate(info.name, dateStr, medStatus);
   };
 
   const anyTaken = meds.some((m) => taken[m.id]);
