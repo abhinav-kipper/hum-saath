@@ -1,173 +1,58 @@
 import { useState } from 'react';
-import { Moon, Play, RotateCcw, Volume2, VolumeX } from 'lucide-react';
-import { useProfile } from '../context/ProfileContext';
-import { lessonsFor, todayLesson, type Lesson } from '../data/lessons';
-import Saathi from '../components/Saathi';
-import { useSaathi } from '../lib/saathi/voice';
-import { buildLessonNarration } from '../lib/saathi/moments';
-import styles from './Lessons.module.css';
-
-function emojiFor(l: Lesson): string {
-  const t = l.title.toLowerCase();
-  const map: [string, string][] = [
-    ['sona', '🛏️'],
-    ['neend', '🛏️'],
-    ['dawai', '💊'],
-    ['dawa', '💊'],
-    ['thyroid', '💊'],
-    ['goli', '💊'],
-    ['teeke', '💉'],
-    ['antidepressant', '💊'],
-    ['namak', '🧂'],
-    ['cheeni', '🍬'],
-    ['tel', '🛢️'],
-    ['protein', '🥚'],
-    ['chaal', '🚶'],
-    ['walk', '🚶'],
-    ['taqat', '💪'],
-    ['hilna', '🏃'],
-    ['baith', '🪑'],
-    ['sciatica', '🌿'],
-    ['barf', '🧊'],
-    ['sikaai', '🔥'],
-    ['paani', '💧'],
-    ['dhoop', '☀️'],
-    ['potassium', '🍌'],
-    ['girne', '🛟'],
-    ['mood', '🌼'],
-    ['mann', '🌼'],
-    ['din', '🎉'],
-    ['bure', '🤍'],
-  ];
-  for (const [k, e] of map) if (t.includes(k)) return e;
-  const cycle = ['🌱', '✨', '💛', '🌿', '☀️'];
-  return cycle[l.day % cycle.length];
-}
+import Icon from '../components/Icon';
+import Bi from '../components/Bi';
+import Chip from '../components/Chip';
+import JugnuSays from '../components/JugnuSays';
+import { useApp } from '../context/AppContext';
+import { lessons, lines } from '../data/content';
 
 export default function Lessons() {
-  const { profile } = useProfile();
-  const [selected, setSelected] = useState<Lesson | null>(null);
-  const { unlocked, muted, speaking, toggleMuted, play } = useSaathi();
-
-  if (!profile) return null;
-
-  const all = lessonsFor(profile);
-  const lesson = selected ?? todayLesson(profile);
-  const isToday = lesson.id === todayLesson(profile).id;
-
-  const open = (l: Lesson) => {
-    setSelected(l);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const narrate = () => play(buildLessonNarration(lesson));
+  const app = useApp();
+  const [active, setActive] = useState(lessons[0]);
 
   return (
-    <div className={styles.page}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>
-          Saathi ki baat <span className={styles.titleHindi}>साथी की बात</span>
-        </h1>
-        <p className={styles.sub}>Roz ek chhoti seekh, Dheeru ke saath.</p>
-      </header>
+    <div className="screen-body fade-in">
+      <div style={{ padding: '4px 22px 0' }}>
+        <Bi hi="आज की सीख" en="LEARN · 2-MIN HABITS" hiSize={23} enSize={10.5} />
+      </div>
+      <div className="scroll" style={{ flex: 1, padding: '10px 18px 110px' }}>
+        <JugnuSays line={lines.lesson} size={84} sound={app.sound} />
 
-      {/* Dheeru reads the lesson aloud */}
-      <div className={styles.narrator}>
-        <Saathi mood={speaking ? 'talking' : 'idle'} size={92} />
-        <div className={styles.narratorControls}>
-          <button type="button" className={styles.listen} onClick={narrate} disabled={speaking}>
-            {unlocked ? <RotateCcw size={18} aria-hidden /> : <Play size={18} aria-hidden />}
-            {unlocked ? 'Phir se' : 'Suniye'} <span className="hindi">· सुनिए</span>
+        {/* featured */}
+        <div className="clay rise" style={{ borderRadius: 28, padding: 18, marginTop: 14 }}>
+          <span className="pill" style={{ background: 'rgba(246,178,92,.2)', color: 'var(--gold-d)', fontSize: 11 }}>{active.tag} · {active.mins} मिनट</span>
+          <h2 className="hi" style={{ fontSize: 23, fontWeight: 700, margin: '12px 0 4px', lineHeight: 1.2 }}>{active.hi}</h2>
+          <p style={{ fontSize: 12.5, fontWeight: 700, color: 'var(--ink-3)', margin: 0 }}>{active.en}</p>
+          <div className="inset" style={{ borderRadius: 18, padding: 16, marginTop: 14, background: '#fffaf2' }}>
+            <p className="hi" style={{ fontSize: 16.5, lineHeight: 1.5, margin: 0 }}>{active.body}</p>
+            <p style={{ fontSize: 12.5, lineHeight: 1.5, color: 'var(--ink-3)', margin: '8px 0 0', fontWeight: 600 }}>{active.bodyEn}</p>
+          </div>
+          <button className="btn btn-primary" style={{ width: '100%', marginTop: 14, background: app.profile.grad }} onClick={() => app.finish(app.activeNode?.id || 'ls')}>
+            <Icon name="check" size={19} sw={2.8} color="#fff" /> समझ गया · पूरा
           </button>
-          <button
-            type="button"
-            className={styles.mute}
-            onClick={toggleMuted}
-            aria-pressed={!muted}
-            aria-label={muted ? "Turn on Dheeru's voice" : "Mute Dheeru's voice"}
-          >
-            {muted ? <VolumeX size={18} aria-hidden /> : <Volume2 size={18} aria-hidden />}
-          </button>
+        </div>
+
+        {/* more */}
+        <div style={{ marginTop: 18 }}>
+          <Bi hi="और सीखें" en="MORE LESSONS" hiSize={15} enSize={9.5} />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 10 }}>
+            {lessons.map((l) => (
+              <button
+                key={l.id}
+                onClick={() => setActive(l)}
+                className="glass"
+                style={{ border: active.id === l.id ? '2px solid var(--gold)' : '1px solid rgba(255,255,255,.75)', textAlign: 'left', borderRadius: 18, padding: '12px 14px', display: 'flex', alignItems: 'center', gap: 12 }}
+              >
+                <Chip icon="book" color="var(--gold)" size={42} />
+                <div style={{ flex: 1 }}>
+                  <Bi hi={l.hi} en={`${l.tag} · ${l.mins} min`} hiSize={15} enSize={10} />
+                </div>
+                <Icon name="chevR" size={18} sw={2.4} color="var(--ink-3)" />
+              </button>
+            ))}
+          </div>
         </div>
       </div>
-
-      <article className={styles.lessonCard}>
-        <div className={styles.banner}>
-          <span className={styles.dayPill}>
-            {isToday ? '✦ Aaj' : `Day ${lesson.day}`}
-          </span>
-          <span className={styles.bannerEmoji} aria-hidden>
-            {emojiFor(lesson)}
-          </span>
-          <span className={styles.blob} aria-hidden />
-        </div>
-
-        <div className={styles.body}>
-          <h2 className={styles.lessonTitle}>{lesson.title}</h2>
-
-          {lesson.myth && lesson.fact && (
-            <div className={styles.mythFact}>
-              <p className={styles.myth}>
-                <span className={styles.mark} aria-hidden>
-                  ✗
-                </span>
-                <span>
-                  <b>Aam galti:</b> {lesson.myth}
-                </span>
-              </p>
-              <p className={styles.fact}>
-                <span className={styles.mark} aria-hidden>
-                  ✓
-                </span>
-                <span>
-                  <b>Sach:</b> {lesson.fact}
-                </span>
-              </p>
-            </div>
-          )}
-
-          {lesson.body.map((p, i) => (
-            <p key={i} className={styles.para}>
-              {p}
-            </p>
-          ))}
-
-          <div className={styles.tryBox}>
-            <span className={styles.tryHead}>
-              <Moon size={16} aria-hidden /> Try tonight · आज आज़माएँ
-            </span>
-            <p className={styles.tryText}>{lesson.tryTonight}</p>
-            <p className={styles.tryHindi}>{lesson.tryTonightHindi}</p>
-          </div>
-
-          <p className={styles.disclaimer}>
-            Yeh aam jaankari hai. Apni dawa ya sehat ke liye doctor ki salah zaroor lein.
-          </p>
-        </div>
-      </article>
-
-      <h3 className={styles.moreTitle}>
-        Aur baatein <span className="hindi">· और पाठ</span>
-      </h3>
-      <ul className={styles.list}>
-        {all.map((l) => (
-          <li key={l.id}>
-            <button
-              type="button"
-              className={`${styles.listItem} ${
-                l.id === lesson.id ? styles.listActive : ''
-              }`}
-              onClick={() => open(l)}
-            >
-              <span className={styles.listEmoji} aria-hidden>
-                {emojiFor(l)}
-              </span>
-              <span className={styles.listText}>{l.title}</span>
-              <span className={styles.listDay}>Day {l.day}</span>
-            </button>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }

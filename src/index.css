@@ -1,48 +1,47 @@
 /* ============================================================
-   Saath — global tokens + base styles
-   Aesthetic: warm, journal-like, calm. Big tap targets.
+   Saath — Jugnu redesign. Global tokens + soft-3D recipes.
+   Warm "firefly light" system, Hindi-first, clay/glass.
+   Screen-specific layout lives inline in components; these are
+   the cross-cutting utilities the whole app shares.
    ============================================================ */
 
 :root {
-  /* Color tokens */
-  --cream: #f5efe6; /* background */
-  --cream-dark: #ebe3d5; /* card borders, subtle fills */
-  --terracotta: #c2542f; /* primary action, dad accent */
-  --terracotta-d: #a8401e;
-  --sage: #6b8e5a; /* success, improvement, mom accent */
-  --sage-dark: #4f6e42;
-  --ink: #2a2520; /* primary text, dark screens */
-  --ink-light: #5a4f44; /* secondary text */
-  --gold: #d4a53a; /* warnings / attention */
-  --indigo: #5f7ea6; /* calm blue, chunnu accent */
-  --indigo-dark: #46637f;
+  --bg-1: #fff4e2;
+  --bg-2: #fdeede;
+  --bg-3: #f6eef6;
+  --surface: #fffaf2;
 
-  --white: #fffdf9;
+  --ink: #2f2620;
+  --ink-2: #6e6054;
+  --ink-3: #a99c8c;
 
-  /* Accent — swapped per active profile (see ProfileContext) */
-  --accent: var(--terracotta);
-  --accent-dark: var(--terracotta-d);
+  /* accents (oklch, shared chroma) */
+  --gold: oklch(0.8 0.13 80);
+  --gold-d: oklch(0.66 0.14 70);
+  --coral: oklch(0.72 0.15 38);
+  --coral-d: oklch(0.6 0.16 36);
+  --mint: oklch(0.73 0.12 160);
+  --mint-d: oklch(0.58 0.13 162);
+  --peri: oklch(0.7 0.13 285);
+  --peri-d: oklch(0.57 0.15 285);
+  --rose: oklch(0.74 0.12 14);
 
-  /* Type */
-  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
-  --font-body: 'Inter Tight', system-ui, -apple-system, sans-serif;
-  --font-hand: 'Caveat', 'Segoe Print', cursive;
+  /* repainted per active profile by AppContext */
+  --accent: var(--coral);
+  --accent-d: var(--coral-d);
 
-  /* Sizing — generous for older eyes */
-  --radius-card: 20px;
-  --radius-btn: 14px;
-  --tap-min: 56px;
-  --pad-screen: 20px;
+  --font-display: 'Baloo 2', 'Segoe UI', system-ui, sans-serif;
+  --font-ui: 'Hanken Grotesk', system-ui, -apple-system, sans-serif;
 
-  /* Base font is intentionally large */
-  font-size: 18px;
-  font-family: var(--font-body);
+  --r-xl: 34px;
+  --r-lg: 26px;
+  --r-md: 18px;
+  --r-sm: 12px;
+
+  font-family: var(--font-ui);
   color: var(--ink);
-  line-height: 1.5;
-
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
 }
 
 * {
@@ -50,66 +49,50 @@
 }
 
 html,
-body,
-#root {
+body {
   margin: 0;
-  padding: 0;
   min-height: 100%;
 }
 
 body {
-  background: var(--cream);
-  color: var(--ink);
-  /* Prevent rubber-band weirdness on iOS standalone */
+  background:
+    radial-gradient(60% 50% at 18% 12%, #fce9c4 0%, transparent 60%),
+    radial-gradient(55% 45% at 85% 88%, #f3e2f1 0%, transparent 60%),
+    linear-gradient(150deg, #fff6ea, #f4eef3);
   overscroll-behavior-y: none;
 }
 
+/* the app surface — the "screen" */
 #root {
+  position: relative;
   max-width: 480px;
   margin: 0 auto;
   min-height: 100vh;
   min-height: 100dvh;
-  position: relative;
-  background: var(--cream);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background:
+    radial-gradient(110% 60% at 70% -8%, #fff3da 0%, transparent 55%),
+    linear-gradient(170deg, #fff7ec 0%, #f6eef4 100%);
 }
 
-h1,
-h2,
-h3 {
+.hi {
   font-family: var(--font-display);
-  font-weight: 600;
-  line-height: 1.15;
-  margin: 0;
-  color: var(--ink);
 }
 
 button {
-  font-family: var(--font-body);
+  font-family: var(--font-ui);
   cursor: pointer;
   border: none;
   background: none;
   color: inherit;
 }
 
-input,
-select {
-  font-family: var(--font-body);
-  font-size: 1rem;
+input {
+  font-family: var(--font-ui);
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-/* Hindi/secondary label helper */
-.hindi {
-  font-family: var(--font-body);
-  font-weight: 400;
-  color: var(--ink-light);
-}
-
-/* Visually hidden but accessible */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -122,7 +105,388 @@ a {
   border: 0;
 }
 
-/* Respect reduced motion */
+/* ---------- soft-3D recipes ---------- */
+.clay {
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 18px 34px -18px rgba(90, 60, 30, 0.3),
+    0 4px 12px -6px rgba(90, 60, 30, 0.14);
+}
+.glass {
+  background: rgba(255, 250, 242, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: var(--r-lg);
+  backdrop-filter: blur(16px) saturate(1.5);
+  -webkit-backdrop-filter: blur(16px) saturate(1.5);
+  box-shadow: 0 16px 38px -22px rgba(90, 60, 30, 0.4);
+}
+.inset {
+  box-shadow:
+    inset 0 2px 6px rgba(90, 60, 30, 0.12),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.7);
+}
+
+/* ---------- buttons / pills ---------- */
+.btn {
+  font-family: var(--font-display);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border-radius: 999px;
+  transition:
+    transform 0.14s,
+    box-shadow 0.2s,
+    filter 0.2s;
+}
+.btn:active {
+  transform: scale(0.96);
+}
+.btn:disabled {
+  cursor: default;
+}
+.btn-primary {
+  background: linear-gradient(160deg, #f6b25c, #ec8a4e);
+  color: #fff;
+  padding: 16px 22px;
+  font-size: 17px;
+  box-shadow: 0 14px 26px -10px rgba(236, 138, 78, 0.7);
+}
+.btn-ghost {
+  background: var(--surface);
+  color: var(--ink-2);
+  padding: 15px 20px;
+  font-size: 16px;
+  box-shadow: 0 8px 18px -10px rgba(90, 60, 30, 0.4);
+}
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 13px;
+  font-family: var(--font-display);
+}
+
+/* ---------- narration bubble ---------- */
+.bubble {
+  position: relative;
+  padding: 14px 17px;
+  border-radius: 22px;
+  background: rgba(255, 250, 242, 0.74);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 16px 36px -22px rgba(90, 60, 30, 0.5);
+}
+.bubble .cap-hi {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 16.5px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.bubble .cap-en {
+  margin: 7px 0 0;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink-3);
+  line-height: 1.35;
+}
+.cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: var(--gold-d);
+  margin-left: 1px;
+  vertical-align: -2px;
+  animation: caretBlink 1s steps(1) infinite;
+}
+@keyframes caretBlink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* sound wave */
+.wave {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 14px;
+}
+.wave i {
+  width: 2.5px;
+  border-radius: 2px;
+  background: var(--gold-d);
+  animation: waveB 0.7s ease-in-out infinite;
+}
+.wave i:nth-child(2) {
+  animation-delay: 0.12s;
+}
+.wave i:nth-child(3) {
+  animation-delay: 0.24s;
+}
+.wave i:nth-child(4) {
+  animation-delay: 0.36s;
+}
+.wave i:nth-child(5) {
+  animation-delay: 0.18s;
+}
+@keyframes waveB {
+  0%,
+  100% {
+    height: 4px;
+  }
+  50% {
+    height: 14px;
+  }
+}
+
+/* ---------- tab bar ---------- */
+.tabbar {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  z-index: 40;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 9px 8px;
+  border-radius: 26px;
+}
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  color: var(--ink-3);
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 6px;
+  border-radius: 16px;
+  transition: color 0.2s;
+}
+.tab .lbl {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+.tab.on {
+  color: var(--accent-d);
+}
+.tab.on .tabdot {
+  opacity: 1;
+  transform: scale(1);
+}
+.tabdot {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0;
+  transform: scale(0);
+  transition: 0.25s;
+}
+
+/* ---------- screen transition (transform-only) ---------- */
+.screen-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.fade-in {
+  animation: fadeIn 0.42s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+@keyframes fadeIn {
+  from {
+    transform: translateY(10px) scale(0.99);
+  }
+  to {
+    transform: none;
+  }
+}
+.rise {
+  animation: rise 0.5s cubic-bezier(0.2, 0.8, 0.25, 1) both;
+}
+@keyframes rise {
+  from {
+    transform: translateY(16px);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* ---------- bottom sheet ---------- */
+.sheet-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(40, 25, 10, 0.34);
+  z-index: 80;
+  display: flex;
+  align-items: flex-end;
+  animation: fadeIn 0.25s;
+}
+.sheet {
+  width: 100%;
+  background: var(--surface);
+  border-radius: 30px 30px 0 0;
+  padding: 12px 22px calc(28px + env(safe-area-inset-bottom));
+  box-shadow: 0 -20px 50px -20px rgba(60, 40, 20, 0.5);
+  animation: sheetUp 0.4s cubic-bezier(0.2, 0.8, 0.25, 1);
+}
+@keyframes sheetUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+.sheet .grip {
+  width: 44px;
+  height: 5px;
+  border-radius: 3px;
+  background: #e4d6c2;
+  margin: 0 auto 14px;
+}
+
+/* ---------- scroll regions ---------- */
+.scroll {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* confetti */
+.confetti {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 90;
+  overflow: hidden;
+}
+.confetti i {
+  position: absolute;
+  top: -12px;
+  width: 9px;
+  height: 9px;
+  animation: fall 1.7s cubic-bezier(0.3, 0.6, 0.5, 1) forwards;
+}
+@keyframes fall {
+  to {
+    transform: translateY(900px) rotate(540deg);
+    opacity: 0;
+  }
+}
+
+/* ambient firefly — Jugnu drifts slowly in the background */
+.firefly {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.42;
+  filter: drop-shadow(0 0 10px rgba(246, 178, 92, 0.65));
+  animation: wander 30s ease-in-out infinite;
+}
+@keyframes wander {
+  0% {
+    transform: translate(26px, 150px);
+  }
+  18% {
+    transform: translate(300px, 96px);
+  }
+  36% {
+    transform: translate(232px, 300px);
+  }
+  54% {
+    transform: translate(54px, 470px);
+  }
+  72% {
+    transform: translate(312px, 560px);
+  }
+  88% {
+    transform: translate(140px, 360px);
+  }
+  100% {
+    transform: translate(26px, 150px);
+  }
+}
+
+/* host (Jugnu) animations */
+@keyframes hostFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+@keyframes hostGlow {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.08);
+  }
+}
+@keyframes hostBlink {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+  96% {
+    transform: scaleY(0.1);
+  }
+}
+@keyframes hostTwinkle {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.7);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+.host-float {
+  animation: hostFloat 4.6s ease-in-out infinite;
+}
+.host-glow {
+  animation: hostGlow 5s ease-in-out infinite;
+  transform-origin: center;
+}
+.host-eye {
+  animation: hostBlink 5.2s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.host-tw {
+  animation: hostTwinkle 2.2s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

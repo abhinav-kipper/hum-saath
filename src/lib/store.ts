@@ -1,382 +1,52 @@
 /* ============================================================
-   Data layer — the ONLY module the UI imports for persistence.
-   UI never touches localStorage or Supabase directly.
-
-   Dual-mode: each data op runs against Supabase when it's
-   configured AND a household code is set (remote.useSupabase());
-   otherwise it falls back to localStorage. So the app works
-   offline / before setup, and "turning on the cloud" needs no
-   UI changes — just env vars + a household code.
-
-   Device-local state (active profile, confetti-fired-today)
-   stays in localStorage in both modes.
+   Persistence seam. The whole app state lives under one key in
+   localStorage. This is the single place that touches storage —
+   swap the body of load/save for a Supabase-backed version later
+   without changing any UI code.
    ============================================================ */
 
-import type { Cheer, DayLog, DayLogPatch, MedLog, Profile, StreakInfo } from '../types';
-import type { Medicine, MedicineInput } from '../data/medicines';
-import { STARTER_MEDICINES } from '../data/medicines';
-import { todayKey, uid } from './util';
-import * as remote from './supabase';
+import type { AppState, ProfileId, Node } from '../types';
+import { plans as defaultPlans } from '../data/content';
 
-export { todayKey };
-export {
-  isSupabaseConfigured,
-  useSupabase,
-  getHousehold,
-  setHousehold,
-  clearHousehold,
-} from './supabase';
+const KEY = 'saath_jugnu_v1';
 
-const KEYS = {
-  profile: 'saath.activeProfile.v1',
-  logs: 'saath.logs.v1',
-  medLogs: 'saath.medLogs.v1',
-  medicines: 'saath.medicines.v1',
-  celebrated: 'saath.celebrated.v1',
-  cheers: 'saath.cheers.v1',
-} as const;
-
-/* ---------------------------------------------------------- */
-/* Profile (always device-local)                              */
-/* ---------------------------------------------------------- */
-
-export async function getProfile(): Promise<Profile | null> {
-  const v = localStorage.getItem(KEYS.profile);
-  return v === 'papa' || v === 'mummy' || v === 'chunnu' ? v : null;
+function clonePlans(): Record<ProfileId, Node[]> {
+  return JSON.parse(JSON.stringify(defaultPlans));
 }
 
-export async function setProfile(profile: Profile): Promise<void> {
-  localStorage.setItem(KEYS.profile, profile);
-}
-
-/* ---------------------------------------------------------- */
-/* Logs — dispatched to Supabase or localStorage             */
-/* ---------------------------------------------------------- */
-
-function readLogs(): DayLog[] {
-  try {
-    const raw = localStorage.getItem(KEYS.logs);
-    const parsed = raw ? (JSON.parse(raw) as DayLog[]) : [];
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
-
-function writeLogs(logs: DayLog[]): void {
-  localStorage.setItem(KEYS.logs, JSON.stringify(logs));
-}
-
-export async function getLogs(profile: Profile): Promise<DayLog[]> {
-  if (remote.useSupabase()) return remote.getLogs(profile);
-  return readLogs()
-    .filter((l) => l.profile === profile)
-    .sort((a, b) => a.date.localeCompare(b.date));
-}
-
-export async function getLog(
-  profile: Profile,
-  date: string = todayKey(),
-): Promise<DayLog | undefined> {
-  if (remote.useSupabase()) return remote.getLog(profile, date);
-  return readLogs().find((l) => l.profile === profile && l.date === date);
-}
-
-/** Create or update a day's log for a profile (one row per profile/day). */
-export async function upsertLog(
-  profile: Profile,
-  patch: DayLogPatch,
-  date: string = todayKey(),
-): Promise<DayLog> {
-  if (remote.useSupabase()) return remote.upsertLog(profile, patch, date);
-
-  const logs = readLogs();
-  const now = new Date().toISOString();
-  const idx = logs.findIndex((l) => l.profile === profile && l.date === date);
-  if (idx >= 0) {
-    const updated: DayLog = { ...logs[idx], ...patch, updatedAt: now };
-    logs[idx] = updated;
-    writeLogs(logs);
-    return updated;
-  }
-  const created: DayLog = {
-    id: uid(),
-    profile,
-    date,
-    createdAt: now,
-    updatedAt: now,
-    ...patch,
-  };
-  logs.push(created);
-  writeLogs(logs);
-  return created;
-}
-
-/* ---------------------------------------------------------- */
-/* Streak — derived from getLogs, so works in both modes      */
-/* ---------------------------------------------------------- */
-
-function daysBetween(a: string, b: string): number {
-  const da = new Date(`${a}T00:00:00`);
-  const db = new Date(`${b}T00:00:00`);
-  return Math.round((db.getTime() - da.getTime()) / 86_400_000);
-}
-
-export async function getStreak(profile: Profile): Promise<StreakInfo> {
-  const logs = await getLogs(profile);
-  if (logs.length === 0) {
-    return { count: 0, daysSinceLast: Infinity, status: 'new' };
-  }
-  const dates = logs.map((l) => l.date);
-  const last = dates[dates.length - 1];
-  const daysSinceLast = daysBetween(last, todayKey());
-
-  let count = 1;
-  for (let i = dates.length - 1; i > 0; i--) {
-    if (daysBetween(dates[i - 1], dates[i]) === 1) count++;
-    else break;
-  }
-
-  let status: StreakInfo['status'];
-  if (daysSinceLast <= 1) status = 'active';
-  else if (daysSinceLast <= 3) status = 'paused';
-  else status = 'welcome';
-
-  return { count, daysSinceLast, status };
-}
-
-/* ---------------------------------------------------------- */
-/* Medicine logs — dispatched                                 */
-/* ---------------------------------------------------------- */
-
-function readMedLogs(): MedLog[] {
-  try {
-    const raw = localStorage.getItem(KEYS.medLogs);
-    const parsed = raw ? (JSON.parse(raw) as MedLog[]) : [];
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
-
-function writeMedLogs(logs: MedLog[]): void {
-  localStorage.setItem(KEYS.medLogs, JSON.stringify(logs));
-}
-
-export async function getMedLogs(
-  profile: Profile,
-  date: string = todayKey(),
-): Promise<MedLog[]> {
-  if (remote.useSupabase()) return remote.getMedLogs(profile, date);
-  return readMedLogs().filter((m) => m.profile === profile && m.date === date);
-}
-
-export async function markMedTaken(
-  profile: Profile,
-  medId: string,
-  date: string = todayKey(),
-): Promise<MedLog> {
-  if (remote.useSupabase()) return remote.markMedTaken(profile, medId, date);
-
-  const logs = readMedLogs();
-  const existing = logs.find(
-    (m) => m.profile === profile && m.medId === medId && m.date === date,
-  );
-  if (existing) return existing;
-  const created: MedLog = {
-    id: uid(),
-    profile,
-    medId,
-    date,
-    takenAt: new Date().toISOString(),
-  };
-  logs.push(created);
-  writeMedLogs(logs);
-  return created;
-}
-
-export async function unmarkMedTaken(
-  profile: Profile,
-  medId: string,
-  date: string = todayKey(),
-): Promise<void> {
-  if (remote.useSupabase()) return remote.unmarkMedTaken(profile, medId, date);
-  const next = readMedLogs().filter(
-    (m) => !(m.profile === profile && m.medId === medId && m.date === date),
-  );
-  writeMedLogs(next);
-}
-
-export async function getMedCountsByDate(
-  profile: Profile,
-): Promise<Record<string, number>> {
-  if (remote.useSupabase()) return remote.getMedCountsByDate(profile);
-  const counts: Record<string, number> = {};
-  for (const m of readMedLogs()) {
-    if (m.profile === profile) counts[m.date] = (counts[m.date] ?? 0) + 1;
-  }
-  return counts;
-}
-
-/* ---------------------------------------------------------- */
-/* Medicine definitions — editable, dispatched                */
-/* ---------------------------------------------------------- */
-
-function readMedDefs(): Record<Profile, Medicine[]> | null {
-  try {
-    const raw = localStorage.getItem(KEYS.medicines);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as Record<Profile, Medicine[]>;
-    return parsed && typeof parsed === 'object' ? parsed : null;
-  } catch {
-    return null;
-  }
-}
-
-function writeMedDefs(defs: Record<Profile, Medicine[]>): void {
-  localStorage.setItem(KEYS.medicines, JSON.stringify(defs));
-}
-
-function seedMedDefs(): Record<Profile, Medicine[]> {
+export function defaultState(): AppState {
   return {
-    papa: STARTER_MEDICINES.papa.map((m) => ({ ...m, id: uid() })),
-    mummy: STARTER_MEDICINES.mummy.map((m) => ({ ...m, id: uid() })),
-    chunnu: STARTER_MEDICINES.chunnu.map((m) => ({ ...m, id: uid() })),
+    entered: false,
+    sound: false,
+    profileId: 'papa',
+    plans: clonePlans(),
+    doneBy: {},
+    medsBy: {},
   };
 }
 
-export async function listMedicines(profile: Profile): Promise<Medicine[]> {
-  if (remote.useSupabase()) return remote.listMedicines(profile);
-  let defs = readMedDefs();
-  if (!defs) {
-    defs = seedMedDefs();
-    writeMedDefs(defs);
-  }
-  return defs[profile] ?? [];
-}
-
-export async function addMedicine(
-  profile: Profile,
-  data: MedicineInput,
-): Promise<Medicine> {
-  if (remote.useSupabase()) return remote.addMedicine(profile, data);
-  const defs = readMedDefs() ?? seedMedDefs();
-  const med: Medicine = { ...data, id: uid() };
-  defs[profile] = [...(defs[profile] ?? []), med];
-  writeMedDefs(defs);
-  return med;
-}
-
-export async function updateMedicine(
-  profile: Profile,
-  id: string,
-  patch: Partial<MedicineInput>,
-): Promise<void> {
-  if (remote.useSupabase()) return remote.updateMedicine(profile, id, patch);
-  const defs = readMedDefs() ?? seedMedDefs();
-  defs[profile] = (defs[profile] ?? []).map((m) =>
-    m.id === id ? { ...m, ...patch } : m,
-  );
-  writeMedDefs(defs);
-}
-
-export async function removeMedicine(profile: Profile, id: string): Promise<void> {
-  if (remote.useSupabase()) return remote.removeMedicine(profile, id);
-  const defs = readMedDefs() ?? seedMedDefs();
-  defs[profile] = (defs[profile] ?? []).filter((m) => m.id !== id);
-  writeMedDefs(defs);
-}
-
-/* ---------------------------------------------------------- */
-/* Daily celebration (device-local: confetti once per day)    */
-/* ---------------------------------------------------------- */
-
-function readCelebrated(): Record<string, string> {
+export function loadState(): AppState {
+  const base = defaultState();
   try {
-    const raw = localStorage.getItem(KEYS.celebrated);
-    return raw ? (JSON.parse(raw) as Record<string, string>) : {};
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return base;
+    const saved = JSON.parse(raw) as Partial<AppState>;
+    return {
+      ...base,
+      ...saved,
+      plans: saved.plans ?? base.plans,
+      doneBy: saved.doneBy ?? {},
+      medsBy: saved.medsBy ?? {},
+    };
   } catch {
-    return {};
+    return base;
   }
 }
 
-export async function shouldCelebrate(
-  profile: Profile,
-  date: string = todayKey(),
-): Promise<boolean> {
-  return readCelebrated()[profile] !== date;
-}
-
-export async function markCelebrated(
-  profile: Profile,
-  date: string = todayKey(),
-): Promise<void> {
-  const map = readCelebrated();
-  map[profile] = date;
-  localStorage.setItem(KEYS.celebrated, JSON.stringify(map));
-}
-
-/* ---------------------------------------------------------- */
-/* Family cheers — dispatched to Supabase or localStorage     */
-/* ---------------------------------------------------------- */
-
-function readCheers(): Cheer[] {
+export function saveState(state: AppState): void {
   try {
-    const raw = localStorage.getItem(KEYS.cheers);
-    const parsed = raw ? (JSON.parse(raw) as Cheer[]) : [];
-    return Array.isArray(parsed) ? parsed : [];
+    localStorage.setItem(KEY, JSON.stringify(state));
   } catch {
-    return [];
+    /* storage full / unavailable — non-fatal */
   }
-}
-
-function writeCheers(cheers: Cheer[]): void {
-  localStorage.setItem(KEYS.cheers, JSON.stringify(cheers));
-}
-
-/** Cheers a profile has received on a given day, newest first. */
-export async function getCheers(
-  toProfile: Profile,
-  date: string = todayKey(),
-): Promise<Cheer[]> {
-  if (remote.useSupabase()) return remote.getCheers(toProfile, date);
-  return readCheers()
-    .filter((c) => c.toProfile === toProfile && c.date === date)
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-}
-
-/** Send a cheer from the active profile's name to another family member. */
-export async function sendCheer(
-  fromName: string,
-  toProfile: Profile,
-  emoji: string,
-  date: string = todayKey(),
-): Promise<Cheer> {
-  if (remote.useSupabase()) return remote.sendCheer(fromName, toProfile, emoji, date);
-  const created: Cheer = {
-    id: uid(),
-    toProfile,
-    fromName,
-    emoji,
-    date,
-    createdAt: new Date().toISOString(),
-  };
-  const cheers = readCheers();
-  cheers.push(created);
-  writeCheers(cheers);
-  return created;
-}
-
-/* ---------------------------------------------------------- */
-/* Dev / testing helpers                                      */
-/* ---------------------------------------------------------- */
-
-/** Wipe local device state (does not delete cloud rows). */
-export async function resetAll(): Promise<void> {
-  localStorage.removeItem(KEYS.logs);
-  localStorage.removeItem(KEYS.medLogs);
-  localStorage.removeItem(KEYS.medicines);
-  localStorage.removeItem(KEYS.celebrated);
-  localStorage.removeItem(KEYS.cheers);
-  localStorage.removeItem(KEYS.profile);
 }
