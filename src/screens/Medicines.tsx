@@ -12,6 +12,8 @@ import {
 } from '../lib/store';
 import { shareOnWhatsApp } from '../lib/share';
 import { playSound } from '../lib/sounds';
+import { reactSaathi } from '../lib/saathi/react';
+import { buildAllMedsDone } from '../lib/saathi/moments';
 import { composeMedsUpdate } from '../lib/dailyUpdate';
 import { formatClock, toInputTime } from '../lib/util';
 import { suggestHindi } from '../lib/translit';
@@ -166,6 +168,7 @@ export default function Medicines() {
     if (!wasTaken) {
       const allTaken = meds.length > 0 && meds.every((m) => map[m.id]);
       playSound(allTaken ? 'celebrate' : 'done');
+      if (allTaken) reactSaathi(buildAllMedsDone(info.name));
     }
   };
 
@@ -219,7 +222,7 @@ export default function Medicines() {
         <p className={styles.sub}>
           {editing
             ? 'Add, edit or remove medicines.'
-            : 'Tap when taken — then share to the family group.'}
+            : 'Jab le lein tab tap karein, phir family ko bhej dein.'}
         </p>
       </header>
 
@@ -311,7 +314,7 @@ export default function Medicines() {
             Share update on WhatsApp
           </button>
           <p className={styles.shareNote}>
-            Opens WhatsApp with the message ready — just pick the group.
+            WhatsApp khulega, message taiyaar. Bas group chun lein.
             <span className="hindi"> ग्रुप चुनकर भेजें।</span>
           </p>
         </>

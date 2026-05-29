@@ -14,6 +14,7 @@ import Trends from './screens/Trends';
 import Lessons from './screens/Lessons';
 import Medicines from './screens/Medicines';
 import Garden from './screens/Garden';
+import Reminders from './screens/Reminders';
 import styles from './App.module.css';
 
 function Splash() {
@@ -70,6 +71,7 @@ export default function App() {
         <Route path="/medicines" element={<Medicines />} />
         <Route path="/log" element={<Log />} />
         <Route path="/garden" element={<Garden />} />
+        <Route path="/reminders" element={<Reminders />} />
         <Route path="/trends" element={<Trends />} />
         <Route path="/lessons" element={<Lessons />} />
       </Route>

@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   X,
   Play,
@@ -9,11 +9,15 @@ import {
   Check,
   Video,
   ExternalLink,
+  Volume2,
+  VolumeX,
 } from 'lucide-react';
 import { useProfile } from '../context/ProfileContext';
 import { getRoutine } from '../data/exercises';
 import { upsertLog } from '../lib/store';
 import { playSound } from '../lib/sounds';
+import { useSaathi } from '../lib/saathi/voice';
+import { buildExerciseCue, buildRoutineStart, buildRoutineDone } from '../lib/saathi/moments';
 import styles from './ExercisePlayer.module.css';
 
 function fmt(sec: number): string {
@@ -28,13 +32,35 @@ const RING_C = 2 * Math.PI * RING_R;
 export default function ExercisePlayer() {
   const { profile } = useProfile();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { play, muted, toggleMuted, speaking } = useSaathi();
   const routine = profile ? getRoutine(profile) : null;
   const exercises = routine?.exercises ?? [];
 
-  const [index, setIndex] = useState(0);
-  const [remaining, setRemaining] = useState(exercises[0]?.durationSec ?? 0);
+  const startIndex = Math.max(
+    0,
+    Math.min(
+      (location.state as { startIndex?: number } | null)?.startIndex ?? 0,
+      Math.max(0, exercises.length - 1),
+    ),
+  );
+
+  const [index, setIndex] = useState(startIndex);
+  const [remaining, setRemaining] = useState(exercises[startIndex]?.durationSec ?? 0);
   const [running, setRunning] = useState(true);
   const [finished, setFinished] = useState(false);
+
+  // Dheeru coaches: announce + cue each move as it becomes active.
+  const coachedIndex = useRef(-1);
+  useEffect(() => {
+    if (finished || exercises.length === 0) return;
+    if (coachedIndex.current === index) return;
+    const firstCoach = coachedIndex.current === -1;
+    coachedIndex.current = index;
+    const cue = buildExerciseCue(exercises[index]);
+    play(firstCoach ? [...buildRoutineStart(), ...cue] : cue);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [index, finished]);
 
   // tick
   useEffect(() => {
@@ -63,7 +89,9 @@ export default function ExercisePlayer() {
     if (finished && profile) {
       upsertLog(profile, { exerciseDone: true });
       playSound('done');
+      play(buildRoutineDone());
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [finished, profile]);
 
   if (!profile || !routine) return null;
@@ -83,10 +111,10 @@ export default function ExercisePlayer() {
           <span className={styles.doneBadge} aria-hidden>
             <Check size={48} strokeWidth={3} />
           </span>
-          <h1 className={styles.doneTitle}>Routine complete</h1>
+          <h1 className={styles.doneTitle}>Ho gaya!</h1>
           <p className={styles.doneHindi}>शाबाश! आज पूरा हुआ।</p>
           <p className={styles.doneSub}>
-            Now the important part — tell us how you feel so we can track it.
+            Ab bas bata dijiye aaj kaisa laga, taaki hum track kar sakein.
           </p>
           <button
             type="button"
@@ -133,7 +161,15 @@ export default function ExercisePlayer() {
         <span className={styles.count}>
           {index + 1} / {exercises.length}
         </span>
-        <span style={{ width: 44 }} aria-hidden />
+        <button
+          type="button"
+          className={`${styles.iconBtn} ${speaking ? styles.coachOn : ''}`}
+          onClick={toggleMuted}
+          aria-pressed={!muted}
+          aria-label={muted ? "Turn on Dheeru's voice" : "Mute Dheeru's voice"}
+        >
+          {muted ? <VolumeX size={22} /> : <Volume2 size={22} />}
+        </button>
       </header>
 
       <div className={styles.progressTrack} aria-hidden>

@@ -166,7 +166,7 @@ export default function Trends() {
               }`}
             >
               {metricLabel} {numDir} from <b>{first}</b> to <b>{latest}</b>
-              {improving && ' — improving!'}
+              {improving && ' · behtar ho raha hai!'}
             </div>
           )}
 

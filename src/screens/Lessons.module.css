@@ -3,12 +3,74 @@
 }
 
 .header {
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .title {
   font-size: 1.9rem;
   font-style: italic;
+}
+
+.sub {
+  margin: 4px 0 0;
+  color: var(--ink-light);
+  font-size: 0.95rem;
+}
+
+/* Dheeru narrator */
+.narrator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  padding: 10px 14px;
+  border-radius: var(--radius-card);
+  background: color-mix(in srgb, var(--accent) 8%, var(--white));
+  border: 1px solid var(--cream-dark);
+}
+
+.narratorControls {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.listen {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--white);
+  font-size: 1.02rem;
+  font-weight: 700;
+}
+
+.listen:active {
+  background: var(--accent-dark);
+}
+
+.listen:disabled {
+  opacity: 0.6;
+}
+
+.mute {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--white);
+  border: 1px solid var(--cream-dark);
+  color: var(--ink-light);
+}
+
+.mute[aria-pressed='true'] {
+  color: var(--accent);
 }
 
 .titleHindi {
@@ -88,11 +150,68 @@
   font-style: italic;
 }
 
+.mythFact {
+  margin: 0 0 16px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--cream-dark);
+}
+
+.myth,
+.fact {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0;
+  padding: 12px 14px;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.myth {
+  background: color-mix(in srgb, var(--terracotta) 10%, var(--white));
+  color: var(--ink);
+}
+
+.fact {
+  background: color-mix(in srgb, var(--sage) 14%, var(--white));
+  color: var(--ink);
+}
+
+.mark {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--white);
+  margin-top: 1px;
+}
+
+.myth .mark {
+  background: var(--terracotta);
+}
+
+.fact .mark {
+  background: var(--sage-dark);
+}
+
 .para {
   margin: 0 0 12px;
   color: var(--ink-light);
   font-size: 1.04rem;
   line-height: 1.6;
+}
+
+.disclaimer {
+  margin: 16px 0 0;
+  font-size: 0.82rem;
+  color: var(--ink-light);
+  opacity: 0.85;
+  line-height: 1.45;
 }
 
 .tryBox {

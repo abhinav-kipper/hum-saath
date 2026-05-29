@@ -10,6 +10,8 @@ import {
   Send,
   Flower2,
   ChevronRight,
+  Bell,
+  Video,
 } from 'lucide-react';
 import { useProfile } from '../context/ProfileContext';
 import {
@@ -23,6 +25,10 @@ import {
   markCelebrated,
 } from '../lib/store';
 import { computeGarden } from '../lib/garden';
+import { getVideoOfDay } from '../lib/videoOfDay';
+import { reactSaathi } from '../lib/saathi/react';
+import { buildStreakMilestone } from '../lib/saathi/moments';
+import { anchorFor, type ReminderKind } from '../lib/reminders';
 import { getRoutine } from '../data/exercises';
 import type { Medicine } from '../data/medicines';
 import { todayLesson } from '../data/lessons';
@@ -35,7 +41,7 @@ import { playSound } from '../lib/sounds';
 import type { DayLog, MedLog, StreakInfo } from '../types';
 import TaskCard from '../components/TaskCard';
 import StreakChip from '../components/StreakChip';
-import PlantMascot from '../components/PlantMascot';
+import SaathiHost from '../components/SaathiHost';
 import SoundToggle from '../components/SoundToggle';
 import FamilyCheers from '../components/FamilyCheers';
 import InstallPrompt from '../components/InstallPrompt';
@@ -58,6 +64,8 @@ export default function Today() {
   const [medLogs, setMedLogs] = useState<MedLog[]>([]);
   const [meds, setMeds] = useState<Medicine[]>([]);
   const [gardenFlowers, setGardenFlowers] = useState(0);
+  const [anchors, setAnchors] = useState<Partial<Record<ReminderKind, string>>>({});
+  const [lowEnergy, setLowEnergy] = useState(false);
 
   useEffect(() => {
     if (!profile) return;
@@ -68,6 +76,12 @@ export default function Today() {
     Promise.all([getLogs(profile), getMedCountsByDate(profile)]).then(([ls, mc]) =>
       setGardenFlowers(computeGarden(ls, mc).flowers),
     );
+    setAnchors({
+      movement: anchorFor(profile, 'movement'),
+      checkin: anchorFor(profile, 'checkin'),
+      medicines: anchorFor(profile, 'medicines'),
+      walk: anchorFor(profile, 'walk'),
+    });
   }, [profile]);
 
   // Fire confetti once per day when everything for the day is done.
@@ -99,9 +113,28 @@ export default function Today() {
     }
   }, [profile, log, medLogs, meds]);
 
+  // Streak milestones — Dheeru celebrates the big ones, once each.
+  useEffect(() => {
+    if (!profile || !streak) return;
+    const MILESTONES = [7, 14, 30, 50, 100, 150, 200, 365];
+    if (!MILESTONES.includes(streak.count)) return;
+    const key = `saath.streakSeen.${profile}`;
+    let seen: number[] = [];
+    try {
+      seen = JSON.parse(localStorage.getItem(key) ?? '[]');
+    } catch {
+      seen = [];
+    }
+    if (seen.includes(streak.count)) return;
+    localStorage.setItem(key, JSON.stringify([...seen, streak.count]));
+    const t = setTimeout(() => reactSaathi(buildStreakMilestone(streak.count, info?.name)), 3000);
+    return () => clearTimeout(t);
+  }, [profile, streak]);
+
   if (!profile || !info) return null;
 
   const routine = getRoutine(profile);
+  const vod = getVideoOfDay(profile);
   const lesson = todayLesson(profile);
   const medTaken = medLogs.length;
   const allMedsTaken = meds.length > 0 && medTaken >= meds.length;
@@ -129,7 +162,7 @@ export default function Today() {
       : kind === 'mood'
         ? `Mood: ${log?.moodScore}/5`
         : `BP: ${log?.systolic}/${log?.diastolic}`
-    : 'Takes 20 seconds';
+    : '20 second ka kaam';
 
   // progress for the encouraging line
   const tasks = [
@@ -143,8 +176,22 @@ export default function Today() {
 
   let encourage: string;
   if (doneCount === 0) encourage = 'Chalo, shuru karte hain 🌱';
-  else if (doneCount >= totalCount) encourage = 'Aaj sab ho gaya — wah! 🎉';
-  else encourage = `${doneCount}/${totalCount} ho gaya — lage raho 👏`;
+  else if (doneCount >= totalCount) encourage = 'Aaj sab ho gaya, wah! 🎉';
+  else encourage = `${doneCount}/${totalCount} ho gaya, lage raho 👏`;
+
+  // "Bad day" minimum — the single tiniest step that still counts.
+  const checkInMicro =
+    kind === 'pain'
+      ? 'Bas dard likh dijiye, 20 second'
+      : kind === 'mood'
+        ? 'Bas mood bata dijiye, 20 second'
+        : 'Bas BP naap lijiye, 20 second';
+  const microOptions = [
+    !checkInDone ? { label: checkInMicro, route: '/log' } : null,
+    !log?.exerciseDone ? { label: 'Bas 2 minute hilna-dulna', route: '/exercise' } : null,
+    !log?.walked ? { label: 'Bas 5 minute ki walk', route: '/log' } : null,
+  ].filter((x): x is { label: string; route: string } => x !== null);
+  const micro = microOptions[0];
 
   const shareDay = () => {
     const dateStr = new Date().toLocaleDateString('en-GB', {
@@ -193,11 +240,31 @@ export default function Today() {
         </div>
         <div className={styles.statusRow}>
           {streak && <StreakChip streak={streak} />}
-          <SoundToggle />
+          <div className={styles.controls}>
+            <button
+              type="button"
+              className={styles.iconBtn}
+              onClick={() => navigate('/reminders')}
+              aria-label="Reminders"
+            >
+              <Bell size={18} aria-hidden />
+            </button>
+            <SoundToggle />
+          </div>
         </div>
       </header>
 
-      <PlantMascot done={doneCount} total={totalCount} label={encourage} />
+      <SaathiHost
+        ctx={{
+          name: info.name,
+          hour: new Date().getHours(),
+          doneCount,
+          totalCount,
+          remaining: Math.max(0, totalCount - doneCount),
+          streakStatus: streak?.status ?? 'new',
+        }}
+        encourage={encourage}
+      />
       <p className={styles.affirm}>{todayAffirmation()}</p>
 
       <button
@@ -216,9 +283,9 @@ export default function Today() {
       {streak?.status === 'welcome' && (
         <div className={styles.welcome}>
           <p className={styles.welcomeText}>
-            Welcome back — no pressure. Start with just 5 minutes today?
+            Aap aa gaye. Koi jaldi nahi, aaj bas 5 minute se shuru karein?
           </p>
-          <p className="hindi">वापसी पर स्वागत है — आज सिर्फ़ 5 मिनट से शुरू करें?</p>
+          <p className="hindi">आप आ गए। कोई जल्दी नहीं, आज बस 5 मिनट से शुरू करें?</p>
         </div>
       )}
 
@@ -232,6 +299,7 @@ export default function Today() {
           title="Today’s movement"
           hindi="आज की एक्सरसाइज़"
           meta={`${routine.exercises.length} moves · ${routine.minutes} min`}
+          anchor={anchors.movement}
           done={log?.exerciseDone}
           onClick={() => navigate('/exercise')}
         />
@@ -244,9 +312,10 @@ export default function Today() {
             meds.length === 0
               ? 'Tap to add'
               : allMedsTaken
-                ? 'All taken — great!'
+                ? 'Sab le liya, badhiya!'
                 : `${medTaken}/${meds.length} taken today`
           }
+          anchor={anchors.medicines}
           done={allMedsTaken}
           onClick={() => navigate('/medicines')}
         />
@@ -256,6 +325,7 @@ export default function Today() {
           title={checkInTitle}
           hindi={checkInHindi}
           meta={checkInMeta}
+          anchor={anchors.checkin}
           done={checkInDone}
           onClick={() => navigate('/log')}
         />
@@ -264,7 +334,8 @@ export default function Today() {
           icon={<Footprints size={26} />}
           title="Walk after a meal"
           hindi="खाने के बाद टहलें"
-          meta={log?.walked ? 'Done — nice!' : '10 minutes is enough'}
+          meta={log?.walked ? 'Ho gaya, badhiya!' : '10 minute kaafi hai'}
+          anchor={anchors.walk}
           done={log?.walked}
           onClick={() => navigate('/log')}
         />
@@ -276,6 +347,58 @@ export default function Today() {
           meta={lesson.title}
           onClick={() => navigate('/lessons')}
         />
+      </div>
+
+      {vod && (
+        <button
+          type="button"
+          className={styles.videoCard}
+          onClick={() => navigate('/exercise', { state: { startIndex: vod.index } })}
+        >
+          <span className={styles.videoIcon} aria-hidden>
+            <Video size={24} />
+          </span>
+          <span className={styles.videoText}>
+            <span className={styles.videoKicker}>Aaj ka video · आज का वीडियो</span>
+            <span className={styles.videoTitle}>{vod.exercise.name}</span>
+            <span className={styles.videoHindi}>{vod.exercise.hindiName} · 1 min</span>
+          </span>
+          <ChevronRight size={20} aria-hidden />
+        </button>
+      )}
+
+      <div className={styles.badDay}>
+        {!lowEnergy ? (
+          <button
+            type="button"
+            className={styles.badDayToggle}
+            onClick={() => setLowEnergy(true)}
+          >
+            Low on energy today? <span className="hindi">· मन नहीं है?</span>
+          </button>
+        ) : (
+          <div className={styles.badDayCard}>
+            {micro ? (
+              <>
+                <p className={styles.badDayLead}>Toh bas ek chhoti cheez 🌱</p>
+                <button
+                  type="button"
+                  className={styles.badDayCta}
+                  onClick={() => navigate(micro.route)}
+                >
+                  {micro.label}
+                </button>
+                <p className={styles.badDayNote}>
+                  Itna hi kaafi hai. Baaki phir kabhi. 💛
+                </p>
+              </>
+            ) : (
+              <p className={styles.badDayLead}>
+                Aaj sab ho gaya. Ab aaram kijiye 💛
+              </p>
+            )}
+          </div>
+        )}
       </div>
 
       <FamilyCheers />

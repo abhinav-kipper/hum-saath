@@ -50,6 +50,14 @@
   color: var(--ink-light);
 }
 
+.anchor {
+  font-family: var(--font-hand);
+  font-size: 1.05rem;
+  color: var(--accent-dark);
+  margin-top: 2px;
+  line-height: 1.1;
+}
+
 .meta {
   font-size: 0.82rem;
   color: var(--ink-light);

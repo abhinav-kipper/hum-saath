@@ -15,6 +15,12 @@ export interface Lesson {
   body: string[];
   tryTonight: string;
   tryTonightHindi: string;
+  /** "Aam galti" — a common belief we get wrong (Hinglish, for display). */
+  myth?: string;
+  /** "Sach" — what's actually true (Hinglish, for display). */
+  fact?: string;
+  /** What Dheeru says aloud, in Devanagari (so the Hindi TTS reads it well). */
+  spokenHi?: string;
 }
 
 export const LESSONS: Lesson[] = raw as Lesson[];

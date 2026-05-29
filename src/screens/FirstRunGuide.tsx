@@ -13,8 +13,8 @@ const STEPS: Step[] = [
   {
     icon: <Heart size={34} strokeWidth={2.4} />,
     title: 'Welcome to Saath',
-    en: 'One small thing for your health, every day. That’s all.',
-    hi: 'रोज़ थोड़ी सेहत — बस इतना।',
+    en: 'One small thing for your health, every day. Bas itna.',
+    hi: 'रोज़ थोड़ी सेहत, बस इतना।',
   },
   {
     icon: <Dumbbell size={34} strokeWidth={2.4} />,
@@ -25,8 +25,8 @@ const STEPS: Step[] = [
   {
     icon: <Sprout size={34} strokeWidth={2.4} />,
     title: 'Watch it grow',
-    en: 'Tick things off — your plant blooms, your streak grows, and you can share the day with family.',
-    hi: 'काम पूरे करें — पौधा खिलेगा, और परिवार को अपडेट भेजें।',
+    en: 'Dheeru cheers you on, your garden grows, and you can share the day with family.',
+    hi: 'धीरू साथ देगा, बगीचा खिलेगा, और परिवार को अपडेट भेजें।',
   },
 ];
 

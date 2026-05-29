@@ -8,6 +8,8 @@ interface TaskCardProps {
   hindi: string;
   /** small supporting line, e.g. "8 moves · 8 min" */
   meta?: string;
+  /** implementation-intention anchor, e.g. "After morning chai" */
+  anchor?: string;
   done?: boolean;
   onClick: () => void;
 }
@@ -17,6 +19,7 @@ export default function TaskCard({
   title,
   hindi,
   meta,
+  anchor,
   done = false,
   onClick,
 }: TaskCardProps) {
@@ -33,6 +36,7 @@ export default function TaskCard({
       <span className={styles.text}>
         <span className={styles.title}>{title}</span>
         <span className={styles.hindi}>{hindi}</span>
+        {anchor && <span className={styles.anchor}>↳ {anchor}</span>}
         {meta && <span className={styles.meta}>{meta}</span>}
       </span>
       <span className={styles.right} aria-hidden>

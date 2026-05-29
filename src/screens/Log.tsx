@@ -4,6 +4,8 @@ import { Check, Footprints, TrendingDown, TrendingUp, Minus } from 'lucide-react
 import { useProfile } from '../context/ProfileContext';
 import { getLog, getLogs, upsertLog } from '../lib/store';
 import { playSound } from '../lib/sounds';
+import { reactSaathi } from '../lib/saathi/react';
+import { buildCheckinReaction } from '../lib/saathi/moments';
 import { checkinKind } from '../lib/checkin';
 import type { DayLog } from '../types';
 import styles from './Log.module.css';
@@ -24,7 +26,7 @@ function bpStatus(sys: number, dia: number): 'ok' | 'watch' | 'high' {
 }
 
 export default function Log() {
-  const { profile } = useProfile();
+  const { profile, info } = useProfile();
   const navigate = useNavigate();
 
   const [pain, setPain] = useState<number | null>(null);
@@ -72,6 +74,16 @@ export default function Log() {
     await upsertLog(profile, patch);
     setHistory(await getLogs(profile));
     playSound('save');
+    reactSaathi(
+      buildCheckinReaction({
+        kind,
+        name: info?.name,
+        painScore: pain ?? undefined,
+        moodScore: mood ?? undefined,
+        systolic: sys ? Number(sys) : undefined,
+        diastolic: dia ? Number(dia) : undefined,
+      }),
+    );
     setSaved(true);
   };
 
@@ -120,7 +132,7 @@ export default function Log() {
               <span>
                 {metricLabel} {numDir} from <b>{first}</b> to <b>{latest}</b>
                 {unit} over {series.length} entries.
-                {improving && ' Keep going!'}
+                {improving && ' Lage raho!'}
               </span>
             </div>
           )}
@@ -150,7 +162,7 @@ export default function Log() {
         <h1 className={styles.title}>
           Today’s check-in <span className={styles.titleHindi}>आज की जाँच</span>
         </h1>
-        <p className={styles.sub}>One quick note about how you feel.</p>
+        <p className={styles.sub}>Bas ek chhoti si baat.</p>
       </header>
 
       {kind === 'pain' && (
@@ -246,7 +258,7 @@ export default function Log() {
           aria-pressed={walked}
         >
           <Footprints size={24} />
-          {walked ? 'Yes — done!' : 'Not yet'}
+          {walked ? 'Haan, ho gaya!' : 'Abhi nahi'}
           <span className={styles.walkDot} aria-hidden />
         </button>
       </section>
@@ -265,16 +277,16 @@ export default function Log() {
 
 function BpHint({ status }: { status: 'ok' | 'watch' | 'high' }) {
   const map = {
-    ok: { cls: styles.hintOk, en: 'Looking good.', hi: 'अच्छा है।' },
+    ok: { cls: styles.hintOk, en: 'All good.', hi: 'अच्छा है।' },
     watch: {
       cls: styles.hintWatch,
-      en: 'A little elevated — keep an eye on it.',
-      hi: 'थोड़ा ज़्यादा — ध्यान रखें।',
+      en: 'A little high. Keep an eye on it.',
+      hi: 'थोड़ा ज़्यादा है, ध्यान रखें।',
     },
     high: {
       cls: styles.hintHigh,
-      en: 'On the high side. If it stays here, tell the doctor.',
-      hi: 'ज़्यादा है — डॉक्टर को बताएँ।',
+      en: 'On the high side. Agar aisa hi rahe toh doctor ko batayein.',
+      hi: 'ज़्यादा है, डॉक्टर को बताएँ।',
     },
   } as const;
   const h = map[status];
