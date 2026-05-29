@@ -10,6 +10,7 @@ import {
   Send,
   Flower2,
   ChevronRight,
+  Bell,
 } from 'lucide-react';
 import { useProfile } from '../context/ProfileContext';
 import {
@@ -23,6 +24,7 @@ import {
   markCelebrated,
 } from '../lib/store';
 import { computeGarden } from '../lib/garden';
+import { anchorFor, type ReminderKind } from '../lib/reminders';
 import { getRoutine } from '../data/exercises';
 import type { Medicine } from '../data/medicines';
 import { todayLesson } from '../data/lessons';
@@ -58,6 +60,8 @@ export default function Today() {
   const [medLogs, setMedLogs] = useState<MedLog[]>([]);
   const [meds, setMeds] = useState<Medicine[]>([]);
   const [gardenFlowers, setGardenFlowers] = useState(0);
+  const [anchors, setAnchors] = useState<Partial<Record<ReminderKind, string>>>({});
+  const [lowEnergy, setLowEnergy] = useState(false);
 
   useEffect(() => {
     if (!profile) return;
@@ -68,6 +72,12 @@ export default function Today() {
     Promise.all([getLogs(profile), getMedCountsByDate(profile)]).then(([ls, mc]) =>
       setGardenFlowers(computeGarden(ls, mc).flowers),
     );
+    setAnchors({
+      movement: anchorFor(profile, 'movement'),
+      checkin: anchorFor(profile, 'checkin'),
+      medicines: anchorFor(profile, 'medicines'),
+      walk: anchorFor(profile, 'walk'),
+    });
   }, [profile]);
 
   // Fire confetti once per day when everything for the day is done.
@@ -146,6 +156,20 @@ export default function Today() {
   else if (doneCount >= totalCount) encourage = 'Aaj sab ho gaya — wah! 🎉';
   else encourage = `${doneCount}/${totalCount} ho gaya — lage raho 👏`;
 
+  // "Bad day" minimum — the single tiniest step that still counts.
+  const checkInMicro =
+    kind === 'pain'
+      ? 'Just log your pain — 20 seconds'
+      : kind === 'mood'
+        ? 'Just check in your mood — 20 seconds'
+        : 'Just take your BP — 20 seconds';
+  const microOptions = [
+    !checkInDone ? { label: checkInMicro, route: '/log' } : null,
+    !log?.exerciseDone ? { label: 'Just 2 minutes of movement', route: '/exercise' } : null,
+    !log?.walked ? { label: 'Just a 5-minute walk', route: '/log' } : null,
+  ].filter((x): x is { label: string; route: string } => x !== null);
+  const micro = microOptions[0];
+
   const shareDay = () => {
     const dateStr = new Date().toLocaleDateString('en-GB', {
       day: 'numeric',
@@ -193,7 +217,17 @@ export default function Today() {
         </div>
         <div className={styles.statusRow}>
           {streak && <StreakChip streak={streak} />}
-          <SoundToggle />
+          <div className={styles.controls}>
+            <button
+              type="button"
+              className={styles.iconBtn}
+              onClick={() => navigate('/reminders')}
+              aria-label="Reminders"
+            >
+              <Bell size={18} aria-hidden />
+            </button>
+            <SoundToggle />
+          </div>
         </div>
       </header>
 
@@ -232,6 +266,7 @@ export default function Today() {
           title="Today’s movement"
           hindi="आज की एक्सरसाइज़"
           meta={`${routine.exercises.length} moves · ${routine.minutes} min`}
+          anchor={anchors.movement}
           done={log?.exerciseDone}
           onClick={() => navigate('/exercise')}
         />
@@ -247,6 +282,7 @@ export default function Today() {
                 ? 'All taken — great!'
                 : `${medTaken}/${meds.length} taken today`
           }
+          anchor={anchors.medicines}
           done={allMedsTaken}
           onClick={() => navigate('/medicines')}
         />
@@ -256,6 +292,7 @@ export default function Today() {
           title={checkInTitle}
           hindi={checkInHindi}
           meta={checkInMeta}
+          anchor={anchors.checkin}
           done={checkInDone}
           onClick={() => navigate('/log')}
         />
@@ -265,6 +302,7 @@ export default function Today() {
           title="Walk after a meal"
           hindi="खाने के बाद टहलें"
           meta={log?.walked ? 'Done — nice!' : '10 minutes is enough'}
+          anchor={anchors.walk}
           done={log?.walked}
           onClick={() => navigate('/log')}
         />
@@ -276,6 +314,40 @@ export default function Today() {
           meta={lesson.title}
           onClick={() => navigate('/lessons')}
         />
+      </div>
+
+      <div className={styles.badDay}>
+        {!lowEnergy ? (
+          <button
+            type="button"
+            className={styles.badDayToggle}
+            onClick={() => setLowEnergy(true)}
+          >
+            Low on energy today? <span className="hindi">· मन नहीं है?</span>
+          </button>
+        ) : (
+          <div className={styles.badDayCard}>
+            {micro ? (
+              <>
+                <p className={styles.badDayLead}>Then just do one small thing 🌱</p>
+                <button
+                  type="button"
+                  className={styles.badDayCta}
+                  onClick={() => navigate(micro.route)}
+                >
+                  {micro.label}
+                </button>
+                <p className={styles.badDayNote}>
+                  Itna hi kaafi hai. Baaki phir kabhi. 💛
+                </p>
+              </>
+            ) : (
+              <p className={styles.badDayLead}>
+                You’ve already done today — rest easy 💛
+              </p>
+            )}
+          </div>
+        )}
       </div>
 
       <FamilyCheers />
