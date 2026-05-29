@@ -1,0 +1,18 @@
+{
+  "plan_intro": {
+    "hi": "आज के लिए छोटी सी लिस्ट है, घबराइए मत।",
+    "en": "Today's list is small — don't worry."
+  },
+  "plan_alldone": {
+    "hi": "और आज तो सब हो गया — अरे वाह, शाबाश जी!",
+    "en": "And today, it's all done — wonderful, shaabaash!"
+  },
+  "plan_empty": {
+    "hi": "आज के लिए अभी कुछ नहीं — आराम से।",
+    "en": "Nothing on the list yet — rest easy."
+  },
+  "encourage_steady": {
+    "hi": "धीरे-धीरे, पर रोज़। यही असली जीत है।",
+    "en": "Slowly, but every day. That's the real win."
+  }
+}

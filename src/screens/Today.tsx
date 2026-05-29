@@ -37,7 +37,7 @@ import { playSound } from '../lib/sounds';
 import type { DayLog, MedLog, StreakInfo } from '../types';
 import TaskCard from '../components/TaskCard';
 import StreakChip from '../components/StreakChip';
-import PlantMascot from '../components/PlantMascot';
+import SaathiHost from '../components/SaathiHost';
 import SoundToggle from '../components/SoundToggle';
 import FamilyCheers from '../components/FamilyCheers';
 import InstallPrompt from '../components/InstallPrompt';
@@ -231,7 +231,17 @@ export default function Today() {
         </div>
       </header>
 
-      <PlantMascot done={doneCount} total={totalCount} label={encourage} />
+      <SaathiHost
+        ctx={{
+          name: info.name,
+          hour: new Date().getHours(),
+          doneCount,
+          totalCount,
+          remaining: Math.max(0, totalCount - doneCount),
+          streakStatus: streak?.status ?? 'new',
+        }}
+        encourage={encourage}
+      />
       <p className={styles.affirm}>{todayAffirmation()}</p>
 
       <button
