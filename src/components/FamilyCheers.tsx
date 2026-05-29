@@ -3,6 +3,8 @@ import { useProfile } from '../context/ProfileContext';
 import { PROFILE_LIST } from '../data/profiles';
 import { getCheers, sendCheer } from '../lib/store';
 import { playSound } from '../lib/sounds';
+import { reactSaathi } from '../lib/saathi/react';
+import { buildCheerReceived } from '../lib/saathi/moments';
 import { CHEER_EMOJIS, type Cheer, type ProfileInfo } from '../types';
 import styles from './FamilyCheers.module.css';
 
@@ -15,7 +17,16 @@ export default function FamilyCheers() {
 
   useEffect(() => {
     if (!profile) return;
-    getCheers(profile).then(setReceived);
+    getCheers(profile).then((cs) => {
+      setReceived(cs);
+      if (cs.length === 0) return;
+      const key = `saath.cheerSeen.${profile}`;
+      if (sessionStorage.getItem(key) !== String(cs.length)) {
+        sessionStorage.setItem(key, String(cs.length));
+        // Delay so it follows Dheeru's opening greeting on Today.
+        setTimeout(() => reactSaathi(buildCheerReceived()), 3500);
+      }
+    });
   }, [profile]);
 
   useEffect(() => () => clearTimeout(timer.current), []);

@@ -4,6 +4,8 @@ import { Check, Footprints, TrendingDown, TrendingUp, Minus } from 'lucide-react
 import { useProfile } from '../context/ProfileContext';
 import { getLog, getLogs, upsertLog } from '../lib/store';
 import { playSound } from '../lib/sounds';
+import { reactSaathi } from '../lib/saathi/react';
+import { buildCheckinReaction } from '../lib/saathi/moments';
 import { checkinKind } from '../lib/checkin';
 import type { DayLog } from '../types';
 import styles from './Log.module.css';
@@ -72,6 +74,15 @@ export default function Log() {
     await upsertLog(profile, patch);
     setHistory(await getLogs(profile));
     playSound('save');
+    reactSaathi(
+      buildCheckinReaction({
+        kind,
+        painScore: pain ?? undefined,
+        moodScore: mood ?? undefined,
+        systolic: sys ? Number(sys) : undefined,
+        diastolic: dia ? Number(dia) : undefined,
+      }),
+    );
     setSaved(true);
   };
 

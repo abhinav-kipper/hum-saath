@@ -26,6 +26,8 @@ import {
 } from '../lib/store';
 import { computeGarden } from '../lib/garden';
 import { getVideoOfDay } from '../lib/videoOfDay';
+import { reactSaathi } from '../lib/saathi/react';
+import { buildStreakMilestone } from '../lib/saathi/moments';
 import { anchorFor, type ReminderKind } from '../lib/reminders';
 import { getRoutine } from '../data/exercises';
 import type { Medicine } from '../data/medicines';
@@ -110,6 +112,24 @@ export default function Today() {
       });
     }
   }, [profile, log, medLogs, meds]);
+
+  // Streak milestones — Dheeru celebrates the big ones, once each.
+  useEffect(() => {
+    if (!profile || !streak) return;
+    const MILESTONES = [7, 14, 30, 50, 100, 150, 200, 365];
+    if (!MILESTONES.includes(streak.count)) return;
+    const key = `saath.streakSeen.${profile}`;
+    let seen: number[] = [];
+    try {
+      seen = JSON.parse(localStorage.getItem(key) ?? '[]');
+    } catch {
+      seen = [];
+    }
+    if (seen.includes(streak.count)) return;
+    localStorage.setItem(key, JSON.stringify([...seen, streak.count]));
+    const t = setTimeout(() => reactSaathi(buildStreakMilestone(streak.count)), 3000);
+    return () => clearTimeout(t);
+  }, [profile, streak]);
 
   if (!profile || !info) return null;
 

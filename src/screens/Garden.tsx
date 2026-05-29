@@ -6,6 +6,8 @@ import { getLogs, getMedCountsByDate } from '../lib/store';
 import { computeGarden, DAYS_PER_FLOWER, type GardenState } from '../lib/garden';
 import { launchConfetti } from '../lib/confetti';
 import { playSound } from '../lib/sounds';
+import { reactSaathi } from '../lib/saathi/react';
+import { buildGardenBloom } from '../lib/saathi/moments';
 import type { DayLog } from '../types';
 import styles from './Garden.module.css';
 
@@ -148,6 +150,7 @@ export default function Garden() {
     if (garden.flowers > seen) {
       launchConfetti();
       playSound('streak');
+      reactSaathi(buildGardenBloom(garden.flowers));
     }
     localStorage.setItem(seenKey(profile), String(garden.flowers));
   }, [profile, garden]);

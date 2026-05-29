@@ -95,6 +95,57 @@ export function buildRoutineDone(): SaathiLine[] {
   return [clipLine('exercise_done'), clipLine('encourage_steady')];
 }
 
+/* ---- reactions (fired from any screen via reactSaathi) ---- */
+
+export function buildCheckinReaction(p: {
+  kind: 'pain' | 'mood' | 'bp';
+  painScore?: number;
+  moodScore?: number;
+  systolic?: number;
+  diastolic?: number;
+}): SaathiLine[] {
+  if (p.kind === 'pain') {
+    const v = p.painScore ?? 0;
+    if (v >= 7)
+      return [{ hi: 'दर्द ज़्यादा लग रहा है। आराम कीजिए, ज़रूरत हो तो डॉक्टर को बताइए।', en: 'That looks painful. Please rest.' }];
+    if (v <= 3) return [{ hi: 'अरे वाह, आज दर्द कम है! बढ़िया।', en: 'Less pain today. Lovely.' }];
+    return [{ hi: 'दर्ज हो गया। धीरे-धीरे बेहतर होगा।', en: 'Noted. It will ease, slowly.' }];
+  }
+  if (p.kind === 'mood') {
+    const v = p.moodScore ?? 3;
+    if (v >= 4) return [{ hi: 'अच्छा मूड! ऐसे ही मुस्कुराते रहिए।', en: 'Good mood! Keep smiling.' }];
+    if (v <= 2) return [{ hi: 'आज मन थोड़ा भारी है। कोई बात नहीं, मैं साथ हूँ।', en: 'A heavy day. I am with you.' }];
+    return [{ hi: 'दर्ज हो गया। अपना ख्याल रखिए।', en: 'Noted. Take care.' }];
+  }
+  const s = p.systolic ?? 0;
+  const d = p.diastolic ?? 0;
+  if (s >= 140 || d >= 90)
+    return [{ hi: 'बीपी थोड़ा ज़्यादा है। आराम से बैठिए, और ऐसा बना रहे तो डॉक्टर को बताइए।', en: 'BP is a bit high. Please rest.' }];
+  if (s >= 130 || d >= 85)
+    return [{ hi: 'बीपी थोड़ा ऊपर है, ध्यान रखिए।', en: 'BP is slightly up. Keep an eye on it.' }];
+  return [{ hi: 'बीपी अच्छा है। बढ़िया!', en: 'BP looks good. Lovely!' }];
+}
+
+export function buildAllMedsDone(): SaathiLine[] {
+  return [{ hi: 'सारी दवाई हो गई। शाबाश जी!', en: 'All medicines done. Shaabaash!' }];
+}
+
+export function buildGardenBloom(flowers: number): SaathiLine[] {
+  return [
+    { hi: `नया फूल खिल गया! अब ${flowers} हो गए। शाबाश।`, en: `A new flower bloomed. ${flowers} now.` },
+  ];
+}
+
+export function buildCheerReceived(): SaathiLine[] {
+  return [{ hi: 'देखिए, परिवार ने आपको शाबाशी भेजी है!', en: 'Your family sent you a cheer!' }];
+}
+
+export function buildStreakMilestone(days: number): SaathiLine[] {
+  return [
+    { hi: `${days} दिन लगातार! क्या बात है, शाबाश।`, en: `${days} days in a row. Kya baat hai!` },
+  ];
+}
+
 /** Narrate a lesson: a warm opener, then its Hindi gist. */
 export function buildLessonNarration(l: {
   spokenHi?: string;
