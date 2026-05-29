@@ -167,5 +167,5 @@ export function useSaathi() {
     [speakLines],
   );
 
-  return { unlocked, muted, speaking, caption, toggleMuted, playOpening, stop };
+  return { unlocked, muted, speaking, caption, toggleMuted, playOpening, play: speakLines, stop };
 }

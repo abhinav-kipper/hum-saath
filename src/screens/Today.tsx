@@ -11,6 +11,7 @@ import {
   Flower2,
   ChevronRight,
   Bell,
+  Video,
 } from 'lucide-react';
 import { useProfile } from '../context/ProfileContext';
 import {
@@ -24,6 +25,7 @@ import {
   markCelebrated,
 } from '../lib/store';
 import { computeGarden } from '../lib/garden';
+import { getVideoOfDay } from '../lib/videoOfDay';
 import { anchorFor, type ReminderKind } from '../lib/reminders';
 import { getRoutine } from '../data/exercises';
 import type { Medicine } from '../data/medicines';
@@ -112,6 +114,7 @@ export default function Today() {
   if (!profile || !info) return null;
 
   const routine = getRoutine(profile);
+  const vod = getVideoOfDay(profile);
   const lesson = todayLesson(profile);
   const medTaken = medLogs.length;
   const allMedsTaken = meds.length > 0 && medTaken >= meds.length;
@@ -325,6 +328,24 @@ export default function Today() {
           onClick={() => navigate('/lessons')}
         />
       </div>
+
+      {vod && (
+        <button
+          type="button"
+          className={styles.videoCard}
+          onClick={() => navigate('/exercise', { state: { startIndex: vod.index } })}
+        >
+          <span className={styles.videoIcon} aria-hidden>
+            <Video size={24} />
+          </span>
+          <span className={styles.videoText}>
+            <span className={styles.videoKicker}>Aaj ka video · आज का वीडियो</span>
+            <span className={styles.videoTitle}>{vod.exercise.name}</span>
+            <span className={styles.videoHindi}>{vod.exercise.hindiName} · 1 min</span>
+          </span>
+          <ChevronRight size={20} aria-hidden />
+        </button>
+      )}
 
       <div className={styles.badDay}>
         {!lowEnergy ? (

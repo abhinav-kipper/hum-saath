@@ -14,5 +14,13 @@
   "encourage_steady": {
     "hi": "धीरे-धीरे, पर रोज़। यही असली जीत है।",
     "en": "Slowly, but every day. That's the real win."
+  },
+  "exercise_start": {
+    "hi": "चलिए, साथ में करते हैं। आराम से, मेरे साथ।",
+    "en": "Let's do it together — easy does it, with me."
+  },
+  "exercise_done": {
+    "hi": "शाबाश! आज की एक्सरसाइज़ पूरी हुई।",
+    "en": "Well done — today's exercise is complete."
   }
 }

@@ -71,3 +71,26 @@ export function buildOpening(ctx: SaathiCtx): SaathiLine[] {
 
   return lines;
 }
+
+/** Coach a single exercise: name it, then speak its form cue. */
+export function buildExerciseCue(ex: {
+  name: string;
+  hindiName: string;
+  cue: string;
+  cueHindi: string;
+}): SaathiLine[] {
+  return [
+    { hi: `${ex.hindiName}।`, en: ex.name },
+    { hi: ex.cueHindi, en: ex.cue },
+  ];
+}
+
+/** Kick off the routine. */
+export function buildRoutineStart(): SaathiLine[] {
+  return [clipLine('exercise_start')];
+}
+
+/** Celebrate finishing the routine. */
+export function buildRoutineDone(): SaathiLine[] {
+  return [clipLine('exercise_done'), clipLine('encourage_steady')];
+}

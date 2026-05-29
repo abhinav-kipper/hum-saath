@@ -158,6 +158,60 @@
   color: var(--ink-light);
 }
 
+.videoCard {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 14px;
+  padding: 14px 16px;
+  border-radius: var(--radius-card);
+  background: color-mix(in srgb, var(--gold) 14%, var(--white));
+  border: 1px solid color-mix(in srgb, var(--gold) 36%, var(--cream-dark));
+  text-align: left;
+}
+
+.videoCard:active {
+  background: color-mix(in srgb, var(--gold) 22%, var(--white));
+}
+
+.videoIcon {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--gold) 26%, var(--white));
+  color: var(--ink);
+}
+
+.videoText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.videoKicker {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--accent-dark);
+}
+
+.videoTitle {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.videoHindi {
+  font-size: 0.88rem;
+  color: var(--ink-light);
+}
+
 .badDay {
   margin-top: 14px;
 }
