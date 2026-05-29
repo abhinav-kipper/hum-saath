@@ -5,11 +5,11 @@
     "audience": "both",
     "title": "Chhoti shuruaat, bada farak",
     "body": [
-      "Health koi ek din ka kaam nahi hai — yeh roz ki chhoti aadaton se banta hai. Sirf 5 minute bhi kaafi hai shuru karne ke liye.",
+      "Health koi ek din ka kaam nahi hai, yeh roz ki chhoti aadaton se banta hai. Sirf 5 minute bhi kaafi hai shuru karne ke liye.",
       "Aaj ka maqsad perfect hona nahi, bas shuru karna hai. Ek task chuno aur use poora karo.",
       "Jab aap roz thoda karte ho, body yaad rakhti hai. Consistency hi asli dawa hai."
     ],
-    "tryTonight": "Aaj sirf ek task complete karein — koi bhi.",
+    "tryTonight": "Aaj sirf ek task complete karein, koi bhi.",
     "tryTonightHindi": "आज सिर्फ़ एक काम पूरा करें।"
   },
   {
@@ -18,9 +18,9 @@
     "audience": "papa",
     "title": "Sciatica mein sona kaise",
     "body": [
-      "Galat tarah se sona raat bhar lower back par dabav daalta hai — subah dard isi wajah se badhta hai.",
+      "Galat tarah se sona raat bhar lower back par dabav daalta hai, subah dard isi wajah se badhta hai.",
       "Karwat lekar soyein to ghutnon ke beech ek takiya rakhein; seedhe soyein to ghutnon ke neeche.",
-      "Bahut naram (saggy) gadda kamar ke liye theek nahi — thoda firm gadda behtar hai."
+      "Bahut naram (saggy) gadda kamar ke liye theek nahi, thoda firm gadda behtar hai."
     ],
     "tryTonight": "Aaj ghutnon ke beech ya neeche takiya rakh kar soyein.",
     "tryTonightHindi": "घुटनों के बीच/नीचे तकिया रखकर सोएँ।"
@@ -31,8 +31,8 @@
     "audience": "mummy",
     "title": "Thyroid ki goli ka sahi time",
     "body": [
-      "Thyroid ki dawa khaali pet leni chahiye — khaane se kam se kam 1 ghanta pehle.",
-      "Dawa ke baad chai, doodh ya calcium turant na lein — yeh absorption kam kar dete hain.",
+      "Thyroid ki dawa khaali pet leni chahiye, khaane se kam se kam 1 ghanta pehle.",
+      "Dawa ke baad chai, doodh ya calcium turant na lein, yeh absorption kam kar dete hain.",
       "Roz ek hi time par lena sabse zaroori hai. Phone par alarm laga lein."
     ],
     "tryTonight": "Kal subah ke liye thyroid dawa ka alarm set karein.",
@@ -44,9 +44,9 @@
     "audience": "mummy",
     "title": "Chhupa hua namak",
     "body": [
-      "BP ke liye namak sabse bada dushman hai — par asli khatra packet wale khaane mein chhupa hota hai.",
+      "BP ke liye namak sabse bada dushman hai, par asli khatra packet wale khaane mein chhupa hota hai.",
       "Namkeen, achaar, papad, bread aur sauces mein bahut namak hota hai, bina swaad ke bhi.",
-      "Khaana banate waqt namak thoda kam karein — jeebh 2 hafte mein adjust ho jaati hai."
+      "Khaana banate waqt namak thoda kam karein, jeebh 2 hafte mein adjust ho jaati hai."
     ],
     "tryTonight": "Aaj ek packaged snack ka namak (sodium) label padhein.",
     "tryTonightHindi": "एक पैकेट का नमक लेबल पढ़ें।"
@@ -55,11 +55,11 @@
     "id": "lesson-05",
     "day": 5,
     "audience": "both",
-    "title": "Protein — dal se aage",
+    "title": "Protein, dal se aage",
     "body": [
       "Hum Indians carb (chawal, roti) zyada aur protein kam khaate hain. Umar ke saath protein muscle bachata hai.",
       "Dal, paneer, ande, dahi, soya aur chana achhe protein source hain.",
-      "Har thali mein ek protein zaroor rakhein — sirf dal-chawal kaafi nahi."
+      "Har thali mein ek protein zaroor rakhein, sirf dal-chawal kaafi nahi."
     ],
     "tryTonight": "Aaj raat ke khaane mein ek extra protein add karein (dahi/paneer/anda).",
     "tryTonightHindi": "खाने में एक प्रोटीन जोड़ें।"
@@ -71,7 +71,7 @@
     "title": "Khaane ke baad chaal",
     "body": [
       "Khaane ke turant baad 10 minute chalna blood sugar aur BP dono ke liye kamaal karta hai.",
-      "Yeh tez daudna nahi — bas aaram se ghar ya gali mein tehelna hai.",
+      "Yeh tez daudna nahi, bas aaram se ghar ya gali mein tehelna hai.",
       "Dinner ke baad ki walk neend bhi behtar karti hai."
     ],
     "tryTonight": "Aaj dinner ke baad 10 minute chalein.",
@@ -81,11 +81,11 @@
     "id": "lesson-07",
     "day": 7,
     "audience": "papa",
-    "title": "Sciatica — dard taang tak kyun jaata hai",
+    "title": "Sciatica, dard taang tak kyun jaata hai",
     "body": [
-      "Sciatic nerve kamar se nikalkar kulhe aur taang tak jaati hai — is par dabav padne se dard taang tak pahunchta hai.",
+      "Sciatic nerve kamar se nikalkar kulhe aur taang tak jaati hai, is par dabav padne se dard taang tak pahunchta hai.",
       "Isliye sciatica mein sirf kamar nahi, taang ya pichhle hisse mein bhi jhunjhuni ya dard ho sakta hai.",
-      "Halki nerve-glide aur stretch nerve ko 'free' karne mein madad karti hai — par dard tez ho to ruk jaayein."
+      "Halki nerve-glide aur stretch nerve ko 'free' karne mein madad karti hai, par dard tez ho to ruk jaayein."
     ],
     "tryTonight": "Aaj baithkar halki nerve glide karein (app ka video dekhein).",
     "tryTonightHindi": "बैठकर हल्की नर्व ग्लाइड करें।"
@@ -94,7 +94,7 @@
     "id": "lesson-08",
     "day": 8,
     "audience": "mummy",
-    "title": "Potassium — namak ka dushman",
+    "title": "Potassium, namak ka dushman",
     "body": [
       "Potassium body se extra sodium nikalne mein madad karta hai, isse BP control hota hai.",
       "Kela, nariyal paani, palak, rajma, aloo aur dahi mein achha potassium hota hai.",
@@ -110,7 +110,7 @@
     "title": "Achhi neend, achhi sehat",
     "body": [
       "Kam neend BP badhati hai aur dard ko zyada mehsoos karaati hai.",
-      "Sone se 1 ghanta pehle phone screen band karein — neeli roshni neend kharab karti hai.",
+      "Sone se 1 ghanta pehle phone screen band karein, neeli roshni neend kharab karti hai.",
       "Roz ek hi time par sona aur uthna body ki ghadi theek rakhta hai."
     ],
     "tryTonight": "Aaj sone se 30 min pehle phone door rakhein.",
@@ -124,20 +124,20 @@
     "body": [
       "Ek hi jagah lambe samay baithna sciatic nerve par dabav badha deta hai.",
       "Har 30-40 minute mein uthkar thoda chalein ya halka stretch karein.",
-      "Pichhli jeb mein mota wallet rakh kar na baithein — yeh kulhe ka balance bigaadta hai."
+      "Pichhli jeb mein mota wallet rakh kar na baithein, yeh kulhe ka balance bigaadta hai."
     ],
-    "tryTonight": "Ek reminder lagayein — har 40 min mein uthna.",
+    "tryTonight": "Ek reminder lagayein, har 40 min mein uthna.",
     "tryTonightHindi": "हर 40 मिनट में उठने का रिमाइंडर।"
   },
   {
     "id": "lesson-11",
     "day": 11,
     "audience": "papa",
-    "title": "Barf ya sikaai — kamar ke liye",
+    "title": "Barf ya sikaai, kamar ke liye",
     "body": [
-      "Naya, tez dard ya soojan ho to barf (ice) — 15 minute, kapde mein lapet kar.",
+      "Naya, tez dard ya soojan ho to barf (ice), 15 minute, kapde mein lapet kar.",
       "Purana, akdan wala dard ho to garam sikaai (heat) muscles dheeli karti hai.",
-      "Dono kabhi seedhe skin par nahi — hamesha kapde ke beech rakhein."
+      "Dono kabhi seedhe skin par nahi, hamesha kapde ke beech rakhein."
     ],
     "tryTonight": "Akdan ho to aaj kamar par 10 min garam sikaai karein.",
     "tryTonightHindi": "कमर पर 10 मिनट गरम सिकाई करें।"
@@ -148,9 +148,9 @@
     "audience": "mummy",
     "title": "BP roz naapna kyun",
     "body": [
-      "Ek baar ka reading kuch nahi batata — pattern hi asli kahani kehta hai.",
+      "Ek baar ka reading kuch nahi batata, pattern hi asli kahani kehta hai.",
       "Roz ek hi time par, 5 min aaram ke baad, baithe hue naapein.",
-      "Apne readings doctor ko dikhayein — isse dawa sahi set hoti hai."
+      "Apne readings doctor ko dikhayein, isse dawa sahi set hoti hai."
     ],
     "tryTonight": "Aaj BP naap kar app mein log karein.",
     "tryTonightHindi": "आज बीपी नापकर लॉग करें।"
@@ -174,8 +174,8 @@
     "audience": "chunnu",
     "title": "Dawai roz, ek hi time",
     "body": [
-      "Antidepressant tabhi kaam karti hai jab roz li jaaye — beech mein chhodna mood neeche le jaata hai.",
-      "Ek fix time chuno (jaise raat ko) aur usse jodo kisi aadat se — brush ke baad, ya khaane ke baad.",
+      "Antidepressant tabhi kaam karti hai jab roz li jaaye, beech mein chhodna mood neeche le jaata hai.",
+      "Ek fix time chuno (jaise raat ko) aur usse jodo kisi aadat se, brush ke baad, ya khaane ke baad.",
       "Side-effect ya kuch ajeeb lage to doctor se baat karo, dawai khud se band mat karo."
     ],
     "tryTonight": "Aaj dawai ka ek pakka time set karo aur alarm lagao.",
@@ -187,9 +187,9 @@
     "audience": "chunnu",
     "title": "Hilna-dulna = behtar mood",
     "body": [
-      "Sirf 15-20 minute chalna depression mein dawai jitna asar dikha sakta hai — research kehti hai.",
+      "Sirf 15-20 minute chalna depression mein dawai jitna asar dikha sakta hai, research kehti hai.",
       "Subah ki dhoop body clock aur neend dono theek karti hai.",
-      "Mann na ho tab bhi 5 minute — shuruaat hi sabse mushkil hoti hai."
+      "Mann na ho tab bhi 5 minute, shuruaat hi sabse mushkil hoti hai."
     ],
     "tryTonight": "Kal subah 15 min bahar tehelne ka plan banao.",
     "tryTonightHindi": "कल सुबह 15 मिनट बाहर टहलें।"
@@ -200,9 +200,9 @@
     "audience": "chunnu",
     "title": "Bure din bhi theek hain",
     "body": [
-      "Har din achha nahi hoga, aur yeh normal hai — progress seedhi line mein nahi chalti.",
+      "Har din achha nahi hoga, aur yeh normal hai, progress seedhi line mein nahi chalti.",
       "Ek kharab din poori journey kharab nahi karta. Kal phir se shuru.",
-      "Kisi se baat karna — dost, family ya therapist — bojh halka karta hai."
+      "Kisi se baat karna, dost, family ya therapist, bojh halka karta hai."
     ],
     "tryTonight": "Aaj kisi ek bharosemand insaan ko message karo.",
     "tryTonightHindi": "किसी भरोसेमंद को मैसेज करें।"
@@ -211,9 +211,9 @@
     "id": "lesson-14",
     "day": 14,
     "audience": "both",
-    "title": "Do hafte poore — shabaash!",
+    "title": "Do hafte poore, shabaash!",
     "body": [
-      "Aapne 2 hafte apni sehat ko time diya — yeh badi baat hai.",
+      "Aapne 2 hafte apni sehat ko time diya, yeh badi baat hai.",
       "Ab tak ke trends dekhein: dard, BP ya walk mein kya badla?",
       "Aage bhi yahi chhoti aadtein jaari rakhein. Saath chalte rahenge."
     ],

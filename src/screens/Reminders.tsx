@@ -89,8 +89,8 @@ export default function Reminders() {
       )}
 
       <p className={styles.note}>
-        Set a time and, if you like, tie it to something you already do — like
-        “after morning chai”. That anchor shows on your Today screen too.
+        Ek time chuniye. Chahein toh use kisi aadat se jod dijiye, jaise
+        “subah chai ke baad”. Woh aapki Today screen par bhi dikhega.
       </p>
 
       <div className={styles.list}>
@@ -164,9 +164,9 @@ export default function Reminders() {
       </button>
 
       <p className={styles.fineprint}>
-        <Check size={14} aria-hidden /> Nudges appear when you open the app and,
-        with notifications on, while it’s running. For alerts when the app is
-        fully closed, this needs a push setup later.
+        <Check size={14} aria-hidden /> Reminders show when you open the app, and
+        as notifications while it’s open. Alerts when the app is fully closed will
+        come later.
       </p>
     </div>
   );

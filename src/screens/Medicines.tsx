@@ -219,7 +219,7 @@ export default function Medicines() {
         <p className={styles.sub}>
           {editing
             ? 'Add, edit or remove medicines.'
-            : 'Tap when taken — then share to the family group.'}
+            : 'Jab le lein tab tap karein, phir family ko bhej dein.'}
         </p>
       </header>
 
@@ -311,7 +311,7 @@ export default function Medicines() {
             Share update on WhatsApp
           </button>
           <p className={styles.shareNote}>
-            Opens WhatsApp with the message ready — just pick the group.
+            WhatsApp khulega, message taiyaar. Bas group chun lein.
             <span className="hindi"> ग्रुप चुनकर भेजें।</span>
           </p>
         </>

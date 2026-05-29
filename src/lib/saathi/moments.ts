@@ -45,8 +45,8 @@ export function buildOpening(ctx: SaathiCtx): SaathiLine[] {
 
   if (ctx.streakStatus === 'welcome') {
     lines.push({
-      hi: `${g.hi} ${ctx.name} जी! वापसी पर स्वागत है — धीरू को आपकी याद आ रही थी।`,
-      en: `${g.en}, ${ctx.name}! Welcome back — Dheeru missed you.`,
+      hi: `${g.hi} ${ctx.name} जी! आप आ गए, धीरू को आपकी याद आ रही थी।`,
+      en: `${g.en}, ${ctx.name}! You're back. Dheeru missed you.`,
     });
   } else {
     lines.push({

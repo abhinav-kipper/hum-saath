@@ -218,8 +218,9 @@ export default function Garden() {
       </div>
 
       <p className={styles.note}>
-        One flower for every {DAYS_PER_FLOWER} days you look after yourself. Miss a day?
-        No worry — your flowers stay. <span className="hindi">फूल कभी मुरझाते नहीं।</span>
+        Har {DAYS_PER_FLOWER} din apna khayal rakhne par ek phool. Ek din chhoot
+        gaya? Koi baat nahi, phool wahin rehte hain.{' '}
+        <span className="hindi">फूल कभी मुरझाते नहीं।</span>
       </p>
 
       <button type="button" className={styles.todayBtn} onClick={() => navigate('/')}>

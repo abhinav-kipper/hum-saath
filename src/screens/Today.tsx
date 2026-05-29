@@ -142,7 +142,7 @@ export default function Today() {
       : kind === 'mood'
         ? `Mood: ${log?.moodScore}/5`
         : `BP: ${log?.systolic}/${log?.diastolic}`
-    : 'Takes 20 seconds';
+    : '20 second ka kaam';
 
   // progress for the encouraging line
   const tasks = [
@@ -156,20 +156,20 @@ export default function Today() {
 
   let encourage: string;
   if (doneCount === 0) encourage = 'Chalo, shuru karte hain 🌱';
-  else if (doneCount >= totalCount) encourage = 'Aaj sab ho gaya — wah! 🎉';
-  else encourage = `${doneCount}/${totalCount} ho gaya — lage raho 👏`;
+  else if (doneCount >= totalCount) encourage = 'Aaj sab ho gaya, wah! 🎉';
+  else encourage = `${doneCount}/${totalCount} ho gaya, lage raho 👏`;
 
   // "Bad day" minimum — the single tiniest step that still counts.
   const checkInMicro =
     kind === 'pain'
-      ? 'Just log your pain — 20 seconds'
+      ? 'Bas dard likh dijiye, 20 second'
       : kind === 'mood'
-        ? 'Just check in your mood — 20 seconds'
-        : 'Just take your BP — 20 seconds';
+        ? 'Bas mood bata dijiye, 20 second'
+        : 'Bas BP naap lijiye, 20 second';
   const microOptions = [
     !checkInDone ? { label: checkInMicro, route: '/log' } : null,
-    !log?.exerciseDone ? { label: 'Just 2 minutes of movement', route: '/exercise' } : null,
-    !log?.walked ? { label: 'Just a 5-minute walk', route: '/log' } : null,
+    !log?.exerciseDone ? { label: 'Bas 2 minute hilna-dulna', route: '/exercise' } : null,
+    !log?.walked ? { label: 'Bas 5 minute ki walk', route: '/log' } : null,
   ].filter((x): x is { label: string; route: string } => x !== null);
   const micro = microOptions[0];
 
@@ -263,9 +263,9 @@ export default function Today() {
       {streak?.status === 'welcome' && (
         <div className={styles.welcome}>
           <p className={styles.welcomeText}>
-            Welcome back — no pressure. Start with just 5 minutes today?
+            Aap aa gaye. Koi jaldi nahi, aaj bas 5 minute se shuru karein?
           </p>
-          <p className="hindi">वापसी पर स्वागत है — आज सिर्फ़ 5 मिनट से शुरू करें?</p>
+          <p className="hindi">आप आ गए। कोई जल्दी नहीं, आज बस 5 मिनट से शुरू करें?</p>
         </div>
       )}
 
@@ -292,7 +292,7 @@ export default function Today() {
             meds.length === 0
               ? 'Tap to add'
               : allMedsTaken
-                ? 'All taken — great!'
+                ? 'Sab le liya, badhiya!'
                 : `${medTaken}/${meds.length} taken today`
           }
           anchor={anchors.medicines}
@@ -314,7 +314,7 @@ export default function Today() {
           icon={<Footprints size={26} />}
           title="Walk after a meal"
           hindi="खाने के बाद टहलें"
-          meta={log?.walked ? 'Done — nice!' : '10 minutes is enough'}
+          meta={log?.walked ? 'Ho gaya, badhiya!' : '10 minute kaafi hai'}
           anchor={anchors.walk}
           done={log?.walked}
           onClick={() => navigate('/log')}
@@ -360,7 +360,7 @@ export default function Today() {
           <div className={styles.badDayCard}>
             {micro ? (
               <>
-                <p className={styles.badDayLead}>Then just do one small thing 🌱</p>
+                <p className={styles.badDayLead}>Toh bas ek chhoti cheez 🌱</p>
                 <button
                   type="button"
                   className={styles.badDayCta}
@@ -374,7 +374,7 @@ export default function Today() {
               </>
             ) : (
               <p className={styles.badDayLead}>
-                You’ve already done today — rest easy 💛
+                Aaj sab ho gaya. Ab aaram kijiye 💛
               </p>
             )}
           </div>

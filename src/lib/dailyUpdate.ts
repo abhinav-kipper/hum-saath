@@ -33,7 +33,7 @@ export interface DailyUpdateInput {
 /** One message summarising the whole day, for the family group. */
 export function composeDailyUpdate(i: DailyUpdateInput): string {
   const flower = i.profile === 'mummy' ? '🌸' : i.profile === 'chunnu' ? '🌼' : '🌿';
-  const lines: string[] = [`${flower} ${i.name} ki aaj ki update — ${i.dateStr}`, ''];
+  const lines: string[] = [`${flower} ${i.name} ki aaj ki update · ${i.dateStr}`, ''];
 
   if (i.meds.length > 0) {
     const parts = i.meds.map((m) =>
@@ -61,7 +61,7 @@ export function composeDailyUpdate(i: DailyUpdateInput): string {
     (i.streak.status === 'active' || i.streak.status === 'paused') &&
     i.streak.count > 0
   ) {
-    lines.push('', `🔥 ${i.streak.count} din se lagataar — shaabaash!`);
+    lines.push('', `🔥 ${i.streak.count} din se lagataar, shaabaash!`);
   }
 
   lines.push('', 'Saath 💛');
@@ -77,5 +77,5 @@ export function composeMedsUpdate(
   const parts = meds.map((m) =>
     m.takenAt ? `${m.name} ${DONE} ${fmtTime(m.takenAt)}` : `${m.name} ${PENDING} baaki`,
   );
-  return `💊 ${name} — dawai update (${dateStr})\n${parts.join('\n')}\n\nSaath 💛`;
+  return `💊 ${name} ki dawai update (${dateStr})\n${parts.join('\n')}\n\nSaath 💛`;
 }

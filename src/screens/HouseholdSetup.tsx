@@ -43,7 +43,7 @@ export default function HouseholdSetup() {
       </button>
 
       <p className={styles.note}>
-        Use the same code on every family device. Keep it private — it’s like a
+        Use the same code on every family device. Keep it private, it’s like a
         password.
       </p>
     </div>

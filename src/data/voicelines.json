@@ -1,26 +1,26 @@
 {
   "plan_intro": {
-    "hi": "आज के लिए छोटी सी लिस्ट है, घबराइए मत।",
-    "en": "Today's list is small — don't worry."
+    "hi": "आज की लिस्ट छोटी है। टेंशन मत लीजिए।",
+    "en": "Small list today. No stress."
   },
   "plan_alldone": {
-    "hi": "और आज तो सब हो गया — अरे वाह, शाबाश जी!",
-    "en": "And today, it's all done — wonderful, shaabaash!"
+    "hi": "अरे वाह! आज तो सब हो गया। शाबाश जी।",
+    "en": "Arre wah! All done today. Shaabaash."
   },
   "plan_empty": {
-    "hi": "आज के लिए अभी कुछ नहीं — आराम से।",
-    "en": "Nothing on the list yet — rest easy."
+    "hi": "अभी कुछ नहीं है। आराम कीजिए।",
+    "en": "Nothing pending yet. Relax."
   },
   "encourage_steady": {
     "hi": "धीरे-धीरे, पर रोज़। यही असली जीत है।",
-    "en": "Slowly, but every day. That's the real win."
+    "en": "Slow and steady, every day. That's the real win."
   },
   "exercise_start": {
-    "hi": "चलिए, साथ में करते हैं। आराम से, मेरे साथ।",
-    "en": "Let's do it together — easy does it, with me."
+    "hi": "चलिए, साथ में करते हैं। आराम से।",
+    "en": "Let's do this together. Nice and slow."
   },
   "exercise_done": {
     "hi": "शाबाश! आज की एक्सरसाइज़ पूरी हुई।",
-    "en": "Well done — today's exercise is complete."
+    "en": "Done! Today's exercise is complete."
   }
 }

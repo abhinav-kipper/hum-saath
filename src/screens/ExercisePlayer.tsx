@@ -111,10 +111,10 @@ export default function ExercisePlayer() {
           <span className={styles.doneBadge} aria-hidden>
             <Check size={48} strokeWidth={3} />
           </span>
-          <h1 className={styles.doneTitle}>Routine complete</h1>
+          <h1 className={styles.doneTitle}>Ho gaya!</h1>
           <p className={styles.doneHindi}>शाबाश! आज पूरा हुआ।</p>
           <p className={styles.doneSub}>
-            Now the important part — tell us how you feel so we can track it.
+            Ab bas bata dijiye aaj kaisa laga, taaki hum track kar sakein.
           </p>
           <button
             type="button"

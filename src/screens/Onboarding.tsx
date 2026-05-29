@@ -24,7 +24,7 @@ export default function Onboarding() {
           Saath <span className={styles.titleHindi}>साथ</span>
         </h1>
         <p className={styles.tagline}>
-          A little health, together — every day.
+          A little health, together. Every day.
           <br />
           <span className="hindi">रोज़ थोड़ी सेहत, साथ मिलकर।</span>
         </p>
