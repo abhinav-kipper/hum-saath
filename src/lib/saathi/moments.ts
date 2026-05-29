@@ -94,3 +94,17 @@ export function buildRoutineStart(): SaathiLine[] {
 export function buildRoutineDone(): SaathiLine[] {
   return [clipLine('exercise_done'), clipLine('encourage_steady')];
 }
+
+/** Narrate a lesson: a warm opener, then its Hindi gist. */
+export function buildLessonNarration(l: {
+  spokenHi?: string;
+  tryTonight: string;
+  tryTonightHindi: string;
+  fact?: string;
+  title: string;
+}): SaathiLine[] {
+  const gist = l.spokenHi
+    ? { hi: l.spokenHi, en: l.fact ?? l.title }
+    : { hi: l.tryTonightHindi, en: l.tryTonight };
+  return [clipLine('lesson_intro'), gist];
+}

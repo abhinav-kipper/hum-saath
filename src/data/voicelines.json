@@ -22,5 +22,9 @@
   "exercise_done": {
     "hi": "शाबाश! आज की एक्सरसाइज़ पूरी हुई।",
     "en": "Done! Today's exercise is complete."
+  },
+  "lesson_intro": {
+    "hi": "आइए, आज एक छोटी सी बात बताता हूँ।",
+    "en": "Come, let me share one small thing today."
   }
 }

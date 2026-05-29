@@ -219,5 +219,117 @@
     ],
     "tryTonight": "Apne 14-din ke trends dekhein aur khud ko shabaashi dein.",
     "tryTonightHindi": "अपने 14-दिन के ट्रेंड्स देखें।"
+  },
+  {
+    "id": "lesson-15",
+    "day": 15,
+    "audience": "both",
+    "title": "Cheeni: chhupa hua dushman",
+    "myth": "Gud aur shahad 'healthy' hote hain, inhe jitna marzi khao.",
+    "fact": "Gud, shahad aur cheeni, sab body mein sugar hi bante hain. Maqsad hai kam karna.",
+    "body": [
+      "Chai-coffee mein cheeni dheere-dheere kam karein. 2 hafte mein jeebh adjust ho jaati hai.",
+      "Packet wala juice aur cold drink mein bahut cheeni hoti hai. Saabut phal behtar hai.",
+      "Maida aur white rice bhi tezi se sugar banate hain. Roti, daliya, oats behtar hain."
+    ],
+    "tryTonight": "Aaj chai mein aadhi cheeni karein.",
+    "tryTonightHindi": "आज चाय में आधी चीनी करें।",
+    "spokenHi": "गुड़ हो या शहद या चीनी, शरीर में सब शुगर ही बनते हैं। आज चाय में आधी चीनी कर के देखिए।"
+  },
+  {
+    "id": "lesson-16",
+    "day": 16,
+    "audience": "both",
+    "title": "Tel baar-baar mat garam karein",
+    "myth": "Bacha hua frying ka tel dobara use karna theek hai, paisa bachta hai.",
+    "fact": "Tel baar-baar garam karne par nuksaandeh cheezein banti hain jo dil ke liye theek nahi.",
+    "body": [
+      "Deep fry ka bacha tel dobara high heat par istemaal na karein.",
+      "Jala ya dhuandhaar ho chuka tel phenk dein, usmein khaana na banayein.",
+      "Badal-badal kar alag tel (sarson, moongfali, til) istemaal karna achha hai."
+    ],
+    "tryTonight": "Frying ke baad bacha tel dobara deep-fry mein na lein.",
+    "tryTonightHindi": "तलने के बाद बचा तेल दोबारा न इस्तेमाल करें।",
+    "spokenHi": "तलने वाला तेल बार-बार गरम करना दिल के लिए ठीक नहीं। एक बार इस्तेमाल कर के बदल दीजिए।"
+  },
+  {
+    "id": "lesson-17",
+    "day": 17,
+    "audience": "both",
+    "title": "Theek lag raha hai, matlab dawa kaam kar rahi hai",
+    "myth": "BP ya sugar normal aa gaya, toh dawa apne aap band kar do.",
+    "fact": "Aksar dawa ki wajah se hi reading normal hai. Khud se band karna khatarnaak ho sakta hai.",
+    "body": [
+      "BP aur sugar ki dawa lambe samay tak chalti hai. Beech mein chhodna nuksaan karta hai.",
+      "Side-effect lage ya dawa badalni ho, toh pehle doctor se baat karein.",
+      "Dawa khatam hone se pehle hi agli le aayein, taaki ek bhi din ka gap na ho."
+    ],
+    "tryTonight": "Check karein koi dawa khatam toh nahi ho rahi.",
+    "tryTonightHindi": "देखें कोई दवा खत्म तो नहीं हो रही।",
+    "spokenHi": "तबियत ठीक है, इसका मतलब दवा काम कर रही है। डॉक्टर से पूछे बिना दवा बंद मत कीजिए।"
+  },
+  {
+    "id": "lesson-18",
+    "day": 18,
+    "audience": "both",
+    "title": "Sirf walk kaafi nahi, thodi taqat bhi",
+    "myth": "Roz walk kar lete hain, isse poori sehat ban jaati hai.",
+    "fact": "Walk dil ke liye achhi hai, par 50 ke baad muscle aur haddi ke liye strength bhi zaroori hai.",
+    "body": [
+      "Umar ke saath muscle kam hoti hai, jisse kamzori aur girne ka khatra badhta hai.",
+      "Kursi se bina haath lagaye uthna aur deewar push-up aasan aur asardaar hain.",
+      "Hafte mein 2-3 baar, 10-10 baar se shuruaat kaafi hai."
+    ],
+    "tryTonight": "Aaj kursi se 10 baar bina haath lagaye uthein.",
+    "tryTonightHindi": "आज कुर्सी से 10 बार बिना हाथ लगाए उठें।",
+    "spokenHi": "सिर्फ़ चलना काफ़ी नहीं, पचास के बाद थोड़ी ताक़त भी चाहिए। आज कुर्सी से दस बार बिना हाथ लगाए उठिए।"
+  },
+  {
+    "id": "lesson-19",
+    "day": 19,
+    "audience": "both",
+    "title": "Dhoop: muft ki dawa",
+    "myth": "Ghar mein rehte hain aur khaana achha hai, toh vitamin D ki kami nahi hogi.",
+    "fact": "Bahut se Indians mein vitamin D kam hota hai, kyunki dhoop kam milti hai. Iska asar haddi aur mood par padta hai.",
+    "body": [
+      "Subah ki halki dhoop mein 15-20 minute, haath-pair khule rakh kar baithna achha hai.",
+      "Sirf khaane se poori vitamin D mushkil hai; doctor se ek baar test karwa sakte hain.",
+      "Kami ho toh doctor supplement dete hain, khud se zyada dose na lein."
+    ],
+    "tryTonight": "Kal subah 15 minute dhoop mein baithne ka plan banayein.",
+    "tryTonightHindi": "कल सुबह 15 मिनट धूप में बैठें।",
+    "spokenHi": "धूप मुफ़्त की दवा है। रोज़ सुबह पंद्रह मिनट धूप लीजिए, हड्डी और मन दोनों के लिए अच्छा है।"
+  },
+  {
+    "id": "lesson-20",
+    "day": 20,
+    "audience": "both",
+    "title": "50 ke baad zaroori teeke",
+    "myth": "Teeke sirf bachchon ke liye hote hain.",
+    "fact": "Badi umar mein bhi kuch teeke (jaise flu, nimoniya) bimaari se bachate hain.",
+    "body": [
+      "Har saal flu ka teeka, aur doctor ki salah par nimoniya ka teeka, faydemand ho sakta hai.",
+      "Shingles (harpes) ka teeka bhi 50+ ke liye milta hai.",
+      "Apne doctor se poochein konse teeke aapke liye sahi hain."
+    ],
+    "tryTonight": "Agli doctor visit par teekon ke baare mein poochne ka note banayein.",
+    "tryTonightHindi": "डॉक्टर से ज़रूरी टीकों के बारे में पूछें।",
+    "spokenHi": "टीके सिर्फ़ बच्चों के लिए नहीं। पचास के बाद फ़्लू और निमोनिया के टीके डॉक्टर से ज़रूर पूछिए।"
+  },
+  {
+    "id": "lesson-21",
+    "day": 21,
+    "audience": "both",
+    "title": "Girne se bachaav: ghar ko surakshit banayein",
+    "myth": "Girna toh kismat ki baat hai, ismein kuch nahi ho sakta.",
+    "fact": "Zyadatar girna bathroom aur andheri jagah par hota hai, aur isse roka ja sakta hai.",
+    "body": [
+      "Bathroom mein anti-skid mat aur deewar par pakad (grab-bar) lagwayein.",
+      "Raat ko ek halki light jalti rakhein, taaki raaste mein andhera na ho.",
+      "Dheele, phisalne wale chappal aur geeli farsh se bachein."
+    ],
+    "tryTonight": "Aaj bathroom mein phisalne ka koi khatra dhoondein aur theek karein.",
+    "tryTonightHindi": "बाथरूम में फिसलन का खतरा देखें।",
+    "spokenHi": "ज़्यादातर गिरना बाथरूम में होता है, और इसे रोका जा सकता है। एंटी-स्किड मैट और रात की हल्की लाइट लगाइए।"
   }
 ]

@@ -32,7 +32,13 @@ function Sparkle({ x, y, delay }: { x: number; y: number; delay: string }) {
   );
 }
 
-export default function Saathi({ mood = 'idle' }: { mood?: SaathiMood }) {
+export default function Saathi({
+  mood = 'idle',
+  size = 150,
+}: {
+  mood?: SaathiMood;
+  size?: number;
+}) {
   const [blink, setBlink] = useState(false);
   useEffect(() => {
     const id = setInterval(() => {
@@ -61,7 +67,10 @@ export default function Saathi({ mood = 'idle' }: { mood?: SaathiMood }) {
     );
 
   return (
-    <div className={`${styles.host} ${talking ? styles.talking : ''} ${happy ? styles.happy : ''}`}>
+    <div
+      className={`${styles.host} ${talking ? styles.talking : ''} ${happy ? styles.happy : ''}`}
+      style={{ width: size, height: size * 0.853 }}
+    >
       <svg viewBox="0 0 200 170" width="100%" height="100%" role="img" aria-label="Dheeru, your companion">
         {/* ground shadow */}
         <ellipse cx="100" cy="150" rx="64" ry="9" fill={INK} opacity="0.08" />
