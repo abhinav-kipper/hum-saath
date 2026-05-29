@@ -127,7 +127,7 @@ export default function Today() {
     }
     if (seen.includes(streak.count)) return;
     localStorage.setItem(key, JSON.stringify([...seen, streak.count]));
-    const t = setTimeout(() => reactSaathi(buildStreakMilestone(streak.count)), 3000);
+    const t = setTimeout(() => reactSaathi(buildStreakMilestone(streak.count, info?.name)), 3000);
     return () => clearTimeout(t);
   }, [profile, streak]);
 

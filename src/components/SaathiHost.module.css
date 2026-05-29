@@ -37,6 +37,21 @@
   border-top: 1px solid var(--cream-dark);
 }
 
+.caption {
+  animation: captionFade 0.28s ease;
+}
+
+@keyframes captionFade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .hi {
   margin: 0;
   font-family: var(--font-display);

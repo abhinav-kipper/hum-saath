@@ -26,7 +26,7 @@ function bpStatus(sys: number, dia: number): 'ok' | 'watch' | 'high' {
 }
 
 export default function Log() {
-  const { profile } = useProfile();
+  const { profile, info } = useProfile();
   const navigate = useNavigate();
 
   const [pain, setPain] = useState<number | null>(null);
@@ -77,6 +77,7 @@ export default function Log() {
     reactSaathi(
       buildCheckinReaction({
         kind,
+        name: info?.name,
         painScore: pain ?? undefined,
         moodScore: mood ?? undefined,
         systolic: sys ? Number(sys) : undefined,

@@ -49,7 +49,7 @@ export default function SaathiReactions() {
         <Saathi mood={speaking ? 'talking' : 'happy'} size={72} />
       </span>
       {caption && (
-        <span className={styles.bubble}>
+        <span key={caption.hi} className={styles.bubble}>
           <span className={styles.hi}>{caption.hi}</span>
           <span className={styles.en}>{caption.en}</span>
         </span>

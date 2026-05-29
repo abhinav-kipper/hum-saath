@@ -32,10 +32,10 @@ export default function SaathiHost({
 
       <div className={styles.bubble}>
         {caption ? (
-          <>
+          <div key={caption.hi} className={styles.caption}>
             <p className={styles.hi}>{caption.hi}</p>
             <p className={styles.en}>{caption.en}</p>
-          </>
+          </div>
         ) : (
           <p className={styles.encourage}>{encourage}</p>
         )}

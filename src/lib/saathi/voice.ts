@@ -17,6 +17,7 @@ import { buildOpening, type SaathiCtx, type SaathiLine } from './moments';
 
 const MUTE_KEY = 'saath.saathiMuted.v1';
 const GESTURE_KEY = 'saath.saathiGestured.v1';
+const MUTE_EVENT = 'saath:saathi-mute';
 
 let manifest: Record<string, boolean> | null = null;
 
@@ -119,6 +120,13 @@ export function useSaathi() {
     void loadManifest();
   }, []);
 
+  // Keep every Saathi instance's mute in sync, wherever it's toggled.
+  useEffect(() => {
+    const handler = (e: Event) => setMuted((e as CustomEvent<boolean>).detail);
+    window.addEventListener(MUTE_EVENT, handler);
+    return () => window.removeEventListener(MUTE_EVENT, handler);
+  }, []);
+
   const toggleMuted = useCallback(() => {
     setMuted((m) => {
       const next = !m;
@@ -128,6 +136,7 @@ export function useSaathi() {
         /* ignore */
       }
       if (next) window.speechSynthesis?.cancel?.();
+      window.dispatchEvent(new CustomEvent(MUTE_EVENT, { detail: next }));
       return next;
     });
   }, []);

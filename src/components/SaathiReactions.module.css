@@ -43,6 +43,18 @@
   flex-direction: column;
   gap: 2px;
   margin-bottom: 8px;
+  animation: bubbleFade 0.26s ease;
+}
+
+@keyframes bubbleFade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* tail pointing left toward Dheeru */

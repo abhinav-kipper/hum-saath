@@ -168,7 +168,7 @@ export default function Medicines() {
     if (!wasTaken) {
       const allTaken = meds.length > 0 && meds.every((m) => map[m.id]);
       playSound(allTaken ? 'celebrate' : 'done');
-      if (allTaken) reactSaathi(buildAllMedsDone());
+      if (allTaken) reactSaathi(buildAllMedsDone(info.name));
     }
   };
 

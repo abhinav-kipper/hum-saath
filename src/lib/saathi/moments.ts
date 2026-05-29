@@ -97,37 +97,46 @@ export function buildRoutineDone(): SaathiLine[] {
 
 /* ---- reactions (fired from any screen via reactSaathi) ---- */
 
+/** "{Name} जी, " prefix when we know who we're talking to. */
+function ji(name?: string): { hi: string; en: string } {
+  return name ? { hi: `${name} जी, `, en: `${name}, ` } : { hi: '', en: '' };
+}
+
 export function buildCheckinReaction(p: {
   kind: 'pain' | 'mood' | 'bp';
+  name?: string;
   painScore?: number;
   moodScore?: number;
   systolic?: number;
   diastolic?: number;
 }): SaathiLine[] {
+  const j = ji(p.name);
   if (p.kind === 'pain') {
     const v = p.painScore ?? 0;
     if (v >= 7)
-      return [{ hi: 'दर्द ज़्यादा लग रहा है। आराम कीजिए, ज़रूरत हो तो डॉक्टर को बताइए।', en: 'That looks painful. Please rest.' }];
-    if (v <= 3) return [{ hi: 'अरे वाह, आज दर्द कम है! बढ़िया।', en: 'Less pain today. Lovely.' }];
-    return [{ hi: 'दर्ज हो गया। धीरे-धीरे बेहतर होगा।', en: 'Noted. It will ease, slowly.' }];
+      return [{ hi: `${j.hi}दर्द ज़्यादा लग रहा है। आराम कीजिए, ज़रूरत हो तो डॉक्टर को बताइए।`, en: `${j.en}that looks painful. Please rest.` }];
+    if (v <= 3) return [{ hi: `${j.hi}आज दर्द कम है! बढ़िया।`, en: `${j.en}less pain today. Lovely.` }];
+    return [{ hi: `${j.hi}दर्ज हो गया। धीरे-धीरे बेहतर होगा।`, en: `${j.en}noted. It will ease, slowly.` }];
   }
   if (p.kind === 'mood') {
     const v = p.moodScore ?? 3;
-    if (v >= 4) return [{ hi: 'अच्छा मूड! ऐसे ही मुस्कुराते रहिए।', en: 'Good mood! Keep smiling.' }];
-    if (v <= 2) return [{ hi: 'आज मन थोड़ा भारी है। कोई बात नहीं, मैं साथ हूँ।', en: 'A heavy day. I am with you.' }];
-    return [{ hi: 'दर्ज हो गया। अपना ख्याल रखिए।', en: 'Noted. Take care.' }];
+    if (v >= 4) return [{ hi: `${j.hi}अच्छा मूड! ऐसे ही मुस्कुराते रहिए।`, en: `${j.en}good mood! Keep smiling.` }];
+    if (v <= 2) return [{ hi: `${j.hi}आज मन थोड़ा भारी है। कोई बात नहीं, मैं साथ हूँ।`, en: `${j.en}a heavy day. I am with you.` }];
+    return [{ hi: `${j.hi}दर्ज हो गया। अपना ख्याल रखिए।`, en: `${j.en}noted. Take care.` }];
   }
   const s = p.systolic ?? 0;
   const d = p.diastolic ?? 0;
+  const reading = `${s} बटा ${d}`;
   if (s >= 140 || d >= 90)
-    return [{ hi: 'बीपी थोड़ा ज़्यादा है। आराम से बैठिए, और ऐसा बना रहे तो डॉक्टर को बताइए।', en: 'BP is a bit high. Please rest.' }];
+    return [{ hi: `${j.hi}बीपी ${reading} है, थोड़ा ज़्यादा। आराम से बैठिए, और ऐसा बना रहे तो डॉक्टर को बताइए।`, en: `${j.en}BP ${s}/${d}, a bit high. Please rest.` }];
   if (s >= 130 || d >= 85)
-    return [{ hi: 'बीपी थोड़ा ऊपर है, ध्यान रखिए।', en: 'BP is slightly up. Keep an eye on it.' }];
-  return [{ hi: 'बीपी अच्छा है। बढ़िया!', en: 'BP looks good. Lovely!' }];
+    return [{ hi: `${j.hi}बीपी ${reading} है, थोड़ा ऊपर। ध्यान रखिए।`, en: `${j.en}BP ${s}/${d}, slightly up. Keep an eye on it.` }];
+  return [{ hi: `${j.hi}बीपी ${reading} है, अच्छा है। बढ़िया!`, en: `${j.en}BP ${s}/${d} looks good. Lovely!` }];
 }
 
-export function buildAllMedsDone(): SaathiLine[] {
-  return [{ hi: 'सारी दवाई हो गई। शाबाश जी!', en: 'All medicines done. Shaabaash!' }];
+export function buildAllMedsDone(name?: string): SaathiLine[] {
+  const j = ji(name);
+  return [{ hi: `${j.hi}सारी दवाई हो गई। शाबाश जी!`, en: `${j.en}all medicines done. Shaabaash!` }];
 }
 
 export function buildGardenBloom(flowers: number): SaathiLine[] {
@@ -140,9 +149,10 @@ export function buildCheerReceived(): SaathiLine[] {
   return [{ hi: 'देखिए, परिवार ने आपको शाबाशी भेजी है!', en: 'Your family sent you a cheer!' }];
 }
 
-export function buildStreakMilestone(days: number): SaathiLine[] {
+export function buildStreakMilestone(days: number, name?: string): SaathiLine[] {
+  const j = ji(name);
   return [
-    { hi: `${days} दिन लगातार! क्या बात है, शाबाश।`, en: `${days} days in a row. Kya baat hai!` },
+    { hi: `${j.hi}${days} दिन लगातार! क्या बात है, शाबाश।`, en: `${j.en}${days} days in a row. Kya baat hai!` },
   ];
 }
 
