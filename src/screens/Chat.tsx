@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import Icon from '../components/Icon';
 import Jugnu from '../components/Jugnu';
 import Bi from '../components/Bi';
-import { playMoment, speak, stopSpeak, useTypewriter } from '../lib/voice';
+import { playMoment, stopSpeak, useTypewriter } from '../lib/voice';
 import { useApp } from '../context/AppContext';
 import { chat, pickJugnuLine } from '../data/content';
 import type { ChatItem } from '../types';
@@ -57,10 +57,11 @@ export default function Chat() {
     setUsed((u) => [...u, item.q]);
     setMsgs((mm) => [...mm, { who: 'u', hi: item.q, en: item.qEn }]);
     setTyping(true);
+    const i = chat.findIndex((c) => c.q === item.q);
     setTimeout(() => {
       setTyping(false);
       setMsgs((mm) => [...mm, { who: 'j', hi: item.a, en: item.aEn, fresh: true }]);
-      speak(item.a, app.sound);
+      playMoment('chat', i, item.a, app.sound);
     }, 1100);
   };
   const remaining = chat.filter((c) => !used.includes(c.q));

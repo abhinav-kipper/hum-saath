@@ -2,9 +2,11 @@
    Generate Jugnu's voice clips with ElevenLabs.
 
    Reads every line variant in src/data/content.ts (momentLines)
-   and renders one warm, young-female Hindi clip per variant to:
+   plus Jugnu's chat answers (chat[].a) and renders one warm,
+   young-female Hindi clip each to:
 
-     /public/voice/<moment>-<idx>.mp3
+     /public/voice/<moment>-<idx>.mp3   (moment line variants)
+     /public/voice/chat-<n>.mp3         (chat Q&A answers)
 
    …then writes /public/voice/voice-manifest.json listing every
    clip that exists. The app (src/lib/voice.ts) reads that manifest,
@@ -73,6 +75,16 @@ function loadMomentLines() {
   return new Function(`return ${m[1]}`)();
 }
 
+// Pull the chat Q&A array out of content.ts (same plain-literal trick). We
+// only voice Jugnu's answers (the `a` field).
+function loadChat() {
+  const src = readFileSync(CONTENT, 'utf8');
+  const m = src.match(/export const chat: ChatItem\[\] = (\[[\s\S]*?\n\]);/);
+  if (!m) throw new Error('Could not find the chat literal in src/data/content.ts');
+  // eslint-disable-next-line no-new-func
+  return new Function(`return ${m[1]}`)();
+}
+
 async function tts(text) {
   const url = `https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}?output_format=mp3_44100_128`;
   const res = await fetch(url, {
@@ -105,33 +117,42 @@ async function main() {
 
   mkdirSync(OUT_DIR, { recursive: true });
   const momentLines = loadMomentLines();
+  const chat = loadChat();
+
+  // Everything Jugnu speaks → a clip id. Moments rotate by variant index;
+  // chat answers are keyed by their position in the chat array.
+  const jobs = [];
+  for (const [key, variants] of Object.entries(momentLines)) {
+    for (let idx = 0; idx < variants.length; idx++) {
+      if (variants[idx]?.hi) jobs.push({ id: `${key}-${idx}`, hi: variants[idx].hi });
+    }
+  }
+  for (let i = 0; i < chat.length; i++) {
+    if (chat[i]?.a) jobs.push({ id: `chat-${i}`, hi: chat[i].a });
+  }
 
   let made = 0;
   let skipped = 0;
   let failed = 0;
   console.log(`Jugnu voice: ${VOICE_ID}, model ${MODEL}, speed ${SPEED}.\n`);
 
-  for (const [key, variants] of Object.entries(momentLines)) {
-    for (let idx = 0; idx < variants.length; idx++) {
-      const hi = variants[idx]?.hi;
-      if (!hi) continue;
-      const outPath = join(OUT_DIR, `${key}-${idx}.mp3`);
-      if (!FORCE && existsSync(outPath)) {
-        skipped++;
-        console.log(`  · have ${key}-${idx}.mp3`);
-        continue;
-      }
-      try {
-        process.stdout.write(`  → ${key}-${idx}  "${hi}" … `);
-        const buf = await tts(hi);
-        writeFileSync(outPath, buf);
-        made++;
-        console.log(`(${buf.length} bytes)`);
-        await sleep(250); // be polite to the API
-      } catch (e) {
-        failed++;
-        console.log(`FAIL: ${e.message}`);
-      }
+  for (const { id, hi } of jobs) {
+    const outPath = join(OUT_DIR, `${id}.mp3`);
+    if (!FORCE && existsSync(outPath)) {
+      skipped++;
+      console.log(`  · have ${id}.mp3`);
+      continue;
+    }
+    try {
+      process.stdout.write(`  → ${id}  "${hi}" … `);
+      const buf = await tts(hi);
+      writeFileSync(outPath, buf);
+      made++;
+      console.log(`(${buf.length} bytes)`);
+      await sleep(250); // be polite to the API
+    } catch (e) {
+      failed++;
+      console.log(`FAIL: ${e.message}`);
     }
   }
 
