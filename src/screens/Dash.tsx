@@ -5,6 +5,7 @@ import Chip from '../components/Chip';
 import JugnuSays from '../components/JugnuSays';
 import { useApp } from '../context/AppContext';
 import { metrics as m, lines } from '../data/content';
+import { shareOnWhatsApp, composeReport } from '../lib/share';
 
 export default function Dash() {
   const app = useApp();
@@ -91,10 +92,13 @@ export default function Dash() {
 
         {/* share */}
         <div style={{ display: 'flex', gap: 10, marginTop: 14 }}>
-          <button className="btn" style={{ flex: 1, background: app.profile.grad, color: '#fff', padding: 14, fontSize: 15 }}>
+          <button
+            className="btn"
+            style={{ flex: 1, background: app.profile.grad, color: '#fff', padding: 14, fontSize: 15 }}
+            onClick={() => shareOnWhatsApp(composeReport(app.profile))}
+          >
             <Icon name="heart" size={18} color="#fff" /> परिवार को भेजें
           </button>
-          <button className="btn btn-ghost" style={{ padding: '14px 20px', fontSize: 15 }}>PDF</button>
         </div>
       </div>
     </div>

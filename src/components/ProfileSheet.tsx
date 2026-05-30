@@ -1,11 +1,25 @@
+import { useState } from 'react';
 import Icon from './Icon';
 import Bi from './Bi';
 import Sheet from './Sheet';
 import { useApp } from '../context/AppContext';
 import { profileList } from '../data/content';
+import { isConfigured, getHousehold } from '../lib/supabase';
 
 export default function ProfileSheet({ onClose }: { onClose: () => void }) {
   const app = useApp();
+  const existing = getHousehold();
+  const [code, setCode] = useState(existing ?? '');
+  const [saving, setSaving] = useState(false);
+
+  const save = async () => {
+    if (!code.trim()) return;
+    setSaving(true);
+    await app.linkHousehold(code.trim());
+    setSaving(false);
+    onClose();
+  };
+
   return (
     <Sheet onClose={onClose}>
       <div style={{ textAlign: 'center', marginBottom: 8 }}>
@@ -33,6 +47,33 @@ export default function ProfileSheet({ onClose }: { onClose: () => void }) {
           );
         })}
       </div>
+
+      {isConfigured() && (
+        <div style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid rgba(90,60,30,.08)' }}>
+          <Bi hi="परिवार जोड़ें" en="Connect family · keeps everyone in sync" hiSize={15} enSize={9.5} />
+          <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
+            <input
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              placeholder="घर का कोड · family code"
+              style={{ flex: 1, border: '1px solid rgba(255,255,255,.7)', background: 'var(--surface)', borderRadius: 14, padding: '12px 14px', fontSize: 14, color: 'var(--ink)' }}
+            />
+            <button
+              className="btn btn-primary"
+              onClick={save}
+              disabled={!code.trim() || saving}
+              style={{ background: app.profile.grad, padding: '12px 16px', fontSize: 14, opacity: !code.trim() || saving ? 0.5 : 1 }}
+            >
+              <Icon name="check" size={16} sw={2.8} color="#fff" /> {existing ? 'बदलें' : 'जोड़ें'}
+            </button>
+          </div>
+          {existing && (
+            <p style={{ fontSize: 11, color: 'var(--mint-d)', fontWeight: 700, margin: '8px 0 0' }}>
+              जुड़े हुए · synced across the family
+            </p>
+          )}
+        </div>
+      )}
     </Sheet>
   );
 }
