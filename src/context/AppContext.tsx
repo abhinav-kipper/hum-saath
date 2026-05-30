@@ -19,6 +19,7 @@ import {
   upsertRemoteState,
 } from '../lib/supabase';
 import { todayKey } from '../lib/util';
+import { primeAudio } from '../lib/voice';
 
 export type Route = 'home' | 'meds' | 'exercise' | 'dash' | 'lessons' | 'chat';
 
@@ -172,8 +173,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       profile, profileId, plan, done, medsTaken, streak,
       history: profileHistory, allHistory: history, today,
       sound, entered, route, activeNode, logNode, profileOpen, celebrate,
-      enter(s) { setSound(s); setEntered(true); },
-      toggleSound() { setSound((s) => !s); },
+      enter(s) { if (s) primeAudio(); setSound(s); setEntered(true); },
+      toggleSound() { setSound((s) => { if (!s) primeAudio(); return !s; }); },
       setProfileOpen,
       setLogNode,
       nav(kind, node) {

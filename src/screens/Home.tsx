@@ -6,7 +6,7 @@ import Bi from '../components/Bi';
 import Chip from '../components/Chip';
 import Sheet from '../components/Sheet';
 import { useApp } from '../context/AppContext';
-import { lines, taskPool } from '../data/content';
+import { taskPool } from '../data/content';
 import type { Node } from '../types';
 
 /* connector segment in the bead column */
@@ -55,7 +55,6 @@ export default function Home() {
   const [addOpen, setAddOpen] = useState(false);
   const curIdx = plan.findIndex((n) => !done.has(n.id));
   const allDone = curIdx === -1;
-  const line = allDone ? lines.home_alldone : lines.home;
 
   return (
     <div className="screen-body fade-in">
@@ -121,7 +120,7 @@ export default function Home() {
       ) : (
         <>
           <div className="scroll" style={{ flex: 1, padding: '14px 18px 8px' }}>
-            <JugnuSays line={line} size={96} sound={sound} />
+            <JugnuSays moment={allDone ? 'home_alldone' : 'home'} size={96} sound={sound} />
 
             <div style={{ marginTop: 18 }}>
               {plan.map((n, i) => {

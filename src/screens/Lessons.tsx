@@ -4,7 +4,7 @@ import Bi from '../components/Bi';
 import Chip from '../components/Chip';
 import JugnuSays from '../components/JugnuSays';
 import { useApp } from '../context/AppContext';
-import { lessons, lines } from '../data/content';
+import { lessons } from '../data/content';
 
 export default function Lessons() {
   const app = useApp();
@@ -16,7 +16,7 @@ export default function Lessons() {
         <Bi hi="आज की सीख" en="LEARN · 2-MIN HABITS" hiSize={23} enSize={10.5} />
       </div>
       <div className="scroll" style={{ flex: 1, padding: '10px 18px 110px' }}>
-        <JugnuSays line={lines.lesson} size={84} sound={app.sound} />
+        <JugnuSays moment="lesson" size={84} sound={app.sound} />
 
         {/* featured */}
         <div className="clay rise" style={{ borderRadius: 28, padding: 18, marginTop: 14 }}>

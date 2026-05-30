@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import Icon from '../components/Icon';
 import Jugnu from '../components/Jugnu';
 import Bi from '../components/Bi';
-import { speak, useTypewriter } from '../lib/voice';
+import { playMoment, speak, stopSpeak, useTypewriter } from '../lib/voice';
 import { useApp } from '../context/AppContext';
-import { chat, lines } from '../data/content';
+import { chat, pickJugnuLine } from '../data/content';
 import type { ChatItem } from '../types';
 
 interface Message { who: 'j' | 'u'; hi: string; en?: string; fresh?: boolean }
@@ -35,10 +35,18 @@ function Msg({ m }: { m: Message }) {
 
 export default function Chat() {
   const app = useApp();
-  const [msgs, setMsgs] = useState<Message[]>([{ who: 'j', ...lines.chatGreet }]);
+  // Rotate Jugnu's greeting and play its matching clip when the chat opens.
+  const greet = useRef(pickJugnuLine('chatGreet')).current;
+  const [msgs, setMsgs] = useState<Message[]>([{ who: 'j', hi: greet.line.hi, en: greet.line.en }]);
   const [typing, setTyping] = useState(false);
   const [used, setUsed] = useState<string[]>([]);
   const scroller = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    playMoment('chatGreet', greet.idx, greet.line.hi, app.sound);
+    return stopSpeak;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (scroller.current) scroller.current.scrollTop = scroller.current.scrollHeight;

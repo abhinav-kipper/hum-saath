@@ -4,7 +4,7 @@ import JugnuSays from '../components/JugnuSays';
 import Bi from '../components/Bi';
 import Chip from '../components/Chip';
 import { useApp } from '../context/AppContext';
-import { medsByProfile, lines } from '../data/content';
+import { medsByProfile } from '../data/content';
 
 export default function Meds() {
   const { sound, takeMed, medsTaken, profile } = useApp();
@@ -66,7 +66,7 @@ export default function Meds() {
         </div>
 
         <div style={{ marginTop: 8 }}>
-          <JugnuSays line={next ? lines.meds : lines.medsTaken} size={64} sound={sound} />
+          <JugnuSays moment={next ? 'meds' : 'medsTaken'} size={64} sound={sound} />
         </div>
 
         {next && (
