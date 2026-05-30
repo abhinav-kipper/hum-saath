@@ -232,7 +232,7 @@ export function pickJugnuLine(key: string): { line: Line; idx: number } {
 
 export const chat: ChatItem[] = [
   { q: 'आज क्या-क्या करना है?', qEn: 'What’s on today?', a: 'आज तीन मुख्य काम हैं: सुबह की दवाई (हो गई ✅), गर्दन की एक्सरसाइज़, और दर्द लॉग करना। शाम को एक छोटी सैर। बस इतना!', aEn: 'Three main things: morning meds (done ✅), neck exercise, and logging pain. A short walk in the evening. That’s all!' },
-  { q: 'दर्द ज़्यादा है, क्या करूँ?', qEn: 'Pain feels worse — what do I do?', a: 'पहले आराम कीजिए। आज की एक्सरसाइज़ हल्की रखिए — सिर्फ़ गर्दन वाली। अगर दर्द 7 से ऊपर रहे दो दिन, तो मैं डॉक्टर को रिपोर्ट भेजने में मदद करूँगा।', aEn: 'Rest first. Keep today’s exercise light — just the neck part. If pain stays above 7 for two days, I’ll help you send the report to the doctor.' },
-  { q: 'अगली दवाई कब है?', qEn: 'When’s my next medicine?', a: 'अगली दवाई — दर्द की — दोपहर 2 बजे, खाने के बाद। मैं 1:55 पर हल्का सा याद दिला दूँगा।', aEn: 'Next up — pain relief — at 2 PM after lunch. I’ll give a gentle reminder at 1:55.' },
+  { q: 'दर्द ज़्यादा है, क्या करूँ?', qEn: 'Pain feels worse — what do I do?', a: 'पहले आराम कीजिए। आज की एक्सरसाइज़ हल्की रखिए — सिर्फ़ गर्दन वाली। अगर दर्द 7 से ऊपर रहे दो दिन, तो मैं डॉक्टर को रिपोर्ट भेजने में मदद करूँगी।', aEn: 'Rest first. Keep today’s exercise light — just the neck part. If pain stays above 7 for two days, I’ll help you send the report to the doctor.' },
+  { q: 'अगली दवाई कब है?', qEn: 'When’s my next medicine?', a: 'अगली दवाई — दर्द की — दोपहर 2 बजे, खाने के बाद। मैं 1:55 पर हल्का सा याद दिला दूँगी।', aEn: 'Next up — pain relief — at 2 PM after lunch. I’ll give a gentle reminder at 1:55.' },
   { q: 'इस हफ़्ते कैसा रहा?', qEn: 'How was my week?', a: 'बहुत बढ़िया! 7 में से 6 दिन पूरे, और दर्द पिछले हफ़्ते से 34% कम। 12 दिन की लगातार लय बनी हुई है ✨', aEn: 'Great! 6 of 7 days complete, and pain down 34% from last week. A 12-day streak going strong ✨' },
 ];
