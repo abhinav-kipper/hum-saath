@@ -65,7 +65,15 @@ export default function LogSheet({ node, onClose }: { node: Node; onClose: () =>
         <span className="hi">कम · low</span>
         <span className="hi">ज़्यादा · high</span>
       </div>
-      <button className="btn btn-primary" style={{ width: '100%', marginTop: 16, opacity: val ? 1 : 0.5, background: app.profile.grad }} disabled={!val} onClick={() => app.finish(node.id)}>
+      <button
+        className="btn btn-primary"
+        style={{ width: '100%', marginTop: 16, opacity: val ? 1 : 0.5, background: app.profile.grad }}
+        disabled={!val}
+        onClick={() => {
+          if (val != null) app.logValue(node.id, val);
+          app.finish(node.id);
+        }}
+      >
         नोट कर लें · Save
       </button>
     </Sheet>

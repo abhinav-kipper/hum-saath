@@ -6,7 +6,7 @@ import Bi from '../components/Bi';
 import Chip from '../components/Chip';
 import Sheet from '../components/Sheet';
 import { useApp } from '../context/AppContext';
-import { lines, metrics, taskPool } from '../data/content';
+import { lines, taskPool } from '../data/content';
 import type { Node } from '../types';
 
 /* connector segment in the bead column */
@@ -50,7 +50,7 @@ function Bead({ n, isDone, isCur, accent }: { n: Node; isDone: boolean; isCur: b
 
 export default function Home() {
   const app = useApp();
-  const { profile, plan, done, sound, nav, setProfileOpen } = app;
+  const { profile, plan, done, sound, nav, setProfileOpen, streak } = app;
   const [edit, setEdit] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
   const curIdx = plan.findIndex((n) => !done.has(n.id));
@@ -73,10 +73,10 @@ export default function Home() {
           </span>
         </button>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          {!edit && (
+          {!edit && streak > 0 && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--coral-d)', fontWeight: 800, fontSize: 16 }}>
               <Icon name="flame" size={20} color="var(--coral)" fill="var(--coral)" />
-              {metrics.streak}
+              {streak}
             </div>
           )}
           <button
