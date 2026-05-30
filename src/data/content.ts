@@ -14,9 +14,6 @@ import type {
   Lesson,
   Line,
   ChatItem,
-  MetricRing,
-  MetricTile,
-  Adherence,
 } from '../types';
 
 export const profiles: Record<ProfileId, Profile> = {
@@ -65,14 +62,27 @@ export const taskPool: Node[] = [
   { id: 'breath', kind: 'exercise', icon: 'activity', hi: 'गहरी साँस', en: 'Deep breathing · 4 min' },
 ];
 
-/** Day-clock doses. `ang` places each on the 24-hour dial. */
-export const meds: Dose[] = [
-  { id: 'd1', ang: -90, time: '8:00 AM', hi: 'BP की दवाई', en: 'Amlodipine 5mg', sub: 'खाने के बाद · after food', color: 'var(--gold)', taken: true },
-  { id: 'd2', ang: -18, time: '9:00 AM', hi: 'विटामिन D', en: 'Vitamin D3', sub: 'दूध के साथ · with milk', color: 'var(--coral)', taken: true },
-  { id: 'd3', ang: 54, time: '2:00 PM', hi: 'दर्द की दवाई', en: 'Pain relief', sub: 'खाने के बाद · after lunch', color: 'var(--peri)', taken: false, next: true },
-  { id: 'd4', ang: 128, time: '7:00 PM', hi: 'थायराइड', en: 'Thyronorm 50', sub: 'खाली पेट · empty stomach', color: 'var(--mint)', taken: false },
-  { id: 'd5', ang: 200, time: '10:00 PM', hi: 'रात की दवाई', en: 'Night dose', sub: 'सोने से पहले · before bed', color: 'var(--rose)', taken: false },
-];
+/** Day-clock doses, per profile. `ang` places each on the 24-hour
+    dial. `taken` and `next` are derived at runtime from history. */
+export const medsByProfile: Record<ProfileId, Dose[]> = {
+  papa: [
+    { id: 'p-d1', ang: -90, time: '8:00 AM', hi: 'अमलोडिपाइन', en: 'Amlodipine 5mg', sub: 'खाने के बाद · after food', color: 'var(--gold)' },
+    { id: 'p-d2', ang: -18, time: '9:00 AM', hi: 'विटामिन D', en: 'Vitamin D3', sub: 'दूध के साथ · with milk', color: 'var(--coral)' },
+    { id: 'p-d3', ang: 54, time: '2:00 PM', hi: 'दर्द की दवाई', en: 'Pain relief', sub: 'खाने के बाद · after lunch', color: 'var(--peri)' },
+    { id: 'p-d4', ang: 200, time: '10:00 PM', hi: 'रात की दवाई', en: 'Night dose', sub: 'सोने से पहले · before bed', color: 'var(--rose)' },
+  ],
+  mummy: [
+    { id: 'm-d1', ang: -110, time: '7:00 AM', hi: 'थायराइड', en: 'Thyronorm 50', sub: 'खाली पेट · empty stomach', color: 'var(--mint)' },
+    { id: 'm-d2', ang: -40, time: '9:00 AM', hi: 'BP की दवाई', en: 'Amlodipine 5mg', sub: 'नाश्ते के बाद · after breakfast', color: 'var(--gold)' },
+    { id: 'm-d3', ang: 30, time: '1:00 PM', hi: 'कैल्शियम', en: 'Calcium', sub: 'खाने के बाद · after lunch', color: 'var(--coral)' },
+    { id: 'm-d4', ang: 110, time: '8:00 PM', hi: 'BP की दवाई', en: 'Amlodipine 5mg', sub: 'खाने के बाद · after dinner', color: 'var(--gold)' },
+  ],
+  chunnu: [
+    { id: 'c-d1', ang: -50, time: '9:00 AM', hi: 'मल्टीविटामिन', en: 'Multivitamin', sub: 'नाश्ते के साथ · with breakfast', color: 'var(--peri)' },
+    { id: 'c-d2', ang: 40, time: '1:00 PM', hi: 'आयरन', en: 'Iron + Folate', sub: 'खाने के बाद · after lunch', color: 'var(--rose)' },
+    { id: 'c-d3', ang: 150, time: '8:00 PM', hi: 'B-कॉम्प्लेक्स', en: 'B-complex', sub: 'खाने के बाद · after dinner', color: 'var(--mint)' },
+  ],
+};
 
 /* Per-profile guided exercise.
 
@@ -127,38 +137,8 @@ export const lessons: Lesson[] = [
   { id: 'l3', tag: 'पानी · Hydration', mins: 1, hi: 'दिन में पानी — कितना और कब', en: 'Water through the day — how much & when', body: 'सुबह उठते ही एक गिलास, हर खाने के साथ थोड़ा, और शाम को ज़्यादा नहीं ताकि नींद न टूटे।', bodyEn: 'A glass on waking, a little with meals, less in the late evening so sleep stays unbroken.' },
 ];
 
-export const metrics: {
-  rings: MetricRing[];
-  tiles: MetricTile[];
-  bp: number[];
-  bpDays: string[];
-  adherence: Adherence[];
-  streak: number;
-  daysKept: number;
-  painDrop: number;
-} = {
-  rings: [
-    { key: 'move', hi: 'हलचल', en: 'Move', pct: 0.82, color: 'var(--coral)' },
-    { key: 'meds', hi: 'दवाई', en: 'Meds', pct: 0.66, color: 'var(--gold)' },
-    { key: 'mind', hi: 'मन', en: 'Calm', pct: 0.9, color: 'var(--mint)' },
-  ],
-  tiles: [
-    { icon: 'heart', color: 'var(--coral)', hi: 'रक्तचाप', en: 'BLOOD PRESSURE', val: '124/82', unit: '', foot: '↓ सामान्य · normal' },
-    { icon: 'foot', color: 'var(--mint)', hi: 'कदम', en: 'STEPS', val: '3.4k', unit: 'आज', foot: 'लक्ष्य 4,000' },
-    { icon: 'drop', color: 'var(--peri)', hi: 'दर्द', en: 'PAIN', val: '3', unit: '/10', foot: '↓ कल से बेहतर' },
-    { icon: 'moon', color: 'var(--rose)', hi: 'नींद', en: 'SLEEP', val: '7.2', unit: 'घंटे', foot: 'अच्छी नींद' },
-  ],
-  bp: [120, 128, 122, 118, 124, 116, 121],
-  bpDays: ['सो', 'मं', 'बु', 'गु', 'शु', 'श', 'र'],
-  adherence: [
-    { hi: 'दवाई', en: 'Medicines', p: 0.92, color: 'var(--gold-d)' },
-    { hi: 'व्यायाम', en: 'Exercise', p: 0.78, color: 'var(--coral)' },
-    { hi: 'सैर', en: 'Walking', p: 0.6, color: 'var(--mint-d)' },
-  ],
-  streak: 12,
-  daysKept: 31,
-  painDrop: 34,
-};
+/** Hindi day-of-week abbreviations (Sun-Sat). */
+export const HI_DAY = ['र', 'सो', 'मं', 'बु', 'गु', 'शु', 'श'] as const;
 
 export const lines: Record<string, Line> = {
   home: { hi: 'शाबाश! दवाई हो गई। अब चलिए, थोड़ी गर्दन खोलते हैं।', en: 'Meds done — let’s loosen the neck next.' },

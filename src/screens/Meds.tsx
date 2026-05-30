@@ -4,10 +4,10 @@ import JugnuSays from '../components/JugnuSays';
 import Bi from '../components/Bi';
 import Chip from '../components/Chip';
 import { useApp } from '../context/AppContext';
-import { meds as DOSES, lines } from '../data/content';
+import { medsByProfile, lines } from '../data/content';
 
 export default function Meds() {
-  const { sound, takeMed, medsTaken } = useApp();
+  const { sound, takeMed, medsTaken, profile } = useApp();
   const R = 100;
   const cx = 130;
   const cy = 130;
@@ -15,8 +15,15 @@ export default function Meds() {
     cx + r * Math.cos((a * Math.PI) / 180),
     cy + r * Math.sin((a * Math.PI) / 180),
   ];
-  const doses = DOSES.map((d) => ({ ...d, taken: d.taken || medsTaken.has(d.id) }));
-  const next = doses.find((d) => !d.taken);
+  // mark `taken` from today's history; the first untaken dose is `next`
+  let foundNext = false;
+  const doses = medsByProfile[profile.id].map((d) => {
+    const taken = medsTaken.has(d.id);
+    const isNext = !taken && !foundNext;
+    if (isNext) foundNext = true;
+    return { ...d, taken, next: isNext };
+  });
+  const next = doses.find((d) => d.next);
   const takenCount = doses.filter((d) => d.taken).length;
 
   return (

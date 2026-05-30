@@ -110,6 +110,14 @@ export interface Adherence {
   color: string;
 }
 
+/** Per-profile, per-day record of what was done, taken, and logged. */
+export interface DayRecord {
+  done: string[];
+  meds: string[];
+  /** node id -> logged 1-10 value (from the log sheet) */
+  values: Record<string, number>;
+}
+
 /** Everything persisted. Lives in localStorage first; mirrored to
     Supabase whenever a household code is set and env is configured. */
 export interface AppState {
@@ -117,8 +125,8 @@ export interface AppState {
   sound: boolean;
   profileId: ProfileId;
   plans: Record<ProfileId, Node[]>;
-  doneBy: Record<string, string[]>;
-  medsBy: Record<string, string[]>;
+  /** Day history per profile, keyed by YYYY-MM-DD. */
+  history: Record<ProfileId, Record<string, DayRecord>>;
   /** ISO timestamp of the last write — used to decide remote/local winner. */
   updatedAt: string;
 }

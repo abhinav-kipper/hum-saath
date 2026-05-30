@@ -15,6 +15,7 @@ import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import type { AppState } from '../types';
 
 const HOUSE_KEY = 'saath_jugnu_household_v1';
+const LEGACY_KEY = 'saath.household.v1';
 const URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
 const ANON = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 
@@ -24,7 +25,15 @@ export function isConfigured(): boolean {
 
 export function getHousehold(): string | null {
   try {
-    return localStorage.getItem(HOUSE_KEY);
+    const cur = localStorage.getItem(HOUSE_KEY);
+    if (cur) return cur;
+    // one-time migration from the older household key
+    const legacy = localStorage.getItem(LEGACY_KEY);
+    if (legacy) {
+      localStorage.setItem(HOUSE_KEY, legacy);
+      return legacy;
+    }
+    return null;
   } catch {
     return null;
   }
