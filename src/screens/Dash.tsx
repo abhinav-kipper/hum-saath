@@ -4,7 +4,7 @@ import Bi from '../components/Bi';
 import Chip from '../components/Chip';
 import JugnuSays from '../components/JugnuSays';
 import { useApp } from '../context/AppContext';
-import { lines, medsByProfile, HI_DAY } from '../data/content';
+import { medsByProfile, HI_DAY } from '../data/content';
 import { lastNDays } from '../lib/util';
 import { shareOnWhatsApp } from '../lib/share';
 import type { Adherence, IconName, MetricRing, MetricTile, Profile } from '../types';
@@ -130,7 +130,7 @@ export default function Dash() {
       </div>
 
       <div className="scroll" style={{ flex: 1, padding: '10px 18px 110px' }}>
-        <JugnuSays line={lines.dash} size={84} sound={app.sound} />
+        <JugnuSays moment="dash" size={84} sound={app.sound} />
 
         {/* rings hero */}
         <div className="clay rise" style={{ borderRadius: 28, padding: 16, marginTop: 14, display: 'flex', alignItems: 'center', gap: 6 }}>

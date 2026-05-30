@@ -140,19 +140,95 @@ export const lessons: Lesson[] = [
 /** Hindi day-of-week abbreviations (Sun-Sat). */
 export const HI_DAY = ['र', 'सो', 'मं', 'बु', 'गु', 'शु', 'श'] as const;
 
-export const lines: Record<string, Line> = {
-  home: { hi: 'शाबाश! दवाई हो गई। अब चलिए, थोड़ी गर्दन खोलते हैं।', en: 'Meds done — let’s loosen the neck next.' },
-  home_alldone: { hi: 'अरे वाह! आज की पूरी राह पूरी हो गई। शाबाश जी! 🎉', en: 'All done for today — wonderful!' },
-  meds: { hi: 'अगली दवाई दो बजे है। मैं याद दिला दूँगा।', en: 'Next dose at 2 PM. I’ll remind you.' },
-  medsTaken: { hi: 'ले ली? बढ़िया। एक और काम पूरा।', en: 'Taken? Lovely — one more done.' },
-  exercise: { hi: 'चलिए, साथ में करते हैं। बिल्कुल आराम से।', en: 'Let’s do it together — nice and slow.' },
-  exerciseDone: { hi: 'पूरी हो गई! आपकी पीठ आपको धन्यवाद कहेगी।', en: 'Complete! Your back will thank you.' },
-  log: { hi: 'बस एक टैप — आज दर्द कैसा रहा?', en: 'Just one tap — how was the pain today?' },
-  logDone: { hi: 'नोट कर लिया। धीरे-धीरे बेहतर हो रहा है।', en: 'Noted — slowly getting better.' },
-  lesson: { hi: 'आइए, आज एक छोटी सी बात बताता हूँ।', en: 'Come, let me share one small thing.' },
-  dash: { hi: 'इस हफ़्ते की झलक — आप अच्छा कर रहे हैं!', en: 'A peek at this week — you’re doing well!' },
-  chatGreet: { hi: 'नमस्ते! मैं जुगनू। कुछ भी पूछिए — दवाई, दर्द, या आज का प्लान।', en: 'Hi! I’m Jugnu. Ask me anything — meds, pain, or today’s plan.' },
+/* ─── Jugnu's spoken lines ──────────────────────────────────────────────────
+   Each moment has a few warm, young-female variants so Jugnu never says the
+   same thing twice in a row (pickJugnuLine rotates them, never repeating the
+   last index). The generator (scripts/generate-jugnu-voice.mjs) renders one
+   ElevenLabs clip per variant → /public/voice/<key>-<idx>.mp3; lib/voice.ts
+   prefers the clip and falls back to the device's Hindi TTS.
+
+   IMPORTANT for the generator: keep this a plain object literal of strings —
+   no references, no template literals — so the build-time parser can read it.
+*/
+export const momentLines: Record<string, Line[]> = {
+  home: [
+    { hi: 'शाबाश! दवाई हो गई। अब चलिए, थोड़ी गर्दन खोलते हैं।', en: 'Meds done — let’s loosen the neck next.' },
+    { hi: 'वाह, एक काम हो गया! अब बारी है थोड़ी सी हलचल की।', en: 'One thing done! A little movement next.' },
+    { hi: 'बढ़िया चल रहे हैं आप। चलिए, अगला छोटा सा कदम।', en: 'You’re doing lovely — one small step more.' },
+  ],
+  home_alldone: [
+    { hi: 'अरे वाह! आज की पूरी राह पूरी हो गई। शाबाश जी! 🎉', en: 'All done for today — wonderful!' },
+    { hi: 'क्या बात है! आज सब हो गया। अब आराम कीजिए। 🌼', en: 'Everything’s done today — now rest easy.' },
+    { hi: 'पूरा दिन पूरा! मुझे आप पर बहुत गर्व है। ✨', en: 'A full day, complete — I’m so proud of you.' },
+  ],
+  meds: [
+    { hi: 'अगली दवाई दो बजे है। मैं याद दिला दूँगी।', en: 'Next dose at 2 PM. I’ll remind you.' },
+    { hi: 'अभी आराम कीजिए — अगली दवाई का ध्यान मैं रखूँगी।', en: 'Rest for now — I’ll watch for the next dose.' },
+    { hi: 'दवाई का समय मैं बता दूँगी, आप चिंता मत कीजिए।', en: 'I’ll tell you when it’s time — don’t worry.' },
+  ],
+  medsTaken: [
+    { hi: 'ले ली? बढ़िया। एक और काम पूरा।', en: 'Taken? Lovely — one more done.' },
+    { hi: 'शाबाश! दवाई हो गई। मेरा दिल खुश हो गया।', en: 'Well done — meds taken. That makes me happy.' },
+    { hi: 'हो गई दवाई! आप अपना कितना अच्छा ख़याल रखते हैं।', en: 'Done! You take such good care of yourself.' },
+  ],
+  exercise: [
+    { hi: 'चलिए, साथ में करते हैं। बिल्कुल आराम से।', en: 'Let’s do it together — nice and slow.' },
+    { hi: 'मैं भी आपके साथ हूँ — एकदम धीरे, कोई जल्दी नहीं।', en: 'I’m right here with you — slow, no rush.' },
+  ],
+  exerciseDone: [
+    { hi: 'पूरी हो गई! आपकी पीठ आपको धन्यवाद कहेगी।', en: 'Complete! Your back will thank you.' },
+    { hi: 'शाबाश! शरीर थोड़ा हल्का लग रहा होगा ना?', en: 'Well done — feeling a little lighter now?' },
+  ],
+  log: [
+    { hi: 'बस एक टैप — आज दर्द कैसा रहा?', en: 'Just one tap — how was the pain today?' },
+    { hi: 'एक छोटा सा सवाल — आज कैसा महसूस हुआ?', en: 'One small question — how did today feel?' },
+  ],
+  logDone: [
+    { hi: 'नोट कर लिया। धीरे-धीरे बेहतर हो रहा है।', en: 'Noted — slowly getting better.' },
+    { hi: 'लिख लिया! हर दिन का हिसाब आपकी बहुत मदद करता है।', en: 'Noted! Tracking each day really helps.' },
+  ],
+  lesson: [
+    { hi: 'आइए, आज एक छोटी सी बात बताती हूँ।', en: 'Come, let me share one small thing.' },
+    { hi: 'दो मिनट दीजिए — एक प्यारी सी सीख तैयार है।', en: 'Give me two minutes — a sweet little lesson.' },
+    { hi: 'चलिए, आज कुछ नया और आसान सीखते हैं।', en: 'Let’s learn something new and easy today.' },
+  ],
+  dash: [
+    { hi: 'इस हफ़्ते की झलक — आप अच्छा कर रहे हैं!', en: 'A peek at this week — you’re doing well!' },
+    { hi: 'देखिए ज़रा — इस हफ़्ते की मेहनत रंग ला रही है।', en: 'Look — this week’s effort is paying off.' },
+    { hi: 'वाह! हफ़्ता बढ़िया जा रहा है। ऐसे ही चलते रहिए।', en: 'Lovely week so far — keep going just like this.' },
+  ],
+  chatGreet: [
+    { hi: 'नमस्ते! मैं जुगनू। कुछ भी पूछिए — दवाई, दर्द, या आज का प्लान।', en: 'Hi! I’m Jugnu. Ask me anything — meds, pain, or today’s plan.' },
+    { hi: 'नमस्ते जी! मैं जुगनू हूँ। बताइए, आज किसमें मदद करूँ?', en: 'Hello! I’m Jugnu. How can I help today?' },
+    { hi: 'अरे, आप आ गए! मैं जुगनू। चलिए, कुछ भी पूछिए।', en: 'Oh, you’re here! I’m Jugnu — ask me anything.' },
+  ],
 };
+
+/**
+ * Back-compat single-line view (first variant of each moment), for places that
+ * still want one fixed line (e.g. the chat greeting message shape).
+ */
+export const lines: Record<string, Line> = Object.fromEntries(
+  Object.entries(momentLines).map(([k, v]) => [k, v[0]] as [string, Line]),
+);
+
+const _lastJugnuLine: Record<string, number> = {};
+
+/**
+ * Pick a line variant for a moment, rotating so it never repeats the line it
+ * gave last time for the same moment. Mirrors Chaina's pickLine() on the Hindi
+ * app. Returns the line plus its index, so the caller can play the matching
+ * pre-recorded clip /voice/<key>-<idx>.mp3.
+ */
+export function pickJugnuLine(key: string): { line: Line; idx: number } {
+  const arr = momentLines[key];
+  if (!arr || arr.length === 0) return { line: { hi: '', en: '' }, idx: 0 };
+  if (arr.length === 1) return { line: arr[0], idx: 0 };
+  let i = Math.floor(Math.random() * arr.length);
+  if (i === _lastJugnuLine[key]) i = (i + 1) % arr.length;
+  _lastJugnuLine[key] = i;
+  return { line: arr[i], idx: i };
+}
 
 export const chat: ChatItem[] = [
   { q: 'आज क्या-क्या करना है?', qEn: 'What’s on today?', a: 'आज तीन मुख्य काम हैं: सुबह की दवाई (हो गई ✅), गर्दन की एक्सरसाइज़, और दर्द लॉग करना। शाम को एक छोटी सैर। बस इतना!', aEn: 'Three main things: morning meds (done ✅), neck exercise, and logging pain. A short walk in the evening. That’s all!' },
