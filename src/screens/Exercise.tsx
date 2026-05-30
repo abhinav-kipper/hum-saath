@@ -4,7 +4,7 @@ import Jugnu from '../components/Jugnu';
 import BodyFigure from '../components/BodyFigure';
 import Bi from '../components/Bi';
 import { useApp } from '../context/AppContext';
-import { exercise as ex } from '../data/content';
+import { exercises } from '../data/content';
 
 function PauseIcon() {
   return (
@@ -70,6 +70,7 @@ function VideoCard({ id, accent, title }: { id: string; accent: string; title: s
 
 export default function Exercise() {
   const app = useApp();
+  const ex = exercises[app.profile.id];
   const accent = app.profile.accent;
   const [idx, setIdx] = useState(0);
   const [playing, setPlaying] = useState(false);

@@ -7,9 +7,15 @@ import {
   createContext, useContext, useEffect, useMemo, useRef, useState,
   type ReactNode,
 } from 'react';
-import type { Node, Profile, ProfileId } from '../types';
+import type { AppState, Node, Profile, ProfileId } from '../types';
 import { profiles } from '../data/content';
 import { loadState, saveState } from '../lib/store';
+import {
+  fetchRemoteState,
+  setHousehold as setHouseholdCode,
+  clearHousehold as clearHouseholdCode,
+  upsertRemoteState,
+} from '../lib/supabase';
 
 export type Route = 'home' | 'meds' | 'exercise' | 'dash' | 'lessons' | 'chat';
 
@@ -42,6 +48,8 @@ export interface AppCtx {
   setPlanOrder: (arr: Node[]) => void;
   removeNode: (id: string) => void;
   addNode: (t: Node) => void;
+  linkHousehold: (code: string) => Promise<void>;
+  unlinkHousehold: () => void;
 }
 
 const Ctx = createContext<AppCtx | null>(null);
@@ -62,10 +70,35 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [profileOpen, setProfileOpen] = useState(false);
   const [celebrate, setCelebrate] = useState(false);
 
-  // persist
+  // persist locally + mirror to Supabase whenever the family is linked
   useEffect(() => {
-    saveState({ entered, sound, profileId, plans: plansState, doneBy, medsBy });
-  }, [entered, sound, profileId, plansState, doneBy, medsBy]);
+    saveState({ entered, sound, profileId, plans: plansState, doneBy, medsBy, updatedAt: initial.updatedAt });
+  }, [entered, sound, profileId, plansState, doneBy, medsBy, initial.updatedAt]);
+
+  // pull remote state on mount; adopt if it is newer than local
+  useEffect(() => {
+    let live = true;
+    (async () => {
+      const remote = await fetchRemoteState();
+      if (!live || !remote) return;
+      if (!initial.updatedAt || remote.updatedAt > initial.updatedAt) {
+        adoptState(remote);
+      }
+    })();
+    return () => {
+      live = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function adoptState(s: AppState) {
+    setEntered(s.entered);
+    setSound(s.sound);
+    setProfileId(s.profileId);
+    setPlansState(s.plans);
+    setDoneBy(s.doneBy);
+    setMedsBy(s.medsBy);
+  }
 
   // repaint theme accents per active profile
   useEffect(() => {
@@ -125,8 +158,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setPlanOrder(arr) { setPlansState((p) => ({ ...p, [profileId]: arr })); },
       removeNode(id) { setPlansState((p) => ({ ...p, [profileId]: (p[profileId] ?? []).filter((n) => n.id !== id) })); },
       addNode(t) { setPlansState((p) => ({ ...p, [profileId]: [...(p[profileId] ?? []), { ...t, baseId: t.id }] })); },
+      async linkHousehold(code) {
+        setHouseholdCode(code);
+        const remote = await fetchRemoteState();
+        if (remote) {
+          adoptState(remote);
+        } else {
+          await upsertRemoteState({ entered, sound, profileId, plans: plansState, doneBy, medsBy, updatedAt: new Date().toISOString() });
+        }
+      },
+      unlinkHousehold() {
+        clearHouseholdCode();
+      },
     };
-  }, [profile, profileId, plan, done, medsTaken, sound, entered, route, activeNode, logNode, profileOpen, celebrate]);
+  }, [profile, profileId, plan, done, medsTaken, sound, entered, route, activeNode, logNode, profileOpen, celebrate, plansState, doneBy, medsBy]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

@@ -174,13 +174,16 @@ export default function Home() {
                 <Bi hi="आज की राह पूरी! 🌼" en="All done today" hiSize={15} enSize={10} />
               </div>
             )}
-            <button
-              onClick={() => nav('chat')}
-              aria-label="Talk to Jugnu"
-              style={{ width: 60, height: 60, flex: '0 0 auto', borderRadius: 999, background: 'rgba(255,250,242,.8)', boxShadow: '0 12px 26px -10px rgba(236,170,60,.8), 0 0 0 1px rgba(255,255,255,.6) inset', display: 'grid', placeItems: 'center' }}
-            >
-              <Jugnu size={48} mood="idle" />
-            </button>
+            <div style={{ flex: '0 0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+              <button
+                onClick={() => nav('chat')}
+                aria-label="Talk to Jugnu"
+                style={{ width: 60, height: 60, borderRadius: 999, background: 'rgba(255,250,242,.8)', boxShadow: '0 12px 26px -10px rgba(236,170,60,.8), 0 0 0 1px rgba(255,255,255,.6) inset', display: 'grid', placeItems: 'center' }}
+              >
+                <Jugnu size={48} mood="idle" />
+              </button>
+              <span className="hi" style={{ fontSize: 10.5, fontWeight: 800, color: 'var(--ink-2)' }}>जुगनू से बात</span>
+            </div>
           </div>
         </>
       )}

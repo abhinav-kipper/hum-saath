@@ -1,3 +1,4 @@
+import { useEffect, useRef, type ComponentType } from 'react';
 import Icon from './Icon';
 import Jugnu from './Jugnu';
 import TabBar from './TabBar';
@@ -13,19 +14,53 @@ import Dash from '../screens/Dash';
 import Lessons from '../screens/Lessons';
 import Chat from '../screens/Chat';
 import { useApp, type Route } from '../context/AppContext';
-import type { ComponentType } from 'react';
 
 const SCREENS: Record<Route, ComponentType> = {
-  home: Home,
-  meds: Meds,
-  exercise: Exercise,
-  dash: Dash,
-  lessons: Lessons,
-  chat: Chat,
+  home: Home, meds: Meds, exercise: Exercise, dash: Dash, lessons: Lessons, chat: Chat,
 };
+
+const TAB_ROUTES: Route[] = ['home', 'exercise', 'meds', 'dash', 'lessons'];
 
 export default function AppShell() {
   const app = useApp();
+  const routeRef = useRef(app.route);
+  routeRef.current = app.route;
+  const navRef = useRef(app.nav);
+  navRef.current = app.nav;
+
+  // Native horizontal swipe between tab routes (not on Chat).
+  useEffect(() => {
+    let startX = 0;
+    let startY = 0;
+    let tracking = false;
+    const onDown = (e: PointerEvent) => {
+      if (e.pointerType !== 'touch') return;
+      startX = e.clientX;
+      startY = e.clientY;
+      tracking = true;
+    };
+    const onUp = (e: PointerEvent) => {
+      if (!tracking) return;
+      tracking = false;
+      const r = routeRef.current;
+      if (r === 'chat') return;
+      const idx = TAB_ROUTES.indexOf(r);
+      if (idx === -1) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+        const next = dx < 0 ? Math.min(idx + 1, TAB_ROUTES.length - 1) : Math.max(0, idx - 1);
+        if (next !== idx) navRef.current(TAB_ROUTES[next]);
+      }
+    };
+    document.addEventListener('pointerdown', onDown);
+    document.addEventListener('pointerup', onUp);
+    document.addEventListener('pointercancel', () => { tracking = false; });
+    return () => {
+      document.removeEventListener('pointerdown', onDown);
+      document.removeEventListener('pointerup', onUp);
+    };
+  }, []);
 
   if (!app.entered) return <Onboarding />;
 
@@ -45,13 +80,18 @@ export default function AppShell() {
 
       {/* floating chat button on non-home, non-fullscreen screens (home has its own) */}
       {!fullScreen && app.route !== 'home' && (
-        <button
-          onClick={() => app.nav('chat')}
-          aria-label="Talk to Jugnu"
-          style={{ position: 'absolute', right: 16, bottom: 'calc(88px + env(safe-area-inset-bottom))', width: 62, height: 62, borderRadius: 999, background: 'rgba(255,250,242,.82)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)', boxShadow: '0 14px 30px -12px rgba(236,170,60,.8), 0 0 0 1px rgba(255,255,255,.6) inset', display: 'grid', placeItems: 'center', zIndex: 45 }}
-        >
-          <Jugnu size={50} mood="idle" />
-        </button>
+        <div style={{ position: 'absolute', right: 16, bottom: 'calc(86px + env(safe-area-inset-bottom))', zIndex: 45, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+          <button
+            onClick={() => app.nav('chat')}
+            aria-label="Talk to Jugnu"
+            style={{ width: 62, height: 62, borderRadius: 999, background: 'rgba(255,250,242,.82)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)', boxShadow: '0 14px 30px -12px rgba(236,170,60,.8), 0 0 0 1px rgba(255,255,255,.6) inset', display: 'grid', placeItems: 'center' }}
+          >
+            <Jugnu size={50} mood="idle" />
+          </button>
+          <span className="hi" style={{ fontSize: 10.5, fontWeight: 800, color: 'var(--ink-2)', background: 'rgba(255,250,242,.85)', padding: '3px 9px', borderRadius: 999, boxShadow: '0 4px 10px -6px rgba(90,60,30,.4)' }}>
+            जुगनू से बात
+          </span>
+        </div>
       )}
 
       {!fullScreen && <TabBar />}

@@ -110,7 +110,8 @@ export interface Adherence {
   color: string;
 }
 
-/** Everything persisted (localStorage now, Supabase-swappable behind store.ts). */
+/** Everything persisted. Lives in localStorage first; mirrored to
+    Supabase whenever a household code is set and env is configured. */
 export interface AppState {
   entered: boolean;
   sound: boolean;
@@ -118,4 +119,6 @@ export interface AppState {
   plans: Record<ProfileId, Node[]>;
   doneBy: Record<string, string[]>;
   medsBy: Record<string, string[]>;
+  /** ISO timestamp of the last write — used to decide remote/local winner. */
+  updatedAt: string;
 }

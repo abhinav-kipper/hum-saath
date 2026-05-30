@@ -74,18 +74,51 @@ export const meds: Dose[] = [
   { id: 'd5', ang: 200, time: '10:00 PM', hi: 'रात की दवाई', en: 'Night dose', sub: 'सोने से पहले · before bed', color: 'var(--rose)', taken: false },
 ];
 
-export const exercise: Exercise = {
-  title: 'गर्दन व पीठ खोलें',
-  titleEn: 'Neck & back mobility',
-  region: 'back',
-  videoId: 'REPLACE_ME', // drop an unlisted YouTube id here; falls back to a placeholder
-  steps: [
-    { hi: 'सीधे बैठिए, कंधे ढीले छोड़िए।', en: 'Sit tall, drop the shoulders.', secs: 15, region: 'neck' },
-    { hi: 'धीरे से गर्दन दाईं ओर झुकाइए — 10 तक।', en: 'Gently tilt the neck right — count to 10.', secs: 20, region: 'neck' },
-    { hi: 'अब बाईं ओर — आराम से साँस लेते हुए।', en: 'Now to the left — breathing easy.', secs: 20, region: 'neck' },
-    { hi: 'कमर सीधी, हल्का आगे झुकाव।', en: 'Straight back, a small forward fold.', secs: 25, region: 'lowerback' },
-    { hi: 'शाबाश! एक गहरी साँस लीजिए।', en: 'Well done — take one deep breath.', secs: 12, region: 'full' },
-  ],
+/* Per-profile guided exercise.
+
+   `videoId`s are previously search-sourced YouTube candidates from the
+   repo's original `exercises.ts` (AI-suggested, NOT verified). Confirm
+   each link and form before relying on it; swap freely. */
+export const exercises: Record<ProfileId, Exercise> = {
+  papa: {
+    title: 'गर्दन व पीठ खोलें',
+    titleEn: 'Neck & back mobility',
+    region: 'back',
+    videoId: 'jFHSB245fcM',
+    steps: [
+      { hi: 'सीधे बैठिए, कंधे ढीले छोड़िए।', en: 'Sit tall, drop the shoulders.', secs: 15, region: 'neck' },
+      { hi: 'धीरे से गर्दन दाईं ओर झुकाइए — 10 तक।', en: 'Gently tilt the neck right — count to 10.', secs: 20, region: 'neck' },
+      { hi: 'अब बाईं ओर — आराम से साँस लेते हुए।', en: 'Now to the left — breathing easy.', secs: 20, region: 'neck' },
+      { hi: 'कमर सीधी, हल्का आगे झुकाव।', en: 'Straight back, a small forward fold.', secs: 25, region: 'lowerback' },
+      { hi: 'शाबाश! एक गहरी साँस लीजिए।', en: 'Well done — take one deep breath.', secs: 12, region: 'full' },
+    ],
+  },
+  mummy: {
+    title: 'गहरी साँस व खिंचाव',
+    titleEn: 'Breathing & stretch',
+    region: 'heart',
+    videoId: 'Mg2ar-7_HfA',
+    steps: [
+      { hi: 'सीधे बैठिए, कंधे ढीले। चार गिनती में साँस लीजिए।', en: 'Sit tall, shoulders soft. Breathe in for four.', secs: 20, region: 'heart' },
+      { hi: 'कंधे आगे और पीछे — पाँच बार।', en: 'Roll the shoulders — five times each way.', secs: 25, region: 'heart' },
+      { hi: 'हाथ ऊपर खींचिए, हल्के से।', en: 'Reach the arms overhead, gently.', secs: 20, region: 'heart' },
+      { hi: '4-7-8: चार में लें, सात रोकें, आठ में छोड़ें।', en: 'Box-like 4-7-8: in 4, hold 7, out 8.', secs: 30, region: 'heart' },
+      { hi: 'शांत बैठिए, एक मुस्कान।', en: 'Sit quietly — one small smile.', secs: 25, region: 'full' },
+    ],
+  },
+  chunnu: {
+    title: 'सुबह की मोबिलिटी',
+    titleEn: 'Morning mobility',
+    region: 'mind',
+    videoId: 'REPLACE_ME',
+    steps: [
+      { hi: 'कंधे और गर्दन ढीले छोड़िए।', en: 'Loosen the shoulders and neck.', secs: 20, region: 'mind' },
+      { hi: 'आँखें बंद, पाँच गहरी साँस।', en: 'Eyes closed, five deep breaths.', secs: 25, region: 'mind' },
+      { hi: 'बॉक्स ब्रीदिंग — 4 लें · 4 रोकें · 4 छोड़ें · 4 रोकें।', en: 'Box breathing — 4 · 4 · 4 · 4.', secs: 30, region: 'mind' },
+      { hi: 'खड़े होकर हल्की स्ट्रेच।', en: 'Stand and stretch lightly.', secs: 20, region: 'full' },
+      { hi: 'शांत बैठक, एक छोटी मुस्कान।', en: 'Quiet sit, a small smile.', secs: 25, region: 'mind' },
+    ],
+  },
 };
 
 export const lessons: Lesson[] = [
